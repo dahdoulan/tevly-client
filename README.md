@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # tevly_client
 
 A new Flutter project.
@@ -14,3 +15,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# Tevly Client
+## Overview
+- This repository represents the tevly front end application
+>>>>>>> 4c1361a7694fa2063aafbeb08e4c77feaa5355c9
