@@ -1,0 +1,2 @@
+C:/Flutter_Projects/tevly-client/android/app/.cxx/Debug/1a531h33/x86_64/CMakeFiles/edit_cache.dir
+C:/Flutter_Projects/tevly-client/android/app/.cxx/Debug/1a531h33/x86_64/CMakeFiles/rebuild_cache.dir
