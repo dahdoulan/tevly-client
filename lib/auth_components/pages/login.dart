@@ -54,7 +54,8 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08), // Responsive padding
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.08), // Responsive padding
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -63,24 +64,29 @@ class _LoginPageState extends State<LoginPage> {
                   // Logo
                   SizedBox(
                     height: screenHeight * 0.15, // Adjust logo size dynamically
-                    child: Image.asset('lib/assets/logo.jpg', fit: BoxFit.contain),
+                    child:
+                        Image.asset('lib/assets/logo.jpg', fit: BoxFit.contain),
                   ),
                   SizedBox(height: screenHeight * 0.05),
 
                   // Email Field
-                  _buildTextField(_emailController, "Email", Icons.email, false),
+                  _buildTextField(
+                      _emailController, "Email", Icons.email, false),
                   SizedBox(height: screenHeight * 0.02),
 
                   // Password Field
-                  _buildTextField(_passwordController, "Password", Icons.lock, true),
+                  _buildTextField(
+                      _passwordController, "Password", Icons.lock, true),
                   SizedBox(height: screenHeight * 0.01),
 
                   // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
-                      child: Text("Forgot Password?", style: TextStyle(color: Colors.yellow)),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/forgot-password'),
+                      child: Text("Forgot Password?",
+                          style: TextStyle(color: Colors.yellow)),
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.03),
@@ -89,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     width: double.infinity,
                     height: screenHeight * 0.06,
-                   /* child: ElevatedButton(
+                    /* child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
                       onPressed: _isLoading ? null : _login,
                       child: _isLoading
@@ -103,10 +109,13 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Don't have an account?", style: TextStyle(color: Colors.white)),
+                      Text("Don't have an account?",
+                          style: TextStyle(color: Colors.white)),
                       TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/signup'),
-                        child: Text("Sign Up", style: TextStyle(color: Colors.yellow)),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/signup'),
+                        child: Text("Sign Up",
+                            style: TextStyle(color: Colors.yellow)),
                       ),
                     ],
                   ),
@@ -120,11 +129,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, IconData icon, bool isPassword) {
+  Widget _buildTextField(TextEditingController controller, String label,
+      IconData icon, bool isPassword) {
     return TextField(
       controller: controller,
       obscureText: isPassword && !_isPasswordVisible,
-      keyboardType: isPassword ? TextInputType.text : TextInputType.emailAddress,
+      keyboardType:
+          isPassword ? TextInputType.text : TextInputType.emailAddress,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
@@ -139,7 +150,11 @@ class _LoginPageState extends State<LoginPage> {
         prefixIcon: Icon(icon, color: Colors.white),
         suffixIcon: isPassword
             ? IconButton(
-                icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: Colors.white),
+                icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Colors.white),
                 onPressed: () {
                   setState(() {
                     _isPasswordVisible = !_isPasswordVisible;

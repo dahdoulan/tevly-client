@@ -11,7 +11,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   DateTime? _selectedBirthdate;
   bool _isPasswordVisible = false;
@@ -66,7 +67,8 @@ class _SignupPageState extends State<SignupPage> {
         child: SingleChildScrollView(
           child: Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08), // Responsive padding
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.08), // Responsive padding
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -75,24 +77,31 @@ class _SignupPageState extends State<SignupPage> {
                   // Logo
                   SizedBox(
                     height: screenHeight * 0.15, // Adjust logo size dynamically
-                    child: Image.asset('lib/assets/logo.jpg', fit: BoxFit.contain),
+                    child:
+                        Image.asset('lib/assets/logo.jpg', fit: BoxFit.contain),
                   ),
                   SizedBox(height: screenHeight * 0.05),
 
                   // Email Field
-                  _buildTextField(_emailController, "Email", Icons.email, false),
+                  _buildTextField(
+                      _emailController, "Email", Icons.email, false),
                   SizedBox(height: screenHeight * 0.02),
 
                   // Username Field
-                  _buildTextField(_usernameController, "Username", Icons.person, false),
+                  _buildTextField(
+                      _usernameController, "Username", Icons.person, false),
                   SizedBox(height: screenHeight * 0.02),
 
                   // Password Field
-                  _buildTextField(_passwordController, "Password", Icons.lock, true, isPasswordField: true),
+                  _buildTextField(
+                      _passwordController, "Password", Icons.lock, true,
+                      isPasswordField: true),
                   SizedBox(height: screenHeight * 0.02),
 
                   // Confirm Password Field
-                  _buildTextField(_confirmPasswordController, "Confirm Password", Icons.lock, true, isConfirmPassword: true),
+                  _buildTextField(_confirmPasswordController,
+                      "Confirm Password", Icons.lock, true,
+                      isConfirmPassword: true),
                   SizedBox(height: screenHeight * 0.02),
 
                   // Birthdate Picker
@@ -100,14 +109,16 @@ class _SignupPageState extends State<SignupPage> {
                   SizedBox(height: screenHeight * 0.02),
 
                   // Phone Number Field
-                  _buildTextField(_phoneController, "Phone Number", Icons.phone, false, keyboardType: TextInputType.phone),
+                  _buildTextField(
+                      _phoneController, "Phone Number", Icons.phone, false,
+                      keyboardType: TextInputType.phone),
                   SizedBox(height: screenHeight * 0.03),
 
                   // Signup Button
                   SizedBox(
                     width: double.infinity,
                     height: screenHeight * 0.06,
-                   /* child: ElevatedButton(
+                    /* child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
                       onPressed: _isLoading ? null : _signup,
                       child: _isLoading
@@ -121,10 +132,12 @@ class _SignupPageState extends State<SignupPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Already have an account?", style: TextStyle(color: Colors.white)),
+                      Text("Already have an account?",
+                          style: TextStyle(color: Colors.white)),
                       TextButton(
                         onPressed: () => Navigator.pushNamed(context, '/login'),
-                        child: Text("Login", style: TextStyle(color: Colors.yellow)),
+                        child: Text("Login",
+                            style: TextStyle(color: Colors.yellow)),
                       ),
                     ],
                   ),
@@ -149,7 +162,8 @@ class _SignupPageState extends State<SignupPage> {
   }) {
     return TextField(
       controller: controller,
-      obscureText: (isPasswordField && !_isPasswordVisible) || (isConfirmPassword && !_isConfirmPasswordVisible),
+      obscureText: (isPasswordField && !_isPasswordVisible) ||
+          (isConfirmPassword && !_isConfirmPasswordVisible),
       keyboardType: keyboardType,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -178,7 +192,9 @@ class _SignupPageState extends State<SignupPage> {
             : isConfirmPassword
                 ? IconButton(
                     icon: Icon(
-                      _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isConfirmPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.white,
                     ),
                     onPressed: () {
