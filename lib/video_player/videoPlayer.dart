@@ -25,7 +25,7 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   }
 
   Future<void> _initializePlayer(String url) async {
-    _videoController = VideoPlayerController.network(url);
+    _videoController = VideoPlayerController.networkUrl(Uri.parse(url));
     await _videoController.initialize();
     _chewieController = ChewieController(
       videoPlayerController: _videoController,
@@ -33,8 +33,8 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
       looping: false,
       showControls: true,
       showOptions: true ,
+      allowFullScreen: true,
       customControls: const MaterialControls(),
-      fullScreenByDefault: Theme.of(context).platform == TargetPlatform.android,
       additionalOptions: (context) => _buildResolutionOptions(),
     );
     if (mounted) setState(() {});
@@ -66,7 +66,6 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
           ? Stack(
               children: [
                 Chewie(controller: _chewieController!),
-                 
               ],
             )
           : const Center(child: CircularProgressIndicator()),

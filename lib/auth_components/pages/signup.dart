@@ -53,7 +53,7 @@ class _SignupPageState extends State<SignupPage> {
 
     if (response.statusCode == 202) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signup Successful")));
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/verification');
                  Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
 
     } else {

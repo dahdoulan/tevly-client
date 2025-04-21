@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
-      Navigator.pushReplacementNamed(context, '/signup');
+      Navigator.pushReplacementNamed(context, '/signup');   //todo: make navigation dynamic
       final responseData = jsonDecode(response.body);
       _token = responseData['token'].toString().trim();      
       Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _isLoading ? null : _login,
                       child: _isLoading
                           ? CircularProgressIndicator(color: Colors.white)
-                          : Text("Login", style: TextStyle(color: Colors.white)),
+                          : Text("Log in", style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.04),
