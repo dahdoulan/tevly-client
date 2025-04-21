@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -9,36 +13,37 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   DateTime? _selectedBirthdate;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
 
-  /*Future<void> _signup() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
+  Future<void> _signup() async {
+  /*  if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Passwords do not match")));
       return;
-    }
+    }*/
 
     setState(() {
       _isLoading = true;
     });
 
-    final url = Uri.parse('http://your-backend-url.com/api/auth/signup'); // Replace with actual backend URL
+    final url = Uri.parse(ApiConstants.signup); // Replace with actual backend URL
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
+        'firstname': _firstnameController.text,
+        'lastname': _lastnameController.text,
         'email': _emailController.text,
-        'username': _usernameController.text,
         'password': _passwordController.text,
-        'birthdate': _selectedBirthdate?.toIso8601String(),
-        'phone': _phoneController.text,
+        'dateOfBirth': _selectedBirthdate?.toIso8601String(),
+       /* 'phone': _phoneController.text,*/
       }),
     );
 
@@ -46,14 +51,19 @@ class _SignupPageState extends State<SignupPage> {
       _isLoading = false;
     });
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 202) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signup Successful")));
       Navigator.pushReplacementNamed(context, '/login');
+                 Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signup Failed")));
+                Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
+
+
     }
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -82,15 +92,25 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: screenHeight * 0.05),
 
+                
+                  // Firstname Field
+                  _buildTextField(
+                      _firstnameController, "Firstname", Icons.person, false),
+                  SizedBox(height: screenHeight * 0.02),
+
+
+                     // Lastname Field
+                   _buildTextField(
+                      _lastnameController, "Lastname", Icons.person, false),
+                  SizedBox(height: screenHeight * 0.02),
+
+
                   // Email Field
                   _buildTextField(
                       _emailController, "Email", Icons.email, false),
                   SizedBox(height: screenHeight * 0.02),
 
-                  // Username Field
-                  _buildTextField(
-                      _usernameController, "Username", Icons.person, false),
-                  SizedBox(height: screenHeight * 0.02),
+
 
                   // Password Field
                   _buildTextField(
@@ -99,32 +119,35 @@ class _SignupPageState extends State<SignupPage> {
                   SizedBox(height: screenHeight * 0.02),
 
                   // Confirm Password Field
-                  _buildTextField(_confirmPasswordController,
+                 /* _buildTextField(_confirmPasswordController,
                       "Confirm Password", Icons.lock, true,
                       isConfirmPassword: true),
-                  SizedBox(height: screenHeight * 0.02),
+                  SizedBox(height: screenHeight * 0.02),*/
 
                   // Birthdate Picker
                   _buildDatePicker(),
                   SizedBox(height: screenHeight * 0.02),
 
                   // Phone Number Field
-                  _buildTextField(
+                 /* _buildTextField(
                       _phoneController, "Phone Number", Icons.phone, false,
                       keyboardType: TextInputType.phone),
-                  SizedBox(height: screenHeight * 0.03),
+                  SizedBox(height: screenHeight * 0.03),*/
 
                   // Signup Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: screenHeight * 0.06,
-                    /* child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-                      onPressed: _isLoading ? null : _signup,
-                      child: _isLoading
-                          ? CircularProgressIndicator(color: Colors.white)
-                          : Text("Sign Up", style: TextStyle(color: Colors.white)),
-                    ),*/
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: screenHeight * 0.06,
+                       child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 205, 189, 43)),
+                        onPressed: _isLoading ? null : _signup,
+                        child: _isLoading
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text("Sign Up", style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
                   ),
                   SizedBox(height: screenHeight * 0.04),
 
@@ -160,102 +183,112 @@ class _SignupPageState extends State<SignupPage> {
     bool isConfirmPassword = false,
     TextInputType keyboardType = TextInputType.text,
   }) {
-    return TextField(
-      controller: controller,
-      obscureText: (isPasswordField && !_isPasswordVisible) ||
-          (isConfirmPassword && !_isConfirmPasswordVisible),
-      keyboardType: keyboardType,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.white),
-        border: OutlineInputBorder(),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+    return Container(
+     width: kIsWeb
+    ? MediaQuery.of(context).size.width * 0.4
+    : MediaQuery.of(context).size.width * 0.6,
+
+      child: TextField(
+        controller: controller,
+        obscureText: (isPasswordField && !_isPasswordVisible) ||
+            (isConfirmPassword && !_isConfirmPasswordVisible),
+        keyboardType: keyboardType,
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.white),
+          border: OutlineInputBorder(),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellow),
+          ),
+          prefixIcon: Icon(icon, color: Colors.white),
+          suffixIcon: isPasswordField
+              ? IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                )
+              : isConfirmPassword
+                  ? IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                        });
+                      },
+                    )
+                  : null,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.yellow),
-        ),
-        prefixIcon: Icon(icon, color: Colors.white),
-        suffixIcon: isPasswordField
-            ? IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-              )
-            : isConfirmPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isConfirmPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
       ),
     );
   }
-
-  Widget _buildDatePicker() {
-    return GestureDetector(
-      onTap: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
-          initialDate: DateTime(2000),
-          firstDate: DateTime(1900),
-          lastDate: DateTime.now(),
-          builder: (context, child) {
-            return Theme(
-              data: ThemeData.dark().copyWith(
-                colorScheme: ColorScheme.dark(
-                  primary: Colors.yellow,
-                  surface: Colors.black,
-                  onSurface: Colors.white,
-                ),
-                dialogBackgroundColor: Colors.black,
+Widget _buildDatePicker() {
+  return GestureDetector(
+    onTap: () async {
+      DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime(2000),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+        builder: (context, child) {
+          return Theme(
+            data: ThemeData.dark().copyWith(
+              colorScheme: const ColorScheme.dark(
+                primary: Colors.yellow,
+                surface: Colors.black,
+                onSurface: Colors.white,
               ),
-              child: child!,
-            );
-          },
-        );
-
-        if (pickedDate != null) {
-          setState(() {
-            _selectedBirthdate = pickedDate;
-          });
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              _selectedBirthdate == null
-                  ? "Select Birthdate"
-                  : "${_selectedBirthdate!.day}/${_selectedBirthdate!.month}/${_selectedBirthdate!.year}",
-              style: TextStyle(color: Colors.white),
+              dialogBackgroundColor: Colors.black,
             ),
-            Icon(Icons.calendar_today, color: Colors.white),
-          ],
-        ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedDate != null) {
+        setState(() {
+          _selectedBirthdate = pickedDate;
+        });
+      }
+    },
+    child: Container(
+     width: kIsWeb
+    ? MediaQuery.of(context).size.width * 0.4
+    : MediaQuery.of(context).size.width * 0.6,
+
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white),
+        borderRadius: BorderRadius.circular(5),
       ),
-    );
-  }
+      child: Row(
+        children: [
+          Icon(Icons.calendar_today, color: Colors.white),
+          SizedBox(width: 12),
+          Text(
+            _selectedBirthdate == null
+                ? "Select Birthdate"
+                : "${_selectedBirthdate!.day}/${_selectedBirthdate!.month}/${_selectedBirthdate!.year}",
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 }
