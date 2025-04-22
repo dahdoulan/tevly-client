@@ -14,7 +14,7 @@ class UniversalVideoPlayer extends StatefulWidget {
 class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   late VideoPlayerController _videoController;
   ChewieController? _chewieController;
-  String _currentResolution = '1080p';
+  String _currentResolution = 'Full HD';
   bool _isMuted = false;
   bool _showControls = true;
 
@@ -22,7 +22,7 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   void initState() {
     super.initState();
     _initializePlayer(widget.resolutionUrls[_currentResolution]!);
-  }
+  } 
 
   Future<void> _initializePlayer(String url) async {
     _videoController = VideoPlayerController.networkUrl(Uri.parse(url));
@@ -44,7 +44,7 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
     return widget.resolutionUrls.keys.map((res) {
       return OptionItem(
         onTap: (context) => _changeResolution(context, res),
-        iconData: Icons.hd,
+        iconData: Icons.hd_rounded,
         title: res,
       );
     }).toList();

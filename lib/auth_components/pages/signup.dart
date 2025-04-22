@@ -65,227 +65,235 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      body: Container(
-        width: screenWidth,
-        height: screenHeight,
-        color: Colors.black, // Dark theme
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.secondary,
+          ],
+        ),
+      ),
+      child: Center(
         child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.08), // Responsive padding
-              child: Column(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset(
+                    'lib/assets/logo.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              
+              _buildTextField(_firstnameController, "First Name", Icons.person_outline, false),
+              const SizedBox(height: 20),
+              
+              _buildTextField(_lastnameController, "Last Name", Icons.person_outline, false),
+              const SizedBox(height: 20),
+              
+              _buildTextField(_emailController, "Email", Icons.email_outlined, false),
+              const SizedBox(height: 20),
+              
+              _buildTextField(_passwordController, "Password", Icons.lock_outline, true),
+              const SizedBox(height: 20),
+              
+              _buildDatePicker(),
+              const SizedBox(height: 30),
+              
+              _buildSignUpButton(),
+              const SizedBox(height: 20),
+              
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: screenHeight * 0.1),
-
-                  // Logo
-                  SizedBox(
-                    height: screenHeight * 0.15, // Adjust logo size dynamically
-                    child:
-                        Image.asset('lib/assets/logo.jpg', fit: BoxFit.contain),
+                  Text(
+                    "Already have an account? ",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
-                  SizedBox(height: screenHeight * 0.05),
-
-                
-                  // Firstname Field
-                  _buildTextField(
-                      _firstnameController, "Firstname", Icons.person, false),
-                  SizedBox(height: screenHeight * 0.02),
-
-
-                     // Lastname Field
-                   _buildTextField(
-                      _lastnameController, "Lastname", Icons.person, false),
-                  SizedBox(height: screenHeight * 0.02),
-
-
-                  // Email Field
-                  _buildTextField(
-                      _emailController, "Email", Icons.email, false),
-                  SizedBox(height: screenHeight * 0.02),
-
-
-
-                  // Password Field
-                  _buildTextField(
-                      _passwordController, "Password", Icons.lock, true,
-                      isPasswordField: true),
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Confirm Password Field
-                 /* _buildTextField(_confirmPasswordController,
-                      "Confirm Password", Icons.lock, true,
-                      isConfirmPassword: true),
-                  SizedBox(height: screenHeight * 0.02),*/
-
-                  // Birthdate Picker
-                  _buildDatePicker(),
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Phone Number Field
-                 /* _buildTextField(
-                      _phoneController, "Phone Number", Icons.phone, false,
-                      keyboardType: TextInputType.phone),
-                  SizedBox(height: screenHeight * 0.03),*/
-
-                  // Signup Button
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: screenHeight * 0.06,
-                       child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 205, 189, 43)),
-                        onPressed: _isLoading ? null : _signup,
-                        child: _isLoading
-                            ? CircularProgressIndicator(color: Colors.white)
-                            : Text("Sign Up", style: TextStyle(color: Colors.white)),
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/login'),
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  SizedBox(height: screenHeight * 0.04),
-
-                  // Login Link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account?",
-                          style: TextStyle(color: Colors.white)),
-                      TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/login'),
-                        child: Text("Login",
-                            style: TextStyle(color: Colors.yellow)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.05),
                 ],
               ),
-            ),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildTextField(
-    TextEditingController controller,
-    String label,
-    IconData icon,
-    bool isPassword, {
-    bool isPasswordField = false,
-    bool isConfirmPassword = false,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Container(
-     width: kIsWeb
-    ? MediaQuery.of(context).size.width * 0.4
-    : MediaQuery.of(context).size.width * 0.6,
-
-      child: TextField(
-        controller: controller,
-        obscureText: (isPasswordField && !_isPasswordVisible) ||
-            (isConfirmPassword && !_isConfirmPasswordVisible),
-        keyboardType: keyboardType,
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
-          border: OutlineInputBorder(),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+Widget _buildTextField(
+  TextEditingController controller,
+  String hintText,
+  IconData icon,
+  bool isPassword,
+) {
+  return Container(
+    width: kIsWeb
+        ? MediaQuery.of(context).size.width * 0.4
+        : MediaQuery.of(context).size.width * 0.8,
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: TextFormField(
+      controller: controller,
+      obscureText: isPassword && !_isPasswordVisible,
+      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+        ),
+        prefixIcon: Icon(
+          icon,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              )
+            : null,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.yellow),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 2,
           ),
-          prefixIcon: Icon(icon, color: Colors.white),
-          suffixIcon: isPasswordField
-              ? IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                )
-              : isConfirmPassword
-                  ? IconButton(
-                      icon: Icon(
-                        _isConfirmPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                        });
-                      },
-                    )
-                  : null,
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 Widget _buildDatePicker() {
-  return GestureDetector(
-    onTap: () async {
-      DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime(2000),
-        firstDate: DateTime(1900),
-        lastDate: DateTime.now(),
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.dark().copyWith(
-              colorScheme: const ColorScheme.dark(
-                primary: Colors.yellow,
-                surface: Colors.black,
-                onSurface: Colors.white,
+  return Container(
+    width: kIsWeb
+        ? MediaQuery.of(context).size.width * 0.4
+        : MediaQuery.of(context).size.width * 0.8,
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: GestureDetector(
+      onTap: () async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: _selectedBirthdate ?? DateTime(2000),
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: Theme.of(context).colorScheme.secondary,
+                ),
               ),
-              dialogBackgroundColor: Colors.black,
-            ),
-            child: child!,
-          );
-        },
-      );
-
-      if (pickedDate != null) {
-        setState(() {
-          _selectedBirthdate = pickedDate;
-        });
-      }
-    },
-    child: Container(
-     width: kIsWeb
-    ? MediaQuery.of(context).size.width * 0.4
-    : MediaQuery.of(context).size.width * 0.6,
-
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.calendar_today, color: Colors.white),
-          SizedBox(width: 12),
-          Text(
-            _selectedBirthdate == null
-                ? "Select Birthdate"
-                : "${_selectedBirthdate!.day}/${_selectedBirthdate!.month}/${_selectedBirthdate!.year}",
-            style: TextStyle(color: Colors.white),
+              child: child!,
+            );
+          },
+        );
+        if (picked != null && picked != _selectedBirthdate) {
+          setState(() {
+            _selectedBirthdate = picked;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
-        ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.calendar_today,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              _selectedBirthdate == null
+                  ? 'Select Birthdate'
+                  : '${_selectedBirthdate!.day}/${_selectedBirthdate!.month}/${_selectedBirthdate!.year}',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildSignUpButton() {
+  return SizedBox(
+    width: kIsWeb
+        ? MediaQuery.of(context).size.width * 0.4
+        : MediaQuery.of(context).size.width * 0.8,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _signup,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: _isLoading
+            ? const CircularProgressIndicator()
+            : Text(
+                'Sign Up',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
+              ),
       ),
     ),
   );

@@ -43,8 +43,8 @@ dependencies:
   chewie: ^1.11.3  
   video_player: ^2.9.5
   universal_html: ^2.2.1
-  file_picker: ^10.1.2
-    
+   
+     
 dev_dependencies:
   flutter_test:
     sdk: flutter

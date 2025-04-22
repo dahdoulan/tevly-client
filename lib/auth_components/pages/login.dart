@@ -53,89 +53,98 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
+   @override
+   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: screenWidth,
-        height: screenHeight,
-        color: Colors.black, // Background color
-        child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.08), // Responsive padding
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: screenHeight * 0.1),
-                  
-                  // Logo
-                  SizedBox(
-                    height: screenHeight * 0.15, // Adjust logo size dynamically
-                    child:
-                        Image.asset('lib/assets/logo.jpg', fit: BoxFit.contain),
-                  ),
-                  SizedBox(height: screenHeight * 0.05),
-
-                  // Email Field
-                  _buildTextField(
-                      _emailController, "Email", Icons.email, false),
-                  SizedBox(height: screenHeight * 0.02),
-
-                  // Password Field
-                  _buildTextField(
-                      _passwordController, "Password", Icons.lock, true),
-                  SizedBox(height: screenHeight * 0.01),
-
-                  // Forgot Password
-                  Align(
-                    alignment: Alignment.centerRight/2,
-                    child: TextButton(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/forgot-password'),
-                      child: Text("Forgot Password?",
-                          style: TextStyle(color: Colors.yellow)),
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.03),
-
-                  // Login Button
-                  SizedBox(
-                    width: kIsWeb
-                        ? MediaQuery.of(context).size.width * 0.4
-                        : MediaQuery.of(context).size.width * 0.6,
-                    height: screenHeight * 0.06,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 205, 189, 43)),
-                      onPressed: _isLoading ? null : _login,
-                      child: _isLoading
-                          ? CircularProgressIndicator(color: Colors.white)
-                          : Text("Log in", style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.04),
-
-                  // Signup Link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Don't have an account?",
-                          style: TextStyle(color: Colors.white)),
-                      TextButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/signup'),
-                        child: Text("Sign Up",
-                            style: TextStyle(color: Colors.yellow)),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.secondary,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Replace Icon with Image
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    // Optional: add a subtle shadow
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
                       ),
                     ],
                   ),
-                  SizedBox(height: screenHeight * 0.05),
-                ],
-              ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      'lib/assets/logo.jpg', // Replace with your image path
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+                _buildTextField(_emailController, "Email", Icons.email_outlined, false),
+                const SizedBox(height: 20),
+                _buildTextField(_passwordController, "Password", Icons.lock_outline, true),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: kIsWeb
+                          ? MediaQuery.of(context).size.width * 0.3
+                          : MediaQuery.of(context).size.width * 0.1,
+                    ),
+                    child: TextButton(
+                      onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildLoginButton(),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pushNamed(context, '/signup'),
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -143,37 +152,36 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label,
-      IconData icon, bool isPassword) {
+ Widget _buildTextField(
+    TextEditingController controller,
+    String hintText,
+    IconData icon,
+    bool isPassword,
+  ) {
     return Container(
       width: kIsWeb
-        ? MediaQuery.of(context).size.width * 0.4
-        : MediaQuery.of(context).size.width * 0.6,
-
-      child: TextField(
+          ? MediaQuery.of(context).size.width * 0.4
+          : MediaQuery.of(context).size.width * 0.8,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: TextFormField(
         controller: controller,
         obscureText: isPassword && !_isPasswordVisible,
-        keyboardType:
-            isPassword ? TextInputType.text : TextInputType.emailAddress,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
-          border: OutlineInputBorder(),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.yellow),
+          prefixIcon: Icon(
+            icon,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
-          prefixIcon: Icon(icon, color: Colors.white),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.white),
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                   onPressed: () {
                     setState(() {
                       _isPasswordVisible = !_isPasswordVisible;
@@ -181,6 +189,48 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 )
               : null,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
+Widget _buildLoginButton() {
+    return SizedBox(
+      width: kIsWeb
+          ? MediaQuery.of(context).size.width * 0.4
+          : MediaQuery.of(context).size.width * 0.8,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ElevatedButton(
+          onPressed: _isLoading ? null : _login,
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: _isLoading
+              ? const CircularProgressIndicator()
+              : Text(
+                  'Login',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ),
         ),
       ),
     );

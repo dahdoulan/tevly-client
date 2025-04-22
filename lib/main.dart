@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/auth_components/pages/forgotPassword.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verificationPage.dart';
@@ -30,10 +31,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
-home: VerificationPage(),/* const UniversalVideoPlayer(
+home: VerificationPage(), /*const UniversalVideoPlayer(
   resolutionUrls: {
-    '1080p':'https://example,
-    '720p': 'https://example',
+    'Full HD':'http://192.168.1.15:8000/stream2.mp4',
+    'HD': 'http://192.168.1.15:8000/stream.mp4',
   }, 
 ),*/
       routes: {
@@ -42,7 +43,7 @@ home: VerificationPage(),/* const UniversalVideoPlayer(
         '/login': (context) => LoginPage(),
         '/upload': (context) => const UploadPage(),
         '/verification': (context) => VerificationPage(),
-        
+        '/forgot-password': (context) => const ForgotPasswordPage(),
         // '/home': (context) => HomePage(),
       },
     );
