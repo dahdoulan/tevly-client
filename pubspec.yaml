@@ -40,11 +40,13 @@ dependencies:
   dotted_border: ^2.1.0
   http_parser: ^4.0.0
   provider: ^6.1.4
-  chewie: ^1.11.3  
+  chewie: ^1.11.3
   video_player: ^2.9.5
   universal_html: ^2.2.1
-   
-     
+  file_picker: ^10.1.2
+  cached_network_image: ^3.2.3  # For image caching
+  carousel_slider: ^4.2.1  # For carousels
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

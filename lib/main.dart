@@ -7,11 +7,15 @@ import 'package:tevly_client/auth_components/pages/verificationPage.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/videoPlayer.dart';
 import 'upload_component/providers/video_provider.dart';
+import 'home_component/providers/movie_provider.dart';
+import 'home_component/screens/home_screen.dart';
+import 'home_component/screens/movie_details_screen.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => MovieProvider()),
         ChangeNotifierProvider(create: (_) => VideoUploadProvider()),
       ],
       builder: (context, child) => const MyApp(),
@@ -35,20 +39,21 @@ home: VerificationPage(), /*const UniversalVideoPlayer(
   resolutionUrls: {
     'Full HD':'http://192.168.1.15:8000/stream2.mp4',
     'HD': 'http://192.168.1.15:8000/stream.mp4',
-  }, 
+  },
 ),*/
       routes: {
         '/signup': (context) => SignupPage(),
         '/login': (context) => LoginPage(),
         '/upload': (context) => const UploadPage(),
+        '/home': (context) => HomeScreen(),
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
         // '/home': (context) => HomePage(),
         /* '/video-player': (context) => const UniversalVideoPlayer(
           resolutionUrls: {
-            'Full HD': 'http:// 
+            'Full HD': 'http://
             'HD': 'http://
-            
+
             */
       },
     );
