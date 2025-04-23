@@ -19,10 +19,27 @@ class _LoginPageState extends State<LoginPage> {
   String _token = "";
 
   Future<void> _login() async {
-    setState(() {
-      _isLoading = true;
-    });
+  // Form validation
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
 
+  if (!emailRegex.hasMatch(_emailController.text)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Please enter a valid email address'))
+    );
+    return;
+  }
+
+  if (!passwordRegex.hasMatch(_passwordController.text)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Invalid password format'))
+    );
+    return;
+  }
+
+  setState(() {
+    _isLoading = true;
+  });
     final url = Uri.parse(ApiConstants.login);
 
     final response = await http.post(
@@ -152,60 +169,98 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
- Widget _buildTextField(
-    TextEditingController controller,
-    String hintText,
-    IconData icon,
-    bool isPassword,
-  ) {
-    return Container(
-      width: kIsWeb
-          ? MediaQuery.of(context).size.width * 0.4
-          : MediaQuery.of(context).size.width * 0.8,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextFormField(
-        controller: controller,
-        obscureText: isPassword && !_isPasswordVisible,
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-          ),
-          prefixIcon: Icon(
-            icon,
+Widget _buildTextField(
+  TextEditingController controller,
+  String hintText,
+  IconData icon,
+  bool isPassword,
+) {
+  // Regex patterns
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
+
+  String? getErrorText(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+
+    if (hintText == "Email" && !emailRegex.hasMatch(value)) {
+      return 'Enter a valid email address';
+    }
+
+    if (hintText == "Password" && !passwordRegex.hasMatch(value)) {
+      return 'Min 8 chars, 1 uppercase, 1 symbol, 1 number';
+    }
+
+    return null;
+  }
+
+  return Container(
+    width: kIsWeb
+        ? MediaQuery.of(context).size.width * 0.4
+        : MediaQuery.of(context).size.width * 0.8,
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: TextFormField(
+      controller: controller,
+      obscureText: isPassword && !_isPasswordVisible,
+      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => getErrorText(value),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+        ),
+        prefixIcon: Icon(
+          icon,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              )
+            : null,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          suffixIcon: isPassword
-              ? IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                )
-              : null,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 2,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
           ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 Widget _buildLoginButton() {
     return SizedBox(
       width: kIsWeb

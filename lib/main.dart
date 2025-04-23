@@ -38,13 +38,18 @@ home: VerificationPage(), /*const UniversalVideoPlayer(
   }, 
 ),*/
       routes: {
-        // '/forgot-password': (context) => ForgotPasswordPage(),
         '/signup': (context) => SignupPage(),
         '/login': (context) => LoginPage(),
         '/upload': (context) => const UploadPage(),
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
         // '/home': (context) => HomePage(),
+        /* '/video-player': (context) => const UniversalVideoPlayer(
+          resolutionUrls: {
+            'Full HD': 'http:// 
+            'HD': 'http://
+            
+            */
       },
     );
   }

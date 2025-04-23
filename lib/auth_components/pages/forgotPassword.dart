@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/ApiConstants.dart';
-import '../../commons/constants/api_constants.dart';
 import '../../commons/logger/logger.dart';
 
 class ForgotPasswordPage extends StatefulWidget {

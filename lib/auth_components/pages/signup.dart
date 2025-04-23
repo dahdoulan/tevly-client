@@ -20,20 +20,61 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _phoneController = TextEditingController();
   DateTime? _selectedBirthdate;
   bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
 
   Future<void> _signup() async {
-  /*  if (_passwordController.text != _confirmPasswordController.text) {
+  // Form validation
+  bool isValid = true;
+  String errorMessage = '';
+
+  // Validate first name
+  if (!RegExp(r'^[a-zA-Z]{1,12}$').hasMatch(_firstnameController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid first name';
+  }
+  // Validate last name
+  else if (!RegExp(r'^[a-zA-Z]{1,12}$').hasMatch(_lastnameController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid last name';
+  }
+  // Validate email
+  else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid email address';
+  }
+  // Validate password
+  else if (!RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$')
+      .hasMatch(_passwordController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid password format';
+  }
+  // Validate phone number
+  else if (!RegExp(r'^\+?[\d-]{10,}$').hasMatch(_phoneController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid phone number';
+  }
+  // Check if passwords match
+  else if (_passwordController.text != _confirmPasswordController.text) {
+    isValid = false;
+    errorMessage = 'Passwords do not match';
+  }
+
+  if (!isValid) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(errorMessage))
+    );
+    return;
+  }
+   if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Passwords do not match")));
       return;
-    }*/
+    }
 
     setState(() {
       _isLoading = true;
     });
 
-    final url = Uri.parse(ApiConstants.signup); // Replace with actual backend URL
+    final url = Uri.parse(ApiConstants.signup); 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -118,7 +159,13 @@ Widget build(BuildContext context) {
               
               _buildTextField(_passwordController, "Password", Icons.lock_outline, true),
               const SizedBox(height: 20),
+
+              _buildTextField(_confirmPasswordController, "Confirm Password", Icons.lock_outline, true),
+              const SizedBox(height: 20),
               
+              _buildTextField(_phoneController, "Phone Number", Icons.phone_outlined, false),
+              const SizedBox(height: 20),
+
               _buildDatePicker(),
               const SizedBox(height: 30),
               
@@ -160,6 +207,44 @@ Widget _buildTextField(
   IconData icon,
   bool isPassword,
 ) {
+  // Regex patterns
+  final nameRegex = RegExp(r'^[a-zA-Z]{1,12}$');
+  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final phoneRegex = RegExp(r'^\+?[\d-]{10,}$');
+
+  String? getErrorText(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+
+    switch (hintText) {
+      case "First Name":
+      case "Last Name":
+        if (!nameRegex.hasMatch(value)) {
+          return 'Only letters allowed, max 12 characters';
+        }
+        break;
+      case "Password":
+      case "Confirm Password":
+        if (!passwordRegex.hasMatch(value)) {
+          return 'Min 8 chars, 1 uppercase, 1 symbol';
+        }
+        break;
+      case "Email":
+        if (!emailRegex.hasMatch(value)) {
+          return 'Enter a valid email address';
+        }
+        break;
+      case "Phone Number":
+        if (!phoneRegex.hasMatch(value)) {
+          return 'Enter a valid phone number';
+        }
+        break;
+    }
+    return null;
+  }
+
   return Container(
     width: kIsWeb
         ? MediaQuery.of(context).size.width * 0.4
@@ -169,6 +254,8 @@ Widget _buildTextField(
       controller: controller,
       obscureText: isPassword && !_isPasswordVisible,
       style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) => getErrorText(value),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
@@ -204,11 +291,26 @@ Widget _buildTextField(
           ),
           borderRadius: BorderRadius.circular(10),
         ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.error,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorStyle: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+        ),
       ),
     ),
   );
 }
-
 Widget _buildDatePicker() {
   return Container(
     width: kIsWeb

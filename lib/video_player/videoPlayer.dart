@@ -15,8 +15,7 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   late VideoPlayerController _videoController;
   ChewieController? _chewieController;
   String _currentResolution = 'Full HD';
-  bool _isMuted = false;
-  bool _showControls = true;
+  
 
   @override
   void initState() {

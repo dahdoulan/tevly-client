@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/ApiConstants.dart';
-import '../../commons/constants/api_constants.dart';
 import '../../commons/logger/logger.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -17,46 +16,48 @@ class _VerificationPageState extends State<VerificationPage> {
   final TextEditingController _verificationController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
+  String text="";
 
-  Future<void> _verifyCode() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+Future<void> _verifyCode() async {
+  setState(() {
+    _isLoading = true;
+    _errorMessage = null;
+    String text;
+  });
 
-    try {
-      final response = await http.get(
-        Uri.parse(ApiConstants.verifyEmail),
-        headers: {
-          'Content-Type': 'application/json',
-          'verification': _verificationController.text.trim(),
-        },
-      );
-
-      if (!mounted) return;
-
-      if (response.statusCode == 200) {
-        final token = jsonDecode(response.body)['token'];
-        // Store token in secure storage or state management solution
+   try {
+     final url = Uri.parse(ApiConstants.verifyEmail).replace(queryParameters: {
+      'token': _verificationController.text,}); 
+     final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'token': _verificationController.text ,
         
-        Navigator.pushReplacementNamed(context, '/login');
-      } else {
-        setState(() {
-          _errorMessage = 'Invalid verification code. Please try again.';
-        });
-      }
-    } catch (e) {
-      Logger.debug('Verification error: $e');
+      }),
+    );
+    if (!mounted) return;
+    Logger.debug(response.body.toString());
+    if (response.statusCode == 200) {
+      Logger.debug(response.statusCode.toString());
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
       setState(() {
-        _errorMessage = 'An error occurred. Please try again.';
+        _errorMessage = 'Invalid verification code. Please try again.';
+        Logger.debug(response.statusCode.toString());
+ 
       });
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+    }
+  } catch (e) {
+    setState(() {
+      _errorMessage = 'An error occurred. Please try again.';
+    });
+  } finally {
+    if (mounted) {
+      setState(() => _isLoading = false);
     }
   }
-
+}
   @override
   void dispose() {
     _verificationController.dispose();
@@ -116,7 +117,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     ),
                   ),
                 const SizedBox(height: 20),
-                _buildVerifyButton(),
+                _buildVerifyButton("Verify"),
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
@@ -128,6 +129,11 @@ class _VerificationPageState extends State<VerificationPage> {
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
+                ),TextButton(
+                  onPressed: () {
+           Navigator.pushReplacementNamed(context, '/signup');
+                  },
+                  child:_buildVerifyButton("Go back to signup"),
                 ),
               ],
             ),
@@ -144,6 +150,7 @@ class _VerificationPageState extends State<VerificationPage> {
           : MediaQuery.of(context).size.width * 0.8,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
+        keyboardType: TextInputType.number,
         controller: _verificationController,
         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         decoration: InputDecoration(
@@ -173,7 +180,7 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
-  Widget _buildVerifyButton() {
+  Widget _buildVerifyButton(String text) {
     return SizedBox(
       width: kIsWeb
           ? MediaQuery.of(context).size.width * 0.4
@@ -192,7 +199,7 @@ class _VerificationPageState extends State<VerificationPage> {
           child: _isLoading
               ? const CircularProgressIndicator()
               : Text(
-                  'Verify',
+                  text,
                   style: TextStyle(
                     fontSize: 18,
                     color: Theme.of(context).colorScheme.onSecondary,
