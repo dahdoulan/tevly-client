@@ -14,18 +14,17 @@ class UniversalVideoPlayer extends StatefulWidget {
 class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   late VideoPlayerController _videoController;
   ChewieController? _chewieController;
-  String _currentResolution = '1080p';
-  bool _isMuted = false;
-  bool _showControls = true;
+  String _currentResolution = 'Full HD';
+  
 
   @override
   void initState() {
     super.initState();
     _initializePlayer(widget.resolutionUrls[_currentResolution]!);
-  }
+  } 
 
   Future<void> _initializePlayer(String url) async {
-    _videoController = VideoPlayerController.network(url);
+    _videoController = VideoPlayerController.networkUrl(Uri.parse(url));
     await _videoController.initialize();
     _chewieController = ChewieController(
       videoPlayerController: _videoController,
@@ -33,8 +32,8 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
       looping: false,
       showControls: true,
       showOptions: true ,
+      allowFullScreen: true,
       customControls: const MaterialControls(),
-      fullScreenByDefault: Theme.of(context).platform == TargetPlatform.android,
       additionalOptions: (context) => _buildResolutionOptions(),
     );
     if (mounted) setState(() {});
@@ -44,7 +43,7 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
     return widget.resolutionUrls.keys.map((res) {
       return OptionItem(
         onTap: (context) => _changeResolution(context, res),
-        iconData: Icons.hd,
+        iconData: Icons.hd_rounded,
         title: res,
       );
     }).toList();
@@ -66,7 +65,6 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
           ? Stack(
               children: [
                 Chewie(controller: _chewieController!),
-                 
               ],
             )
           : const Center(child: CircularProgressIndicator()),
