@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 class LoginPage extends StatefulWidget {
+  String get token => "";
+
+  set tokenGetter(String tokenGetter) {}
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -16,59 +21,45 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isLoading = false;
-  String _token = "";
+  String token = "";
 
-  Future<void> _login() async {
-  // Form validation
-  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
+    get tokenGetter => token;
 
-  if (!emailRegex.hasMatch(_emailController.text)) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please enter a valid email address'))
-    );
-    return;
-  }
-
-  if (!passwordRegex.hasMatch(_passwordController.text)) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Invalid password format'))
-    );
-    return;
-  }
-
+ Future<void> _login() async {
   setState(() {
     _isLoading = true;
   });
-    final url = Uri.parse(ApiConstants.login);
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': _emailController.text,
-        'password': _passwordController.text,
-      }),
-    );
+  final url = Uri.parse(ApiConstants.login);
 
-    setState(() {
-      _isLoading = false;
-    });
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'email': _emailController.text,
+      'password': _passwordController.text,
+    }),
+  );
 
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
-      Navigator.pushReplacementNamed(context, '/signup');   //todo: make navigation dynamic
-      final responseData = jsonDecode(response.body);
-      _token = responseData['token'].toString().trim();      
-      Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
-      Logger.debug('Token: $_token');
+  setState(() {
+    _isLoading = false;
+  });
 
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
-      
-      Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
-    }
+  if (response.statusCode == 200) {
+    final responseData = jsonDecode(response.body);
+    final token = responseData['token'].toString().trim();
+
+    // Save the token using AuthenticationService
+    AuthenticationService().setToken(token);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
+    Navigator.pushReplacementNamed(context, '/home');
+    Logger.debug('Token: $token');
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
+    Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
   }
+}
 
    @override
    Widget build(BuildContext context) {
@@ -169,98 +160,60 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-Widget _buildTextField(
-  TextEditingController controller,
-  String hintText,
-  IconData icon,
-  bool isPassword,
-) {
-  // Regex patterns
-  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
-
-  String? getErrorText(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    }
-
-    if (hintText == "Email" && !emailRegex.hasMatch(value)) {
-      return 'Enter a valid email address';
-    }
-
-    if (hintText == "Password" && !passwordRegex.hasMatch(value)) {
-      return 'Min 8 chars, 1 uppercase, 1 symbol, 1 number';
-    }
-
-    return null;
-  }
-
-  return Container(
-    width: kIsWeb
-        ? MediaQuery.of(context).size.width * 0.4
-        : MediaQuery.of(context).size.width * 0.8,
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: TextFormField(
-      controller: controller,
-      obscureText: isPassword && !_isPasswordVisible,
-      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) => getErrorText(value),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-              )
-            : null,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+ Widget _buildTextField(
+    TextEditingController controller,
+    String hintText,
+    IconData icon,
+    bool isPassword,
+  ) {
+    return Container(
+      width: kIsWeb
+          ? MediaQuery.of(context).size.width * 0.4
+          : MediaQuery.of(context).size.width * 0.8,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword && !_isPasswordVisible,
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+          ),
+          prefixIcon: Icon(
+            icon,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-            width: 2,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                )
+              : null,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            borderRadius: BorderRadius.circular(10),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorStyle: TextStyle(
-          color: Theme.of(context).colorScheme.error,
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 Widget _buildLoginButton() {
     return SizedBox(
       width: kIsWeb

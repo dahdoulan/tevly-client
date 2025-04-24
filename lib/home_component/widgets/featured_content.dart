@@ -26,7 +26,7 @@ class FeaturedContent extends StatelessWidget {
           height: 500,
           width: double.infinity,
           child: CachedNetworkImage(
-            imageUrl: movie.thumbnailUrl, //movie.thumbnailUrl
+            imageUrl: movie.thumbnailUrl.toString(), //movie.thumbnailUrl
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(color: Colors.black),
             errorWidget: (context, url, error) => Container(

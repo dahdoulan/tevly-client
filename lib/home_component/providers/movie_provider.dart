@@ -1,5 +1,6 @@
 // lib/providers/movie_provider.dart
 import 'package:flutter/foundation.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 import '../models/movie.dart';
 import '../services/movie_service.dart';
 
@@ -27,7 +28,7 @@ class MovieProvider with ChangeNotifier {
     try {
       _allMovies = await _movieService.fetchMovies();
     } catch (e) {
-      print('Error in fetchMovies: $e');
+      Logger.debug('Error in fetchMovies: $e');
       // You might want to show an error message to the user
     } finally {
       _isLoading = false;

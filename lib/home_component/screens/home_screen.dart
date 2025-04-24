@@ -1,6 +1,7 @@
 // lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 import '../providers/movie_provider.dart';
 import '../models/movie.dart';
 import '../widgets/bottom_navigation.dart';
@@ -91,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     FeaturedContent(
                       movie: featuredMovie,
                       onPlay: (movie) {
-                        print('Play: ${movie.title}');
+                        Logger.debug('Play: ${movie.title}');
                         // Implement video playback functionality
                       },
                       onMyList: (movie) {
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       movies: movieProvider.actionMovies,
                       onMovieTap: _onMovieTap,
                     ),
-                  if (movieProvider.actionMovies.isNotEmpty)
+                  if (movieProvider.horrorMovies.isNotEmpty)
                     MovieRow(
                       title: 'Horror Movies',
                       movies: movieProvider.horrorMovies,

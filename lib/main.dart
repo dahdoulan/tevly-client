@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
-home: VerificationPage(), /*const UniversalVideoPlayer(
+home: LoginPage(), /*const UniversalVideoPlayer(
   resolutionUrls: {
     'Full HD':'http://192.168.1.15:8000/stream2.mp4',
     'HD': 'http://192.168.1.15:8000/stream.mp4',
@@ -48,12 +48,11 @@ home: VerificationPage(), /*const UniversalVideoPlayer(
         '/home': (context) => HomeScreen(),
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
-        // '/home': (context) => HomePage(),
+         
         /* '/video-player': (context) => const UniversalVideoPlayer(
           resolutionUrls: {
             'Full HD': 'http://
             'HD': 'http://
-
             */
       },
     );
