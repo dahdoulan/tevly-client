@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:http_parser/http_parser.dart';
@@ -9,6 +10,24 @@ import 'package:http/http.dart' as http;
 
 class VideoUploadProvider extends ChangeNotifier {
   List<UploadedVideo> _videos = [];
+  final List<String> _categories = [
+    'Horror',
+    'Action',
+    'Adventure',
+    'Comedy',
+    'Crime and mystery',
+    'Fantasy',
+    'Historical',
+    'Romance',
+    'Science fiction',
+    'Thriller',
+    'Animation',
+    'Drama',
+    'Western',
+    'documentary',
+    'Other',
+  ];
+  String _selectedCategory = 'Other';
 
   late DropzoneViewController _dropzoneController;
   final TextEditingController _titleController = TextEditingController();
@@ -34,6 +53,7 @@ class VideoUploadProvider extends ChangeNotifier {
       size: size,
       url: url,
       file: file,
+      category: _selectedCategory,
     ));
     isDragging = false;
   }
@@ -60,6 +80,7 @@ class VideoUploadProvider extends ChangeNotifier {
     final request = http.MultipartRequest('POST', url)
       ..fields['title'] = video.title
       ..fields['description'] = video.description
+      ..fields['category'] = video.category
       ..files.add(
         http.MultipartFile.fromBytes(
           'video',
@@ -102,6 +123,13 @@ class VideoUploadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set selectedCategory(String value) {
+    _selectedCategory = value;
+    notifyListeners();
+  }
+
+  List<String> get categories => _categories;
+  String get selectedCategory => _selectedCategory;
   bool get isDragging => _isDragging;
   bool get isUploading => _isUploading;
   TextEditingController get titleController => _titleController;

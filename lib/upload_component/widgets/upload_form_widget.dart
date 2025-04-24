@@ -31,7 +31,7 @@ class UploadFormWidget extends StatelessWidget {
                       contentPadding: const EdgeInsets.all(16),
                       hintText: 'Enter video title',
                       hintStyle:
-                          TextStyle(color: kSecondaryColor.withOpacity(0.6)),
+                      TextStyle(color: kSecondaryColor.withOpacity(0.6)),
                       labelText: 'Video Title',
                       labelStyle: const TextStyle(color: kSecondaryColor),
                       alignLabelWithHint: false,
@@ -56,7 +56,7 @@ class UploadFormWidget extends StatelessWidget {
                       contentPadding: const EdgeInsets.all(16),
                       hintText: 'Enter video description',
                       hintStyle:
-                          TextStyle(color: kSecondaryColor.withOpacity(0.6)),
+                      TextStyle(color: kSecondaryColor.withOpacity(0.6)),
                       labelText: 'Video Description',
                       labelStyle: const TextStyle(color: kSecondaryColor),
                       alignLabelWithHint: false,
@@ -71,10 +71,52 @@ class UploadFormWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kPrimaryColor),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text(
+                            'Category',
+                            style: TextStyle(color: kSecondaryColor),
+                          ),
+                        ),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            dropdownColor: Colors.black87,
+                            iconEnabledColor: kPrimaryColor,
+                            value: provider.selectedCategory,
+                            items: provider.categories.map((String category) {
+                              return DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(
+                                  category,
+                                  style:
+                                  const TextStyle(color: kSecondaryColor),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                provider.selectedCategory = newValue;
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   Center(
                     child:
-                        UploadButtonWidget(text: 'Save', onPressed: onPressed),
+                    UploadButtonWidget(text: 'Save', onPressed: onPressed),
                   ),
                 ],
               ),

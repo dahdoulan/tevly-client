@@ -5,6 +5,7 @@ class UploadedVideo {
   final int size;
   final String url;
   final dynamic file;
+  final String category;
 
   UploadedVideo({
     required this.title,
@@ -13,5 +14,6 @@ class UploadedVideo {
     required this.size,
     required this.url,
     required this.file,
+    required this.category,
   });
 }
