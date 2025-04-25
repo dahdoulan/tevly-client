@@ -49,12 +49,13 @@ home: LoginPage(), /*const UniversalVideoPlayer(
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
          
-        /* '/video-player': (context) => const UniversalVideoPlayer(
-          resolutionUrls: {
-            'Full HD': 'http://
-            'HD': 'http://
-            */
-      },
+         '/video-player': (context) => const UniversalVideoPlayer(
+            resolutionUrls: {
+              'Full HD':'http://192.168.1.15:8000/stream2.mp4',
+              'HD': 'http://192.168.1.15:8000/stream.mp4',
+  },
+    ),},
+      
     );
   }
 }
