@@ -34,7 +34,7 @@ class ImageLoaderService {
           'Access-Control-Allow-Origin': '*',
         },
       ).timeout(
-        const Duration(seconds: 20),
+        const Duration(seconds: 30),
         onTimeout: () {
           throw TimeoutException('Request timed out');
         },

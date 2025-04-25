@@ -1,14 +1,6 @@
  
-import 'dart:async';
-import 'dart:convert';
-import 'dart:math' as Math;
-
-import 'package:flutter/foundation.dart';
+import 'dart:async';  
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart' as http;
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
-import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/home_component/widgets/image_loader.dart';
 import '../models/movie.dart';
@@ -33,24 +25,19 @@ class _MovieCardState extends State<MovieCard> {
     _loadImage();
   }
 
-  Future<void> _loadImage() async {
-    if (!kIsWeb) {
-      setState(() {
-        _imageUrl = widget.movie.thumbnailUrl;
-        _isLoading = false;
-      });
-      return;
-    }
-
+    Future<void> _loadImage() async {
     try {
       final imageUrl = await ImageLoaderService.loadImage(widget.movie.id);
       setState(() {
-        _imageUrl = imageUrl;
+        _imageUrl = imageUrl ?? widget.movie.thumbnailUrl;
         _isLoading = false;
       });
     } catch (e) {
       Logger.debug('Error in MovieCard: $e');
-      setState(() => _isLoading = false);
+      setState(() {
+        _imageUrl = widget.movie.thumbnailUrl;
+        _isLoading = false;
+      });
     }
   }
   @override
