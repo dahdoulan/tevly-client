@@ -8,6 +8,7 @@ import '../constants/upload_constants.dart';
 import '../widgets/drop_zone_widget.dart';
 import '../widgets/upload_button_widget.dart';
 import '../widgets/video_list_widget.dart';
+import '../widgets/thumbnail_drop_zone_widget.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({super.key});
@@ -51,10 +52,32 @@ class _UploadPageState extends State<UploadPage> {
                             ],
                           ),
                           const SizedBox(height: 32),
+                          const Text(
+                            'Upload Thumbnail',
+                            style:
+                                TextStyle(color: kSecondaryColor, fontSize: 16),
+                          ),
+                          const SizedBox(height: 16),
+                          const ThumbnailDropZoneWidget(),
+                          const SizedBox(height: 32),
+                          const Text(
+                            'Upload Video',
+                            style:
+                                TextStyle(color: kSecondaryColor, fontSize: 16),
+                          ),
+                          const SizedBox(height: 16),
                           SizedBox(
-                            height: screenSize.height * 0.7,
+                            height: screenSize.height *
+                                0.5, // Reduced height to accommodate thumbnail
                             child: DropZoneWidget(
                               onDrop: (file) {
+                                if (provider.selectedThumbnail == null) {
+                                  SnackbarUtil.showErrorSnackbar(
+                                    context,
+                                    'Please upload a thumbnail first',
+                                  );
+                                  return;
+                                }
                                 showDialog(
                                     context: context,
                                     useSafeArea: true,

@@ -1,1 +1,1 @@
-const uploadUrl = 'http://localhost:8080/api/video/upload';
+const uploadUrl = 'https://f65d-92-253-123-178.ngrok-free.app/api/video/upload';

@@ -29,7 +29,12 @@ class VideoUploadProvider extends ChangeNotifier {
   ];
   String _selectedCategory = 'Other';
 
+  dynamic _selectedThumbnail;
+  String _thumbnailMime = '';
+
   late DropzoneViewController _dropzoneController;
+  late DropzoneViewController
+      _thumbnailDropzoneController; // Added separate controller for thumbnail
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -54,8 +59,30 @@ class VideoUploadProvider extends ChangeNotifier {
       url: url,
       file: file,
       category: _selectedCategory,
+      thumbnail: _selectedThumbnail,
+      thumbnailMime: _thumbnailMime,
     ));
     isDragging = false;
+  }
+
+  Future<void> handleThumbnailDrop(dynamic event) async {
+    try {
+      // Use the thumbnail controller instead of the video controller
+      final mime = await _thumbnailDropzoneController.getFileMIME(event);
+      if (!mime.startsWith('image/')) {
+        throw Exception('Please upload an image file for thumbnail');
+      }
+      _selectedThumbnail =
+          await _thumbnailDropzoneController.getFileData(event);
+      _thumbnailMime = mime;
+      isDragging = false;
+      notifyListeners();
+    } catch (e) {
+      _selectedThumbnail = null;
+      _thumbnailMime = '';
+      isDragging = false;
+      rethrow;
+    }
   }
 
   Future<void> uploadVideos() async {
@@ -78,15 +105,23 @@ class VideoUploadProvider extends ChangeNotifier {
 
   http.MultipartRequest _createRequest(Uri url, UploadedVideo video) {
     final request = http.MultipartRequest('POST', url)
-      ..fields['title'] = video.title
       ..fields['description'] = video.description
+      ..fields['title'] = video.title
       ..fields['category'] = video.category
       ..files.add(
         http.MultipartFile.fromBytes(
           'video',
           video.file,
-          filename: video.title,
+          filename: '${video.title}.mp4',
           contentType: MediaType.parse(video.mime),
+        ),
+      )
+      ..files.add(
+        http.MultipartFile.fromBytes(
+          'thumbnail',
+          video.thumbnail,
+          filename: '${video.title}_thumbnail.jpg',
+          contentType: MediaType.parse(video.thumbnailMime),
         ),
       );
     return request;
@@ -123,11 +158,19 @@ class VideoUploadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Added new method for setting the thumbnail dropzone controller
+  void setThumbnailDropzoneController(DropzoneViewController controller) {
+    _thumbnailDropzoneController = controller;
+    notifyListeners();
+  }
+
   set selectedCategory(String value) {
     _selectedCategory = value;
     notifyListeners();
   }
 
+  dynamic get selectedThumbnail => _selectedThumbnail;
+  String get thumbnailMime => _thumbnailMime;
   List<String> get categories => _categories;
   String get selectedCategory => _selectedCategory;
   bool get isDragging => _isDragging;
