@@ -1,18 +1,50 @@
 // lib/screens/movie_details_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:tevly_client/home_component/widgets/image_loader.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
 
-class MovieDetailsScreen extends StatelessWidget {
+class MovieDetailsScreen extends StatefulWidget {
   final Movie movie;
 
   const MovieDetailsScreen({Key? key, required this.movie}) : super(key: key);
 
   @override
+  State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();
+}
+
+class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
+  String? _imageUrl;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  Future<void> _loadImage() async {
+    try {
+      final imageUrl = await ImageLoaderService.loadImage(widget.movie.id);
+      setState(() {
+        _imageUrl = imageUrl ?? widget.movie.thumbnailUrl;
+        _isLoading = false;
+      });
+    } catch (e) {
+      Logger.debug('Error in MovieDetailsScreen: $e');
+      setState(() {
+        _imageUrl = widget.movie.thumbnailUrl;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final movieProvider = Provider.of<MovieProvider>(context);
-    final isInMyList = movieProvider.isInMyList(movie.id);
+    final isInMyList = movieProvider.isInMyList(widget.movie.id);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -21,15 +53,32 @@ class MovieDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hero image
             Stack(
               children: [
-                Image.network(
-                  movie.videoUrl,
-                  height: 300,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                _isLoading
+                    ? Container(
+                        height: 300,
+                        width: double.infinity,
+                        color: Colors.black,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Image.network(
+                        _imageUrl ?? '',
+                        height: 300,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          Logger.debug('Image load error: $error');
+                          return Container(
+                            height: 300,
+                            width: double.infinity,
+                            color: Colors.black,
+                            child: const Icon(Icons.error, color: Colors.white),
+                          );
+                        },
+                      ),
                 Container(
                   height: 300,
                   decoration: BoxDecoration(
@@ -46,7 +95,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   right: 0,
                   child: Center(
                     child: Text(
-                      movie.title,
+                     widget.movie.title,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -76,7 +125,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      movieProvider.toggleMyList(movie);
+                      movieProvider.toggleMyList(widget.movie);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey.withOpacity(0.3),
@@ -98,7 +147,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        movie.category.substring(0, 4),
+                        widget.movie.category.substring(0, 4),
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(width: 16),
@@ -112,14 +161,14 @@ class MovieDetailsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          '${movie.id}/10',
+                          '${widget.movie.id}/10',
                           style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 16),
-                  Text(movie.description, style: TextStyle(fontSize: 16)),
+                  Text(widget.movie.description, style: TextStyle(fontSize: 16)),
                 ],
               ),
             ),

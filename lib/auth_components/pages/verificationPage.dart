@@ -22,8 +22,7 @@ Future<void> _verifyCode() async {
   setState(() {
     _isLoading = true;
     _errorMessage = null;
-    String text;
-  });
+   });
 
    try {
      final url = Uri.parse(ApiConstants.verifyEmail).replace(queryParameters: {

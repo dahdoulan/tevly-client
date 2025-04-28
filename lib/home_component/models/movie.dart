@@ -1,4 +1,6 @@
 // lib/models/movie.dart
+import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+
 class Movie {
   final int id;
   final String title;
@@ -21,14 +23,14 @@ class Movie {
   });
 
   // Factory method to create a Movie object from JSON
-  factory Movie.fromJson(Map<String, dynamic> json) {
-    return Movie(
-      id: json['id'],
-      title: json['title'],
-      videoUrl: json['videoUrl'],
-      thumbnailUrl: json['thumbnailUrl'],
-      category: json['category'],
-      description: json['description'],
-    );
-  }
+ factory Movie.fromJson(Map<String, dynamic> json) {
+  return Movie(
+    id: json['id'],
+    title: json['title'],
+    videoUrl: json['videoUrl'],
+    thumbnailUrl: '${ApiConstants.baseUrl}${json['thumbnailUrl']}', // Add "/api"
+    category: json['category'],
+    description: json['description'],
+  );
+}
 }

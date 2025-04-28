@@ -1,9 +1,11 @@
 // lib/widgets/featured_content.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:tevly_client/home_component/widgets/image_loader.dart';
 import '../models/movie.dart';
 
-class FeaturedContent extends StatelessWidget {
+class FeaturedContent extends StatefulWidget {
   final Movie movie;
   final Function(Movie) onPlay;
   final Function(Movie) onMyList;
@@ -18,6 +20,36 @@ class FeaturedContent extends StatelessWidget {
   });
 
   @override
+  State<FeaturedContent> createState() => _FeaturedContentState();
+}
+
+class _FeaturedContentState extends State<FeaturedContent> {
+  String? _imageUrl;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  Future<void> _loadImage() async {
+    try {
+      final imageUrl = await ImageLoaderService.loadImage(widget.movie.id);
+      setState(() {
+        _imageUrl = imageUrl ?? widget.movie.thumbnailUrl;
+        _isLoading = false;
+      });
+    } catch (e) {
+      Logger.debug('Error in FeaturedContent: $e');
+      setState(() {
+        _imageUrl = widget.movie.thumbnailUrl;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -25,30 +57,20 @@ class FeaturedContent extends StatelessWidget {
         Container(
           height: 500,
           width: double.infinity,
-          child: CachedNetworkImage(
-            imageUrl: movie.thumbnailUrl, //movie.thumbnailUrl
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(color: Colors.black),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.black,
-              child: Icon(Icons.error, color: Colors.white),
-            ),
-          ),
-        ),
-        Container(
-          height: 500,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0.2),
-                Colors.black.withOpacity(0.5),
-                Colors.black,
-              ],
-            ),
-          ),
+          child: _isLoading
+              ? Container(color: Colors.black)
+              : CachedNetworkImage(
+                  imageUrl: _imageUrl ?? '',
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(color: Colors.black),
+                  errorWidget: (context, url, error) {
+                    Logger.debug('Featured content image error: $error');
+                    return Container(
+                      color: Colors.black,
+                      child: const Icon(Icons.error, color: Colors.white),
+                    );
+                  },
+                ),
         ),
         Positioned(
           bottom: 40,
@@ -57,7 +79,7 @@ class FeaturedContent extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                movie.title,
+                widget.movie.title,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -70,7 +92,7 @@ class FeaturedContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () => onPlay(movie),
+                    onPressed: () => widget.onPlay(widget.movie),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
