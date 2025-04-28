@@ -4,6 +4,7 @@ import 'package:tevly_client/auth_components/pages/forgotPassword.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verificationPage.dart';
+import 'package:tevly_client/home_component/models/movie.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/videoPlayer.dart';
 import 'upload_component/providers/video_provider.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
+
  home : LoginPage(),
       routes: {
         '/signup': (context) => SignupPage(),
@@ -44,12 +46,20 @@ class MyApp extends StatelessWidget {
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
          
-        /* '/video-player': (context) => const UniversalVideoPlayer(
-          resolutionUrls: {
-            'Full HD': 'http://
-            'HD': 'http://
-            */
-      },
+         },
+          onGenerateRoute: (settings) {
+      if (settings.name == '/video-player') {
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => UniversalVideoPlayer(
+            resolutionUrls: args['resolutionUrls'] as Map<String, String>,
+          ),
+        );
+      }
+      return null;
+    },
+      initialRoute: '/login',
+    
     );
   }
 }

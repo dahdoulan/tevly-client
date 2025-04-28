@@ -26,8 +26,23 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   }
 
   Future<void> _loadImage() async {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    
+    // Check cache first
+    final cachedUrl = movieProvider.getThumbnailUrl(widget.movie.id);
+    if (cachedUrl != null) {
+      setState(() {
+        _imageUrl = cachedUrl;
+        _isLoading = false;
+      });
+      return;
+    }
+
     try {
       final imageUrl = await ImageLoaderService.loadImage(widget.movie.id);
+      if (imageUrl != null) {
+        movieProvider.cacheThumbnailUrl(widget.movie.id, imageUrl);
+      }
       setState(() {
         _imageUrl = imageUrl ?? widget.movie.thumbnailUrl;
         _isLoading = false;
@@ -113,8 +128,19 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton.icon(
-                    onPressed: () {},
+                 ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context, 
+                        '/video-player',
+                        arguments: {
+                          'resolutionUrls': {
+                            'Full HD': widget.movie.videoUrl,
+                            'HD': widget.movie.videoUrl, // todo: add HD url to backend
+                          },
+                        },
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,

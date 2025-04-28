@@ -23,16 +23,13 @@ class ImageLoaderService {
       final thumbnailUrl = Uri.parse('${ApiConstants.baseUrl}/videos/$movieId/thumbnail');
       Logger.debug('Requesting thumbnail from: $thumbnailUrl');
 
-      final response = await http.get(
+      final response = await http.post(
         thumbnailUrl,
         headers: {
           'Authorization': 'Bearer $token',
-          'Accept': 'image/jpeg, image/png, image/*',
+          'Accept': '*/*',
           'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
-          'Cache-Control': 'no-cache',
-          'Access-Control-Allow-Origin': '*',
-        },
+         },
       ).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
