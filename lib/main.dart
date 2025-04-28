@@ -35,12 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
- 
-  resolutionUrls: {
-    'Full HD':'http://192.168.1.15:8000/stream2.mp4',
-    'HD': 'http://192.168.1.15:8000/stream.mp4',
-  },
-),*/
+ home : LoginPage(),
       routes: {
         '/signup': (context) => SignupPage(),
         '/login': (context) => LoginPage(),
