@@ -173,7 +173,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   Row(
                     children: [
                       Text(
-                        widget.movie.category.substring(0, 4),
+                        widget.movie.category,
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(width: 16),
@@ -187,7 +187,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          '${widget.movie.id}/10',
+                          '${widget.movie.id}/10', // TODO: replace with actual rating
                           style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ),

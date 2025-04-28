@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/auth_components/pages/filmmakerSignUp.dart';
 import 'package:tevly_client/auth_components/pages/forgotPassword.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
 
- home : LoginPage(),
+ home :  LoginPage(),
       routes: {
         '/signup': (context) => SignupPage(),
         '/login': (context) => LoginPage(),
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomeScreen(),
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
+        '/signupFilmmaker': (context) => FilmmakerSignupPage(),
          
          },
           onGenerateRoute: (settings) {

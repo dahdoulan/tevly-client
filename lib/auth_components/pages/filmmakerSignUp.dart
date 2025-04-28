@@ -6,12 +6,12 @@ import 'dart:convert';
 import 'package:tevly_client/auth_components/api/ApiConstants.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 
-class SignupPage extends StatefulWidget {
+class FilmmakerSignupPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _FilmmakerSignupPageState createState() => _FilmmakerSignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
@@ -74,7 +74,7 @@ class _SignupPageState extends State<SignupPage> {
       _isLoading = true;
     });
 
-    final url = Uri.parse(ApiConstants.signup); 
+    final url = Uri.parse(ApiConstants.signupFilmmaker); 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -185,27 +185,6 @@ Widget build(BuildContext context) {
                     onPressed: () => Navigator.pushNamed(context, '/login'),
                     child: Text(
                       "Login",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Sign up as fillmaker? ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pushNamed(context, '/signupFilmmaker'),
-                    child: Text(
-                      "Fillmaker Signup",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -411,7 +390,7 @@ Widget _buildSignUpButton() {
         child: _isLoading
             ? const CircularProgressIndicator()
             : Text(
-                'Sign Up',
+                'Filmmaker Sign Up',
                 style: TextStyle(
                   fontSize: 18,
                   color: Theme.of(context).colorScheme.onSecondary,

@@ -48,13 +48,25 @@ class _LoginPageState extends State<LoginPage> {
   if (response.statusCode == 200) {
     final responseData = jsonDecode(response.body);
     final token = responseData['token'].toString().trim();
+    final role = responseData['role'].toString().trim();
+
 
     // Save the token using AuthenticationService
     AuthenticationService().setToken(token);
+    AuthenticationService().setRole(role);
+
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
-    Navigator.pushReplacementNamed(context, '/home');
-    Logger.debug('Token: $token');
+    if(role == "USER"){
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+    else if(role == "FILMMAKER"){
+            Navigator.pushReplacementNamed(context, '/upload');
+    }
+     else if(role == "ADMIN"){
+            Navigator.pushReplacementNamed(context, '/upload');
+    }
+     Logger.debug('Token: $token');
   } else {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
     Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
