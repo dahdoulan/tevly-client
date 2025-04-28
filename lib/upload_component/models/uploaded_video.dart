@@ -6,6 +6,8 @@ class UploadedVideo {
   final String url;
   final dynamic file;
   final String category;
+  final dynamic thumbnail; // Add thumbnail field
+  final String thumbnailMime; // Add thumbnail mime type
 
   UploadedVideo({
     required this.title,
@@ -15,5 +17,7 @@ class UploadedVideo {
     required this.url,
     required this.file,
     required this.category,
+    required this.thumbnail,
+    required this.thumbnailMime,
   });
 }
