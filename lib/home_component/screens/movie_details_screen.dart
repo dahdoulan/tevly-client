@@ -128,14 +128,18 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton.icon(
-                    onPressed: (  ) {
-                      Navigator.pushNamed(context, '/video-player', arguments: {
-                        'resolutionUrls': {
-                          'Full HD': 'http://192.168.1.15:8000/stream2.mp4',
-                          'HD': 'http://192.168.1.15:8000/stream.mp4',
+                 ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context, 
+                        '/video-player',
+                        arguments: {
+                          'resolutionUrls': {
+                            'Full HD': widget.movie.videoUrl,
+                            'HD': widget.movie.videoUrl, // todo: add HD url to backend
+                          },
                         },
-                      });
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -144,7 +148,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ),
                     icon: Icon(Icons.play_arrow),
                     label: Text('Play'),
-                    
                   ),
                   ElevatedButton.icon(
                     onPressed: () {

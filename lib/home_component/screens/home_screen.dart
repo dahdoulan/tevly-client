@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return CustomScrollView(
             slivers: [
               // App Bar
-              SliverAppBar(
+             const SliverAppBar(
                 backgroundColor: Colors.transparent,
                 pinned: true,
                 expandedHeight: 50.0,
@@ -72,21 +72,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       const SizedBox(width: 16),
                       const Text(
-                        'Tevely',
+                        'Tvely',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.cast, color: Colors.white),
-                        onPressed: () {},
-                      ),
+                      
+                      
                     ],
                   ),
                   centerTitle: false,
+                  
                 ),
               ),
 
