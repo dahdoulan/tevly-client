@@ -9,7 +9,7 @@ class SnackbarUtil {
         style: const TextStyle(color: kSecondaryColor),
       ),
       duration: const Duration(seconds: 2),
-      backgroundColor: kPrimaryColor,
+      backgroundColor:  Colors.green,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),

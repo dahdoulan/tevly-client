@@ -79,10 +79,10 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'firstname': _firstnameController.text,
-        'lastname': _lastnameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
+        'firstname': _firstnameController.text.trim(),
+        'lastname': _lastnameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text.trim(),
         'dateOfBirth': _selectedBirthdate?.toIso8601String(),
        /* 'phone': _phoneController.text,*/
       }),
@@ -293,19 +293,19 @@ Widget _buildTextField(
         ),
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
+            color: Colors.black,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
+            color: Colors.black,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         errorStyle: TextStyle(
-          color: Theme.of(context).colorScheme.error,
+          color: Colors.black,
         ),
       ),
     ),

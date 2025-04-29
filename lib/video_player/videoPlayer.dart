@@ -58,18 +58,38 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   }
  
   @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: _chewieController?.videoPlayerController.value.isInitialized == true
-          ? Stack(
-              children: [
-                Chewie(controller: _chewieController!),
-              ],
-            )
-          : const Center(child: CircularProgressIndicator()),
-    );
-  }
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.black,
+    body: Stack(
+      children: [
+        Center(
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: _chewieController?.videoPlayerController.value.isInitialized == true
+                ? Chewie(controller: _chewieController!)
+                : const Center(child: CircularProgressIndicator()),
+          ),
+        ),
+     
+        Positioned(
+          top: 40,
+          left: 16,
+          child: SafeArea(
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 28,
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
    
 

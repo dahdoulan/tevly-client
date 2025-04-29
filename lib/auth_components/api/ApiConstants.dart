@@ -1,11 +1,13 @@
+import 'package:tevly_client/auth_components/service/environmentAuth.dart';
+
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:8080/api';
-  static const String login = '$baseUrl/auth/authenticate';
-  static const String signup = '$baseUrl/auth/register/user';
-  static const String signupFilmmaker = '$baseUrl/auth/register/filmmaker';
-  static const String verifyEmail = '$baseUrl/auth/activate-account?token=';
-  static const String forgotPassword = '$baseUrl/auth/forgot-password';
-  static const String fetchmovies = '$baseUrl/homepage/movies';
-  static const String metadata = '$baseUrl/homepage/metadata';
-  static const String fetchThumbnail = '$baseUrl/videos';  
+  static String get baseUrl => Environment.baseUrl;
+  static String login = '$baseUrl/auth/authenticate';
+  static String signup = '$baseUrl/auth/register/user';
+  static String signupFilmmaker = '$baseUrl/auth/register/filmmaker';
+  static String verifyEmail = '$baseUrl/auth/activate-account?token=';
+  static String forgotPassword = '$baseUrl/auth/forgot-password';
+  static String fetchmovies = '$baseUrl/homepage/movies';
+  static String metadata = '$baseUrl/homepage/metadata';
+  static String fetchThumbnail = '$baseUrl/videos';  
 }
