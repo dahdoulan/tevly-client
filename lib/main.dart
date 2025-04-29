@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
         '/signupFilmmaker': (context) => FilmmakerSignupPage(),
+        //'/admin': (context) => const HomeScreen(),
          
          },
           onGenerateRoute: (settings) {

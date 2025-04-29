@@ -1,4 +1,4 @@
-import 'package:tevly_client/auth_components/service/environmentAuth.dart';
+import 'package:tevly_client/auth_components/service/environmentAuthService.dart';
 
 class ApiConstants {
   static String get baseUrl => Environment.baseUrl;
