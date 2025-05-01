@@ -11,7 +11,7 @@ class Environment {
     //TODO: Change these URLs once we deploy the backend to a CDN
     else {
       if (Platform.isAndroid) {
-        return 'http://localhost:8080/api'; // Android emulator localhost
+        return 'http://10.0.2.2:8080/api'; // Android emulator localhost
       } else if (Platform.isIOS) {
         return 'http://localhost:8080/api'; // iOS simulator localhost
       } else if (Platform.isWindows) {

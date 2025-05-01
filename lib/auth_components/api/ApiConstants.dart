@@ -10,4 +10,7 @@ class ApiConstants {
   static String fetchmovies = '$baseUrl/homepage/movies';
   static String metadata = '$baseUrl/homepage/metadata';
   static String fetchThumbnail = '$baseUrl/videos';  
+  static String  fetchSeries =  '$baseUrl/homepage/series';
+  static String  fetchSeasons =  '$baseUrl/series';
+  static String  fetchEpisode =  '$baseUrl/episodes';
 }

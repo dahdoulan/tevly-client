@@ -6,6 +6,7 @@ import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verificationPage.dart';
 import 'package:tevly_client/home_component/models/movie.dart';
+import 'package:tevly_client/home_component/providers/series_provider.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/videoPlayer.dart';
 import 'upload_component/providers/video_provider.dart';
@@ -18,6 +19,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MovieProvider()),
+        ChangeNotifierProvider(create: (_) => SeriesProvider()),
         ChangeNotifierProvider(create: (_) => VideoUploadProvider()),
       ],
       builder: (context, child) => const MyApp(),
@@ -27,7 +29,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,8 +38,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
-
- home :  LoginPage(),
+  home :  LoginPage(),
       routes: {
         '/signup': (context) => SignupPage(),
         '/login': (context) => LoginPage(),

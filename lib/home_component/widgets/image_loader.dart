@@ -19,7 +19,6 @@ class ImageLoaderService {
         Logger.debug('Authentication token is null');
         return null;
       }
-
       final thumbnailUrl = Uri.parse('${ApiConstants.baseUrl}/videos/$movieId/thumbnail');
       Logger.debug('Requesting thumbnail from: $thumbnailUrl');
 

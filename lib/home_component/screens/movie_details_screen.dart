@@ -27,6 +27,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 bool isArabicText(String text) {
   // Unicode range for Arabic characters
   final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+  // Check if the text contains any Arabic characters
+  
   return arabicRegex.hasMatch(text);
 }
   Future<void> _loadImage() async {
@@ -149,7 +151,7 @@ bool isArabicText(String text) {
                           'resolutionUrls': {
                             'Full HD': widget.movie.videoUrl,
                             'HD': widget.movie.videoUrl, // todo: add HD url to backend
-                          },
+                          }, 
                         },
                       );
                     },
