@@ -32,9 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onNavTap(int index) {
-    setState(() {
-      _currentNavIndex = index;
-    });
+    if (index == 2) { // Settings tab index
+      Navigator.pushNamed(context, '/settings');
+    } else {
+      setState(() {
+        _currentNavIndex = index;
+      });
+    }
   }
 
   void _onMovieTap(Movie movie) {

@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushReplacementNamed(context, '/upload');
     }
      else if(role == "ADMIN"){
-            Navigator.pushReplacementNamed(context, '/upload');
+            Navigator.pushReplacementNamed(context, '/admin');
     }
      Logger.debug('Token: $token');
   } else {

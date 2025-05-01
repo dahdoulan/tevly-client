@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/admin_component/pages/adminDashboard.dart';
 import 'package:tevly_client/auth_components/pages/filmmakerSignUp.dart';
 import 'package:tevly_client/auth_components/pages/forgotPassword.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verificationPage.dart';
 import 'package:tevly_client/home_component/models/movie.dart';
+import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/videoPlayer.dart';
 import 'upload_component/providers/video_provider.dart';
@@ -47,7 +49,8 @@ class MyApp extends StatelessWidget {
         '/verification': (context) => VerificationPage(),
         '/forgot-password': (context) => const ForgotPasswordPage(),
         '/signupFilmmaker': (context) => FilmmakerSignupPage(),
-        //'/admin': (context) => const HomeScreen(),
+        '/admin': (context) => const AdminDashboard(),
+        '/settings': (context) => const SettingsPage(),
          
          },
           onGenerateRoute: (settings) {

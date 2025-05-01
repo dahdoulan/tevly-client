@@ -23,7 +23,10 @@ class AuthenticationService {
   String? getRole() {
     return _role;
   }
-
+  void clearToken() {
+    _token =' ';
+    _role = '';
+  }
 
 
 
