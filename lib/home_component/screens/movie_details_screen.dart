@@ -5,6 +5,7 @@ import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/home_component/widgets/image_loader.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
+import '../widgets/comments_section.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final Movie movie;
@@ -27,7 +28,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
   Future<void> _loadImage() async {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
-    
+
     // Check cache first
     final cachedUrl = movieProvider.getThumbnailUrl(widget.movie.id);
     if (cachedUrl != null) {
@@ -110,7 +111,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   right: 0,
                   child: Center(
                     child: Text(
-                     widget.movie.title,
+                      widget.movie.title,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -128,15 +129,16 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                 ElevatedButton.icon(
+                  ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pushNamed(
-                        context, 
+                        context,
                         '/video-player',
                         arguments: {
                           'resolutionUrls': {
                             'Full HD': widget.movie.videoUrl,
-                            'HD': widget.movie.videoUrl, // todo: add HD url to backend
+                            'HD': widget
+                                .movie.videoUrl, // todo: add HD url to backend
                           },
                         },
                       );
@@ -194,10 +196,14 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  Text(widget.movie.description, style: TextStyle(fontSize: 16)),
+                  Text(widget.movie.description,
+                      style: TextStyle(fontSize: 16)),
                 ],
               ),
             ),
+
+            // Comments section   TODO TEST
+            CommentsSection(movie: widget.movie),
           ],
         ),
       ),
