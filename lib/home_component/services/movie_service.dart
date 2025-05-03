@@ -1,5 +1,4 @@
 import 'package:tevly_client/auth_components/api/ApiConstants.dart';
-import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import '../models/movie.dart';

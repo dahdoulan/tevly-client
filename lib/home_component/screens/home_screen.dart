@@ -1,7 +1,5 @@
-// lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tevly_client/commons/logger/logger.dart';
 import '../providers/movie_provider.dart';
 import '../models/movie.dart';
 import '../widgets/bottom_navigation.dart';
@@ -74,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 flexibleSpace: FlexibleSpaceBar(
                   title: Row(
                     children: [
-                      const SizedBox(width: 16),
-                      const Text(
+                        SizedBox(width: 16),
+                        Text(
                         'Tvely',
                         style: TextStyle(
                           color: Colors.white,
