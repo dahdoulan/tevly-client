@@ -41,7 +41,7 @@ class MovieProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       Logger.debug('Error in fetchMovies: $e');
-    } finally {
+     } finally {
       _isLoading = false;
       notifyListeners();
     }

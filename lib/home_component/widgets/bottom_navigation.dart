@@ -32,6 +32,7 @@ class TevelyBottomNavigation extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: 'Settings',
+          
         ),
 
       ],

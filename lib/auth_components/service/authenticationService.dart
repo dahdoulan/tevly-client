@@ -1,6 +1,7 @@
 class AuthenticationService {
   static final AuthenticationService _instance = AuthenticationService._internal();
   String? _token;
+   String? _role;
 
   AuthenticationService._internal();
 
@@ -15,4 +16,18 @@ class AuthenticationService {
   String? getToken() {
     return _token;
   }
+
+  void setRole(String role) {
+    _role = role;
+  }
+  String? getRole() {
+    return _role;
+  }
+  void clearToken() {
+    _token =' ';
+    _role = '';
+  }
+
+
+
 }

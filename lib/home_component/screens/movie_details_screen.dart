@@ -24,7 +24,11 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     super.initState();
     _loadImage();
   }
-
+bool isArabicText(String text) {
+  // Unicode range for Arabic characters
+  final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+  return arabicRegex.hasMatch(text);
+}
   Future<void> _loadImage() async {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     
@@ -104,21 +108,29 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: 20,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                     widget.movie.title,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+               Positioned(
+  bottom: 20,
+  left: 0,
+  right: 0,
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: Text(
+      widget.movie.title,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        height: 1.5, // Better height for both languages
+      ),
+      textAlign: isArabicText(widget.movie.title) 
+          ? TextAlign.right 
+          : TextAlign.left,
+      textDirection: isArabicText(widget.movie.title) 
+          ? TextDirection.rtl 
+          : TextDirection.ltr,
+    ),
+  ),
+),
               ],
             ),
 
@@ -166,38 +178,64 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
             // Movie info
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        widget.movie.category.substring(0, 4),
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      SizedBox(width: 16),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '${widget.movie.id}/10',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Text(widget.movie.description, style: TextStyle(fontSize: 16)),
-                ],
+  padding: const EdgeInsets.all(16.0),
+  child: Column(
+    crossAxisAlignment: isArabicText(widget.movie.description) 
+        ? CrossAxisAlignment.end 
+        : CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: isArabicText(widget.movie.category) 
+            ? MainAxisAlignment.end 
+            : MainAxisAlignment.start,
+        children: [
+          Text(
+            widget.movie.category,
+            style: const TextStyle(
+              color: Colors.grey,
+              height: 1.5,
+            ),
+            textDirection: isArabicText(widget.movie.category) 
+                ? TextDirection.rtl 
+                : TextDirection.ltr,
+          ),
+          const SizedBox(width: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 6,
+              vertical: 2,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              '${widget.movie.id}/10',
+              style: const TextStyle(
+                color: Colors.white, 
+                fontSize: 12
               ),
             ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      Text(
+        widget.movie.description,
+        style: const TextStyle(
+          fontSize: 16,
+          height: 1.8, // Better line height for readability
+        ),
+        textAlign: isArabicText(widget.movie.description) 
+            ? TextAlign.right 
+            : TextAlign.left,
+        textDirection: isArabicText(widget.movie.description) 
+            ? TextDirection.rtl 
+            : TextDirection.ltr,
+      ),
+    ],
+  ),
+),
           ],
         ),
       ),

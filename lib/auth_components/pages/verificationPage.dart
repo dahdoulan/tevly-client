@@ -31,7 +31,7 @@ Future<void> _verifyCode() async {
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'token': _verificationController.text ,
+        'token': _verificationController.text.trim(),
         
       }),
     );

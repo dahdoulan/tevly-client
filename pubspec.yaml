@@ -42,11 +42,12 @@ dependencies:
   provider: ^6.1.4
   chewie: ^1.11.3
   video_player: ^2.9.5
-  universal_html: ^2.2.1
   file_picker: ^10.1.2
-  cached_network_image: ^3.2.3  # For image caching
-  carousel_slider: ^4.2.1  # For carousels
-
+  cached_network_image: ^3.2.3   
+  carousel_slider: ^4.2.1  
+  universal_html: ^2.2.4
+  flutter_secure_storage: ^9.2.4
+   
 dev_dependencies:
   flutter_test:
     sdk: flutter
