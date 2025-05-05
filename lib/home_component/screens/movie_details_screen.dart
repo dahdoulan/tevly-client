@@ -5,6 +5,7 @@ import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/home_component/widgets/image_loader.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
+import '../widgets/comments_section.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final Movie movie;
@@ -122,11 +123,11 @@ bool isArabicText(String text) {
         color: Colors.white,
         height: 1.5, // Better height for both languages
       ),
-      textAlign: isArabicText(widget.movie.title) 
-          ? TextAlign.right 
+      textAlign: isArabicText(widget.movie.title)
+          ? TextAlign.right
           : TextAlign.left,
-      textDirection: isArabicText(widget.movie.title) 
-          ? TextDirection.rtl 
+      textDirection: isArabicText(widget.movie.title)
+          ? TextDirection.rtl
           : TextDirection.ltr,
     ),
   ),
@@ -180,13 +181,13 @@ bool isArabicText(String text) {
             Padding(
   padding: const EdgeInsets.all(16.0),
   child: Column(
-    crossAxisAlignment: isArabicText(widget.movie.description) 
-        ? CrossAxisAlignment.end 
+    crossAxisAlignment: isArabicText(widget.movie.description)
+        ? CrossAxisAlignment.end
         : CrossAxisAlignment.start,
     children: [
       Row(
-        mainAxisAlignment: isArabicText(widget.movie.category) 
-            ? MainAxisAlignment.end 
+        mainAxisAlignment: isArabicText(widget.movie.category)
+            ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
           Text(
@@ -195,8 +196,8 @@ bool isArabicText(String text) {
               color: Colors.grey,
               height: 1.5,
             ),
-            textDirection: isArabicText(widget.movie.category) 
-                ? TextDirection.rtl 
+            textDirection: isArabicText(widget.movie.category)
+                ? TextDirection.rtl
                 : TextDirection.ltr,
           ),
           const SizedBox(width: 16),
@@ -210,9 +211,9 @@ bool isArabicText(String text) {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              '${widget.movie.id}/10',
+              '${widget.movie.averageRating}/5',
               style: const TextStyle(
-                color: Colors.white, 
+                color: Colors.white,
                 fontSize: 12
               ),
             ),
@@ -226,16 +227,18 @@ bool isArabicText(String text) {
           fontSize: 16,
           height: 1.8, // Better line height for readability
         ),
-        textAlign: isArabicText(widget.movie.description) 
-            ? TextAlign.right 
+        textAlign: isArabicText(widget.movie.description)
+            ? TextAlign.right
             : TextAlign.left,
-        textDirection: isArabicText(widget.movie.description) 
-            ? TextDirection.rtl 
+        textDirection: isArabicText(widget.movie.description)
+            ? TextDirection.rtl
             : TextDirection.ltr,
       ),
     ],
   ),
 ),
+            // Comments section
+            CommentsSection(movie: widget.movie),
           ],
         ),
       ),
