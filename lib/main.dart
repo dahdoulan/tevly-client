@@ -20,6 +20,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => MovieProvider()),
         ChangeNotifierProvider(create: (_) => VideoUploadProvider()),
+        
  
       ],
       builder: (context, child) => const MyApp(),
