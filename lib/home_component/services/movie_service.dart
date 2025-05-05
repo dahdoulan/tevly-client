@@ -6,7 +6,6 @@ import '../models/movie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class MovieService {
   Future<List<Movie>> fetchMovies() async {
     final token = AuthenticationService().getToken();
@@ -14,8 +13,8 @@ class MovieService {
     if (token == null) {
       throw Exception('User is not authenticated. Token is missing.');
     }
-      Logger.debug('Token: $token');
-      final response = await http.post(
+    Logger.debug('Token: $token');
+    final response = await http.post(
       Uri.parse(ApiConstants.metadata),
       headers: {'Authorization': 'Bearer $token'},
     );

@@ -47,6 +47,7 @@ dependencies:
   cached_network_image: ^3.2.3  # For image caching
   carousel_slider: ^4.2.1  # For carousels
   intl: ^0.18.0
+  timeago: ^3.6.0
 
 dev_dependencies:
   flutter_test:

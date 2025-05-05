@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return CustomScrollView(
             slivers: [
               // App Bar
-             const SliverAppBar(
+              const SliverAppBar(
                 backgroundColor: Colors.transparent,
                 pinned: true,
                 expandedHeight: 50.0,
@@ -79,12 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18,
                         ),
                       ),
-                      
-                      
                     ],
                   ),
                   centerTitle: false,
-                  
                 ),
               ),
 
@@ -118,7 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Dynamic Categories
                   ...movieProvider.categories.map((category) {
-                    final categoryMovies = movieProvider.getMoviesByCategory(category);
+                    final categoryMovies =
+                        movieProvider.getMoviesByCategory(category);
                     if (categoryMovies.isEmpty) return const SizedBox.shrink();
 
                     return MovieRow(

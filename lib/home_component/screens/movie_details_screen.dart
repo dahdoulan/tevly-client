@@ -175,7 +175,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   Row(
                     children: [
                       Text(
-                        widget.movie.category.substring(0, 4),
+                        widget.movie.category,
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(width: 16),
@@ -189,7 +189,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          '${widget.movie.id}/10',
+                          '${widget.movie.averageRating}/5',
                           style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ),
@@ -202,7 +202,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               ),
             ),
 
-            // Comments section   TODO TEST
+            // Comments section
             CommentsSection(movie: widget.movie),
           ],
         ),

@@ -30,6 +30,8 @@ class Movie {
   final bool trendingMovies;
   final String thumbnailUrl;
   final List<Comment> comments;
+  final int averageRating;
+  final int userRating;
 
   Movie({
     required this.id,
@@ -41,6 +43,8 @@ class Movie {
     this.trendingMovies = false,
     required this.thumbnailUrl,
     this.comments = const [],
+    this.averageRating = 0,
+    this.userRating = 0,
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
@@ -55,6 +59,8 @@ class Movie {
               ?.map((commentJson) => Comment.fromJson(commentJson))
               .toList() ??
           [],
+      averageRating: json['averageRating']?.toInt() ?? 0,
+      userRating: json['userRating']?.toInt() ?? 0,
     );
   }
 }
