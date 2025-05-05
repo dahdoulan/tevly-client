@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/upload_component/constants/api_constants.dart';
 import 'package:tevly_client/upload_component/models/uploaded_video.dart';
@@ -104,10 +105,20 @@ class VideoUploadProvider extends ChangeNotifier {
   }
 
   http.MultipartRequest _createRequest(Uri url, UploadedVideo video) {
+     final token = AuthenticationService().getToken();
+  
+  if (token == null) {
+    throw Exception('Authentication token is missing');
+  }
+
     final request = http.MultipartRequest('POST', url)
       ..fields['description'] = video.description
       ..fields['title'] = video.title
       ..fields['category'] = video.category
+      ..headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    })
       ..files.add(
         http.MultipartFile.fromBytes(
           'video',
