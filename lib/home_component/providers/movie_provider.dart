@@ -31,17 +31,16 @@ class MovieProvider with ChangeNotifier {
 
   // Fetch movies if not already loaded
   Future<void> fetchMovies() async {
-    if (_allMovies.isNotEmpty) return; // Don't reload if already loaded
+    if (_allMovies.isNotEmpty) return; // Avoid re-fetching
 
     _isLoading = true;
     notifyListeners();
 
     try {
       _allMovies = await _movieService.fetchMovies();
-      notifyListeners();
     } catch (e) {
-      Logger.debug('Error in fetchMovies: $e');
-     } finally {
+      Logger.debug('Error fetching movies: $e');
+    } finally {
       _isLoading = false;
       notifyListeners();
     }
