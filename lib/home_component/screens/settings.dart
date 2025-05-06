@@ -100,12 +100,12 @@ class _SettingsPageState extends State<SettingsPage> {
             const Spacer(),
            SizedBox(
                   width: double.infinity,
-                  height: 40, // Added height constraint
+                  height: 40,  
                   child: ElevatedButton(
                     onPressed: () => _handleLogout(context),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 8), // Reduced padding
-                      backgroundColor: Colors.red, // Move color here from Text
+                      padding: const EdgeInsets.symmetric(vertical: 8),  
+                      backgroundColor: Colors.red,  
                     ),
                     child: const Text(
                       'Logout',

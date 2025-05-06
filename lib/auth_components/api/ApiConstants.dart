@@ -1,5 +1,4 @@
-import 'package:tevly_client/auth_components/service/environmentAuthService.dart';
-
+ 
 class ApiConstants {
   static const String baseUrl = 'http://localhost:8080/api';
   static const String login = '$baseUrl/auth/authenticate';

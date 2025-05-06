@@ -6,7 +6,6 @@ import 'package:tevly_client/auth_components/pages/forgotPassword.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verificationPage.dart';
-import 'package:tevly_client/home_component/models/movie.dart';
 import 'package:tevly_client/home_component/providers/Comment_provider.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
@@ -14,9 +13,7 @@ import 'package:tevly_client/video_player/videoPlayer.dart';
 import 'upload_component/providers/video_provider.dart';
 import 'home_component/providers/movie_provider.dart';
 import 'home_component/screens/home_screen.dart';
-import 'home_component/screens/movie_details_screen.dart';
-import 'package:provider/provider.dart';
-
+  
 void main() {
   runApp(
     MultiProvider(

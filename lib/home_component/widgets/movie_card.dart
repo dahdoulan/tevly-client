@@ -1,86 +1,60 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import '../models/movie.dart';
-import 'image_loader.dart';
 
-class MovieCard extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tevly_client/home_component/providers/movie_thumbnail_provider.dart';
+import '../models/movie.dart';
+class MovieCard extends StatelessWidget {
   final Movie movie;
   final Function()? onTap;
 
   const MovieCard({super.key, required this.movie, this.onTap});
 
   @override
-  _MovieCardState createState() => _MovieCardState();
-}
-
-class _MovieCardState extends State<MovieCard> {
-  static final Map<int, String> _imageCache = {}; // In-memory cache for images
-  String? _base64Image;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadThumbnail();
-  }
-
-  Future<void> _loadThumbnail() async {
-    // Check if the image is already cached
-    if (_imageCache.containsKey(widget.movie.id)) {
-      setState(() {
-        _base64Image = _imageCache[widget.movie.id];
-        _isLoading = false;
-      });
-      return;
-    }
-
-    // If not cached, fetch the image
-    final base64Image = await ImageLoaderService.loadImage(widget.movie.id);
-    if (base64Image != null) {
-      _imageCache[widget.movie.id] = base64Image; // Cache the image
-    }
-    setState(() {
-      _base64Image = base64Image;
-      _isLoading = false;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Container(
-        width: 120,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: _isLoading
-                  ? _placeholderWidget()
-                  : _base64Image != null
-                      ? Image.memory(
-                          base64Decode(_base64Image!.split(',').last),
-                          height: 160,
-                          width: 120,
-                          fit: BoxFit.cover,
-                        )
-                      : _errorWidget(),
-            ),
-            const SizedBox(height: 4),
-            Flexible(
-              child: Text(
-                widget.movie.title,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
+    return ChangeNotifierProvider(
+      create: (_) => MovieThumbnailProvider()..loadThumbnail(movie.id),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 120,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Consumer<MovieThumbnailProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.isLoading) {
+                      return _placeholderWidget();
+                    } else if (provider.base64Image != null) {
+                      return Image.memory(
+                        base64Decode(provider.base64Image!.split(',').last),
+                        height: 160,
+                        width: 120,
+                        fit: BoxFit.cover,
+                      );
+                    } else {
+                      return _errorWidget();
+                    }
+                  },
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Flexible(
+                child: Text(
+                  movie.title,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

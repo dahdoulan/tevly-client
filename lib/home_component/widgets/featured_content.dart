@@ -1,4 +1,5 @@
 // lib/widgets/featured_content.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
@@ -34,6 +35,7 @@ class _FeaturedContentState extends State<FeaturedContent> {
   }
 
   Future<void> _loadImage() async {
+    if(!kIsWeb){
     try {
       final imageUrl = await ImageLoaderService.loadImage(widget.movie.id);
       setState(() {
@@ -46,6 +48,7 @@ class _FeaturedContentState extends State<FeaturedContent> {
         _imageUrl = widget.movie.thumbnailUrl;
         _isLoading = false;
       });
+    }
     }
   }
 
