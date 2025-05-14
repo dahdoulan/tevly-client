@@ -1,4 +1,6 @@
 // lib/screens/movie_details_screen.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
@@ -76,39 +78,35 @@ bool isArabicText(String text) {
             Stack(
               children: [
                 _isLoading
-                    ? Container(
-                        height: 300,
-                        width: double.infinity,
-                        color: Colors.black,
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Image.network(
-                        _imageUrl ?? '',
-                        height: 300,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          Logger.debug('Image load error: $error');
-                          return Container(
-                            height: 300,
-                            width: double.infinity,
-                            color: Colors.black,
-                            child: const Icon(Icons.error, color: Colors.white),
-                          );
-                        },
-                      ),
-                Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black],
-                    ),
-                  ),
-                ),
+    ? Container(
+        height: 300,
+        width: double.infinity,
+        color: Colors.black,
+        child: const Center(child: CircularProgressIndicator()),
+      )
+    : _imageUrl != null && _imageUrl!.startsWith('data:image')
+        ? Image.memory(
+            base64Decode(_imageUrl!.split(',').last),
+            height: 300,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          )
+        : Image.network(
+            _imageUrl ?? '',
+            height: 300,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              Logger.debug('Image load error: $error');
+              return Container(
+                height: 300,
+                width: double.infinity,
+                color: Colors.black,
+                child: const Icon(Icons.error, color: Colors.white),
+              );
+            },
+          ),
+
                Positioned(
   bottom: 20,
   left: 0,

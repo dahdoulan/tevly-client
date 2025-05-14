@@ -79,9 +79,9 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'firstname': _firstnameController.text.trim(),
-        'lastname': _lastnameController.text.trim(),
-        'email': _emailController.text.trim(),
+        'firstname': _firstnameController.text.trim().toLowerCase(),
+        'lastname': _lastnameController.text.trim().toLowerCase(),
+        'email': _emailController.text.trim().toLowerCase(),
         'password': _passwordController.text.trim(),
         'dateOfBirth': _selectedBirthdate?.toIso8601String(),
        /* 'phone': _phoneController.text,*/
