@@ -8,57 +8,63 @@ class MovieCard extends StatelessWidget {
   final Movie movie;
   final Function()? onTap;
 
-  const MovieCard({super.key, required this.movie, this.onTap});
+  const MovieCard({Key? key, required this.movie, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
+      key: ValueKey(movie.id),  // <-- Add this key here
       create: (_) => MovieThumbnailProvider()..loadThumbnail(movie.id),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           width: 120,
           margin: const EdgeInsets.symmetric(horizontal: 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Consumer<MovieThumbnailProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.isLoading) {
-                      return _placeholderWidget();
-                    } else if (provider.base64Image != null) {
-                      return Image.memory(
-                        base64Decode(provider.base64Image!.split(',').last),
-                        height: 160,
-                        width: 120,
-                        fit: BoxFit.cover,
-                      );
-                    } else {
-                      return _errorWidget();
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 4),
-              Flexible(
-                child: Text(
-                  movie.title,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.25,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Consumer<MovieThumbnailProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.isLoading) {
+                        return _placeholderWidget();
+                      } else if (provider.base64Image != null) {
+                        return Image.memory(
+                          base64Decode(provider.base64Image!.split(',').last),
+                          height: 160,
+                          width: 120,
+                          fit: BoxFit.cover,
+                        );
+                      } else {
+                        return _errorWidget();
+                      }
+                    },
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Flexible(
+                  child: Text(
+                    movie.title,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+ 
+
 
   Widget _placeholderWidget() {
     return Container(

@@ -24,8 +24,8 @@ class AuthenticationService {
     return _role;
   }
   void clearToken() {
-    _token =' ';
-    _role = '';
+    _token =null;
+    _role = null;
   }
 
 

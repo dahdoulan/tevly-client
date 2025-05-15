@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/home_component/widgets/check_authentication.dart';
 import '../providers/movie_provider.dart';
 import '../models/movie.dart';
 import '../widgets/bottom_navigation.dart';
@@ -9,10 +10,10 @@ import 'movie_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+  CheckAuthentication checkAuth = const CheckAuthentication(child: Text("Welcome Home"),);
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
@@ -20,8 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    
+    checkAuth; /////////////////////////////////////////////////TODO: Implement this in a better way, it does not work as expected
+    
     // Only fetch if data is not already loaded
-    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    
+      final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     if (movieProvider.allMovies.isEmpty) {
       Future.microtask(() {
         movieProvider.fetchMovies();
@@ -32,13 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onNavTap(int index) {
     if (index == 2) { // Settings tab index
       Navigator.pushNamed(context, '/settings');
-    } else {
+    }
+     if (index == 1) { // search tab index
+      Navigator.pushNamed(context, '/search');
+     }
+     else {
       setState(() {
         _currentNavIndex = index;
       });
     }
   }
-
+ 
   void _onMovieTap(Movie movie) {
     Navigator.push(
       context,
@@ -126,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       movies: categoryMovies,
                       onMovieTap: _onMovieTap,
                     );
+                    
                   }).toList(),
                 ]),
               ),

@@ -7,6 +7,7 @@ import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verificationPage.dart';
 import 'package:tevly_client/home_component/providers/Comment_provider.dart';
+import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/videoPlayer.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         '/signupFilmmaker': (context) => FilmmakerSignupPage(),
         '/admin': (context) => const AdminDashboard(),
         '/settings': (context) => const SettingsPage(),
+        '/search': (context) => const MovieSearchPage(),
          },
           onGenerateRoute: _onGenerateRoute,
       initialRoute: '/login',
