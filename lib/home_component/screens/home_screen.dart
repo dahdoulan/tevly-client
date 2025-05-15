@@ -72,6 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
               : null;
 
           return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+
             slivers: [
               // App Bar
               const SliverAppBar(

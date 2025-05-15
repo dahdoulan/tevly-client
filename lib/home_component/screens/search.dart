@@ -122,23 +122,25 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
             Expanded(
   child: _filteredMovies.isEmpty
       ? Center(child: Text('No movies found.'))
-      : ListView.builder(
-        
-          itemCount: _filteredMovies.length,
-          itemBuilder: (context, index) {
-            
-            final movie = _filteredMovies[index];
-            return MovieCard(
-              
-              movie: movie,
-              onTap: () {
-               _onMovieTap(movie);
-              },
-              
-            );
-          },
-          
-        ),
+      :GridView.builder(
+  shrinkWrap: true,
+  physics: const AlwaysScrollableScrollPhysics(), // Disable scrolling
+  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+    maxCrossAxisExtent: 200, // Each item max width
+    mainAxisSpacing: 8,
+    crossAxisSpacing: 8,
+    childAspectRatio: 0.7, // Adjust based on your MovieCard dimensions
+  ),
+  itemCount: _filteredMovies.length,
+  itemBuilder: (context, index) {
+    final movie = _filteredMovies[index];
+    return MovieCard(
+      movie: movie,
+      onTap: () => _onMovieTap(movie),
+    );
+  },
+)
+,
 )
 ,
         ],
