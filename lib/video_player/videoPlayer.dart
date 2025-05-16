@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
  
@@ -18,26 +19,50 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   
 
   @override
-  void initState() {
-    super.initState();
-    _initializePlayer(widget.resolutionUrls[_currentResolution]!);
-  } 
+void initState() {
+  super.initState();
+  _videoController = VideoPlayerController.networkUrl(Uri.parse('')); // Initialize with a dummy value
+  _initializePlayer(widget.resolutionUrls[_currentResolution]!);
+}
 
-  Future<void> _initializePlayer(String url) async {
+
+ Future<void> _initializePlayer(String url) async {
+  Logger.debug('Initializing video player with URL: $url');
+  try {
+    // Dispose of the previous VideoPlayerController if it exists
+    if (_videoController.value.isInitialized) {
+      Logger.debug('Disposing previous video controller');
+      await _videoController.dispose();
+    }
+
+    // Initialize the new VideoPlayerController
     _videoController = VideoPlayerController.networkUrl(Uri.parse(url));
     await _videoController.initialize();
+    Logger.debug('Video player initialized successfully');
+
+    // Dispose of the previous ChewieController if it exists
+    if (_chewieController != null) {
+      Logger.debug('Disposing previous Chewie controller');
+    _chewieController!.dispose();
+    }
+
+    // Create a new ChewieController
     _chewieController = ChewieController(
       videoPlayerController: _videoController,
       autoPlay: false,
       looping: false,
       showControls: true,
-      showOptions: true ,
+      showOptions: true,
       allowFullScreen: true,
       customControls: const MaterialControls(),
       additionalOptions: (context) => _buildResolutionOptions(),
     );
+
     if (mounted) setState(() {});
+  } catch (e) {
+    Logger.debug('Error initializing video player: $e');
   }
+}
 
   List<OptionItem> _buildResolutionOptions() {
     return widget.resolutionUrls.keys.map((res) {
@@ -50,12 +75,30 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   }
 
   void _changeResolution(BuildContext context, String newRes) async {
-    if (newRes != _currentResolution) {
-      _currentResolution = newRes;
-      await _videoController.dispose();
-      await _initializePlayer(widget.resolutionUrls[newRes]!);
+  if (newRes != _currentResolution) {
+    final currentPosition = _videoController.value.position; // Save current position
+    final wasPlaying = _videoController.value.isPlaying; // Save playback state
+
+    Logger.debug('Changing resolution to $newRes');
+    Logger.debug('Current position: $currentPosition');
+    Logger.debug('Was playing: $wasPlaying');
+
+    _currentResolution = newRes;
+    await _initializePlayer(widget.resolutionUrls[newRes]!);
+
+    // Use ChewieController to seek to the saved position
+    if (_chewieController != null) {
+      await _chewieController!.seekTo(currentPosition);
     }
+
+    // Resume playback if it was playing
+    if (wasPlaying) {
+      _videoController.play();
+    }
+
+    Logger.debug('Resolution changed to $newRes');
   }
+}
  
   @override
 Widget build(BuildContext context) {
@@ -94,9 +137,12 @@ Widget build(BuildContext context) {
    
 
   @override
-  void dispose() {
+void dispose() {
+  Logger.debug('Disposing video and Chewie controllers');
+  _chewieController?.dispose();
+  if (_videoController.value.isInitialized) {
     _videoController.dispose();
-    _chewieController?.dispose();
-    super.dispose();
   }
+  super.dispose();
+}
 }

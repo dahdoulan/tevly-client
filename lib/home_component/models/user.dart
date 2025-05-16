@@ -1,22 +1,19 @@
 class UserInfo {
-  final String username;
+  final String fullName;
   final String email;
-  final String phone;
-  final String birthdate;
+   final String birthDate;
 
   UserInfo({
-    required this.username,
+    required this.fullName,
     required this.email,
-    required this.phone,
-    required this.birthdate,
+     required this.birthDate,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     return UserInfo(
-      username: json['username'] ?? '',
+      fullName: json['fullName'] ?? '',
       email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
-      birthdate: json['birthdate'] ?? '',
+       birthDate: json['birthDate'] ?? '',
     );
   }
 }

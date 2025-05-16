@@ -32,9 +32,10 @@ class _SettingsPageState extends State<SettingsPage> {
       }
 
       final response = await http.get(
-        Uri.parse('${ApiConstants.baseUrl}/user/profile'),
+        Uri.parse(ApiConstants.viewPorfile),
         headers: {'Authorization': 'Bearer $token'},
       );
+      Logger.debug('Response status: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -87,25 +88,24 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.grey[850],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (_userInfo != null) ...[
-              _buildInfoItem('Username', _userInfo!.username),
+              _buildInfoItem('FullName', _userInfo!.fullName),
               _buildInfoItem('Email', _userInfo!.email),
-              _buildInfoItem('Phone', _userInfo!.phone),
-              _buildInfoItem('Birthdate', _userInfo!.birthdate),
+              _buildInfoItem('Birthdate', _userInfo!.birthDate),
             ],
-            const Spacer(),
+            const Spacer( ), 
            SizedBox(
                   width: double.infinity,
-                  height: 40, // Added height constraint
+                  height: 50,  
                   child: ElevatedButton(
                     onPressed: () => _handleLogout(context),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 8), // Reduced padding
-                      backgroundColor: Colors.red, // Move color here from Text
+                      padding: const EdgeInsets.symmetric(vertical:1),  
+                      backgroundColor: Colors.red,  
                     ),
                     child: const Text(
                       'Logout',
@@ -115,7 +115,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: Colors.black,
                       ),
                     ),
+                     
                   ),
+
                 ),
           ],
         ),
@@ -125,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildInfoItem(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -136,12 +138,12 @@ class _SettingsPageState extends State<SettingsPage> {
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             value,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 21,
               fontWeight: FontWeight.w500,
             ),
           ),

@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
  Future<void> _login() async {
   setState(() {
     _isLoading = true;
-  });
+  }); 
 
   final url = Uri.parse(ApiConstants.login);
 
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     url,
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({
-      'email': _emailController.text.trim(),
+      'email': _emailController.text.trim().toLowerCase(),
       'password': _passwordController.text.trim(),
     }),
   );
@@ -92,14 +92,12 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Replace Icon with Image
-                Container(
+                 Container(
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    // Optional: add a subtle shadow
-                    boxShadow: [
+                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 10,

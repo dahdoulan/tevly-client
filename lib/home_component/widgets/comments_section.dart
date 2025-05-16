@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../models/movie.dart';
 import '../providers/Comment_provider.dart';
-import '../../auth_components/api/ApiConstants.dart';
-
+ 
 class CommentsSection extends StatefulWidget {
   final Movie movie;
 
