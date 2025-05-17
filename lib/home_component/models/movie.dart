@@ -30,6 +30,8 @@ class Movie {
   final bool trendingMovies;
   final String thumbnailUrl;
   final List<Comment> comments;
+  final int filmmakerId;
+  final DateTime? createdAt;
   final int averageRating;
   final int userRating;
 
@@ -43,6 +45,8 @@ class Movie {
     this.trendingMovies = false,
     required this.thumbnailUrl,
     this.comments = const [],
+    this.filmmakerId = 0,
+    this.createdAt,
     this.averageRating = 0,
     this.userRating = 0,
   });
@@ -59,6 +63,10 @@ class Movie {
               ?.map((commentJson) => Comment.fromJson(commentJson))
               .toList() ??
           [],
+      filmmakerId: json['filmmakerId']?.toInt() ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : null,
       averageRating: json['averageRating']?.toInt() ?? 0,
       userRating: json['userRating']?.toInt() ?? 0,
     );

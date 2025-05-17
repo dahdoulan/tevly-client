@@ -26,6 +26,18 @@ class _LoginPageState extends State<LoginPage> {
     get tokenGetter => token;
 
  Future<void> _login() async {
+  bool isValid = true;
+  String errorMessage = '';
+   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid email address';
+  }
+  // Validate password
+  else if (!RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$')
+      .hasMatch(_passwordController.text)) {
+    isValid = false;
+    errorMessage = 'Invalid password format';
+  }
   setState(() {
     _isLoading = true;
   }); 
@@ -68,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
     }
      Logger.debug('Token: $token');
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
     Logger.debug('Status Code: ${response.statusCode}, Response: ${response.body}');
   }
 }
@@ -97,11 +109,11 @@ class _LoginPageState extends State<LoginPage> {
                   height: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                     boxShadow: [
+                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black,
                         blurRadius: 10,
-                        offset: const Offset(0, 5),
+                        offset: Offset(0, 5),
                       ),
                     ],
                   ),
@@ -132,7 +144,8 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Forgot Password?",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -176,53 +189,81 @@ class _LoginPageState extends State<LoginPage> {
     IconData icon,
     bool isPassword,
   ) {
-    return Container(
-      width: kIsWeb
-          ? MediaQuery.of(context).size.width * 0.4
-          : MediaQuery.of(context).size.width * 0.8,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextFormField(
-        controller: controller,
-        obscureText: isPassword && !_isPasswordVisible,
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-          ),
-          prefixIcon: Icon(
-            icon,
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
+  String? getErrorText(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+
+    switch (hintText) {
+      case "Email":
+        if (!emailRegex.hasMatch(value)) {
+          return 'Enter a valid email address';
+        }
+        break;
+      case "Password":
+        if (!passwordRegex.hasMatch(value)) {
+          return 'Min 8 chars, 1 uppercase, 1 symbol';
+        }
+        break;
+      
+      
+    }
+    return null;
+  }
+   return Container(
+  width: kIsWeb
+      ? MediaQuery.of(context).size.width * 0.4
+      : MediaQuery.of(context).size.width * 0.8,
+  padding: const EdgeInsets.symmetric(horizontal: 20),
+  child: Theme(
+    data: Theme.of(context).copyWith(
+      textSelectionTheme: const TextSelectionThemeData(
+        selectionColor: Colors.grey, // Highlight color
+ 
+      ),
+    ),
+    child: TextFormField(
+      controller: controller,
+      obscureText: isPassword && !_isPasswordVisible,
+      style: const TextStyle(color: Colors.black),
+        validator: (value) => getErrorText(value),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.black),
+        prefixIcon: Icon(icon, color: Colors.black),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              )
+            : null,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          suffixIcon: isPassword
-              ? IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                )
-              : null,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 2,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
-    );
+    ),
+  ),
+);
+
   }
 Widget _buildLoginButton() {
     return SizedBox(
@@ -246,7 +287,7 @@ Widget _buildLoginButton() {
                   'Login',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: Colors.black,
                   ),
                 ),
         ),

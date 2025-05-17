@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tevly_client/admin_component/services/previewMovie.dart';
+import 'package:tevly_client/admin_component/services/previewThumbnail.dart';
 import 'dart:convert';
 import 'package:tevly_client/auth_components/api/ApiConstants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:universal_html/html.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({Key? key}) : super(key: key);
@@ -13,10 +16,11 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
+  
   int _selectedIndex = 0;
   bool _isLoading = true;
   List<Map<String, dynamic>> _pendingMovies = [];
-
+ 
   @override
   void initState() {
     super.initState();
@@ -31,8 +35,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
         throw Exception('No authentication token found');
       }
 
-      final response = await http.get(
-        Uri.parse('${ApiConstants.baseUrl}/admin/pending-movies'),
+      final response = await http.post(
+        Uri.parse( ApiConstants.adminPendingMovies ),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -90,7 +94,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-
     if (_selectedIndex == 0) {
       return RefreshIndicator(
         onRefresh: _fetchPendingMovies,
@@ -105,53 +108,84 @@ class _AdminDashboardState extends State<AdminDashboard> {
               ),
               const SizedBox(height: 16),
               DataTable(
-                columns: const [
-                  DataColumn(label: Text('Title')),
-                  DataColumn(label: Text('Uploaded By')),
-                  DataColumn(label: Text('Date')),
-                  DataColumn(label: Text('Actions')),
-                ],
-                rows: _pendingMovies.map((movie) {
-                  return DataRow(cells: [
-                    DataCell(
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(movie['title'] ?? ''),
-                          Text(
-                            movie['description'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    DataCell(Text(movie['uploadedBy'] ?? '')),
-                    DataCell(Text(movie['date'] ?? '')),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.visibility),
-                          onPressed: () => _previewMovie(movie),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.check, color: Colors.green),
-                          onPressed: () => _handleApprove(movie),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.red),
-                          onPressed: () => _handleReject(movie),
-                        ),
-                      ],
-                    )),
-                  ]);
-                }).toList(),
-              ),
+  showCheckboxColumn: false,
+    horizontalMargin: 12,
+  columnSpacing: 28,
+  columns: const [
+    DataColumn(label: Text('Title')),
+    DataColumn(label: Text('Description')),
+    DataColumn(label: Text('Filmmaker')),
+    DataColumn(label: Text('Email')),
+    DataColumn(label: Text('Category')),
+    DataColumn(label: Text('Date')),
+    DataColumn(label: Text('Actions')),
+  ],
+  rows: _pendingMovies.map((movie) {
+    return DataRow(cells: [
+      DataCell(Text(movie['title'] ?? '')),
+      DataCell(
+        Text(
+          movie['description'] ?? '',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 12),
+        ),
+      ),
+   
+      DataCell(Text(movie['filmmakerFullName'] ?? 'Unknown')),
+  
+      DataCell(Text(movie['filmmakerEmail'] ?? '')),
+    
+      DataCell(
+        Row(
+          children: [
+            Icon(
+              Icons.category,
+              size: 16,
+              color: Colors.grey[600],
+            ),
+            const SizedBox(width: 4),
+            Text(movie['category'] ?? 'Uncategorized'),
+          ],
+        ),
+      ),
+      DataCell(
+        Tooltip(
+          message: movie['created'] ?? '',
+          child: Text(
+            (movie['created'] != null && movie['created'].length >= 10)
+              ? movie['created'].substring(0, 10)
+              : (movie['created'] ?? ''),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+      // Actions Cell
+      DataCell(Row(
+        children: [
+           IconButton(
+            icon: const Icon(Icons.visibility),
+            onPressed: () => PreviewThumbnail.previewThumbnail(context,movie),
+          ),
+          IconButton(
+            icon: const Icon(Icons.play_arrow),
+            onPressed: () => Previewmovie.previewMovie(context,movie),
+          ),
+          IconButton(
+            icon: const Icon(Icons.check, color: Colors.green),
+            onPressed: () => _handleApprove(movie),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.red),
+            onPressed: () => _handleReject(movie),
+          ),
+        ],
+      )),
+    ]);
+  }).toList(),
+),
+              
             ],
           ),
         ),
@@ -191,71 +225,81 @@ class _AdminDashboardState extends State<AdminDashboard> {
 }
 
   Future<void> _handleApprove(Map<String, dynamic> movie) async {
-    try {
-      final token = AuthenticationService().getToken();
-      if (token == null) throw Exception('No authentication token found');
+  try {
+    final token = AuthenticationService().getToken();
+    if (token == null) throw Exception('No authentication token found');
 
-      final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/admin/approve-movie/${movie['id']}'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+    final videoId = int.parse(movie['id'].toString());
+    Logger.debug('Approving movie with ID: $videoId');
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Approved: ${movie['title']}')),
-        );
-        _fetchPendingMovies(); // Refresh the list
-      } else {
-        throw Exception('Failed to approve movie');
-      }
-    } catch (e) {
-      Logger.debug('Error approving movie: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to approve movie')),
-      );
-    }
-  }
-
-  Future<void> _handleReject(Map<String, dynamic> movie) async {
-    try {
-      final token = AuthenticationService().getToken();
-      if (token == null) throw Exception('No authentication token found');
-
-      final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/admin/reject-movie/${movie['id']}'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Rejected: ${movie['title']}')),
-        );
-        _fetchPendingMovies(); // Refresh the list
-      } else {
-        throw Exception('Failed to reject movie');
-      }
-    } catch (e) {
-      Logger.debug('Error rejecting movie: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to reject movie')),
-      );
-    }
-  }
-
-  void _previewMovie(Map<String, dynamic> movie) {
-    Navigator.pushNamed(
-      context,
-      '/video-player',
-      arguments: {
-        'resolutionUrls': {'HD': movie['movieUrl']},
-        'title': movie['title'],
+    final url = Uri.parse('${ApiConstants.approveMovie}?videoId=$videoId');
+    
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
       },
     );
+
+    Logger.debug('Approve response status: ${response.statusCode}');
+    Logger.debug('Approve response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Approved: ${movie['title']}')),
+      );
+      await _fetchPendingMovies();
+    } else {
+      throw Exception('Failed to approve movie: ${response.statusCode}');
+    }
+  } catch (e) {
+    Logger.debug('Error approving movie: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to approve movie')),
+    );
   }
+}
+
+Future<void> _handleReject(Map<String, dynamic> movie) async {
+  try {
+    final token = AuthenticationService().getToken();
+    if (token == null) throw Exception('No authentication token found');
+
+    final videoId = int.parse(movie['id'].toString());
+    Logger.debug('Rejecting movie with ID: $videoId');
+
+
+    final url = Uri.parse('${ApiConstants.rejectMovie}?videoId=$videoId');
+    
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    Logger.debug('Reject response status: ${response.statusCode}');
+    Logger.debug('Reject response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Rejected: ${movie['title']}')),
+      );
+      await _fetchPendingMovies();
+    } else {
+      throw Exception('Failed to reject movie: ${response.statusCode}');
+    }
+  } catch (e) {
+    Logger.debug('Error rejecting movie: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to reject movie')),
+    );
+  }
+}
+
+ 
+
+ 
 }

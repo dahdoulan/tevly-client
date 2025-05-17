@@ -250,62 +250,69 @@ Widget _buildTextField(
         ? MediaQuery.of(context).size.width * 0.4
         : MediaQuery.of(context).size.width * 0.8,
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: TextFormField(
-      controller: controller,
-      obscureText: isPassword && !_isPasswordVisible,
-      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) => getErrorText(value),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-              )
-            : null,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+    child: Theme(
+      data: Theme.of(context).copyWith(
+      textSelectionTheme: const TextSelectionThemeData(
+        selectionColor: Colors.grey, // Highlight color
+      ),
+    ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword && !_isPasswordVisible,
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) => getErrorText(value),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+          ),
+          prefixIcon: Icon(
+            icon,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onPrimary,
-            width: 2,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                )
+              : null,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            borderRadius: BorderRadius.circular(10),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onPrimary,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          errorStyle: TextStyle(
             color: Colors.black,
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorStyle: TextStyle(
-          color: Colors.black,
         ),
       ),
     ),
