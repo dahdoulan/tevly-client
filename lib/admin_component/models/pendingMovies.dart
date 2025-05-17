@@ -25,7 +25,7 @@ class PendingMovie {
       thumbnailUrl: json['thumbnailUrl'] ?? '',
       movieUrl: json['movieUrl'] ?? '',
       date: json['date'] ?? '',
-      status: json['status'] ?? 'Pending',
+      status: json['status'] ?? 'ENCODED',
     );
   }
 }
