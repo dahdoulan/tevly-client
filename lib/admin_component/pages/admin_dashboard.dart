@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:tevly_client/admin_component/services/previewMovie.dart';
-import 'package:tevly_client/admin_component/services/previewThumbnail.dart';
+import 'package:tevly_client/admin_component/services/preview_movie.dart';
+import 'package:tevly_client/admin_component/services/preview_thumbnail.dart';
 import 'dart:convert';
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
-import 'package:universal_html/html.dart';
-
+ 
 class AdminDashboard extends StatefulWidget {
-  const AdminDashboard({Key? key}) : super(key: key);
+  const AdminDashboard({super.key});
 
   @override
   State<AdminDashboard> createState() => _AdminDashboardState();
@@ -107,81 +106,97 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              DataTable(
+        DataTable(
   showCheckboxColumn: false,
-    horizontalMargin: 12,
-  columnSpacing: 28,
+  horizontalMargin: 16,
+  columnSpacing: 24,
+  border: TableBorder.all(
+    color: Colors.grey.shade300,
+    width: 1,
+    borderRadius: BorderRadius.circular(8),
+  ),
+  headingRowColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
+  dataRowHeight: 60,
   columns: const [
-    DataColumn(label: Text('Title')),
-    DataColumn(label: Text('Description')),
-    DataColumn(label: Text('Filmmaker')),
-    DataColumn(label: Text('Email')),
-    DataColumn(label: Text('Category')),
-    DataColumn(label: Text('Date')),
-    DataColumn(label: Text('Actions')),
+    DataColumn(
+      label: Text('Title', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
+    DataColumn(
+      label: Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
+    DataColumn(
+      label: Text('Filmmaker', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
+    DataColumn(
+      label: Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
+    DataColumn(
+      label: Text('Category', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
+    DataColumn(
+      label: Text('Date', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
+    DataColumn(
+      label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
+    ),
   ],
   rows: _pendingMovies.map((movie) {
     return DataRow(cells: [
-      DataCell(Text(movie['title'] ?? '')),
       DataCell(
-        Text(
-          movie['description'] ?? '',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Text(
+            movie['title'] ?? '',
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
-   
+      DataCell(
+        Container(
+          constraints: const BoxConstraints(maxWidth: 2000),
+          child: Text(
+            movie['description'] ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
       DataCell(Text(movie['filmmakerFullName'] ?? 'Unknown')),
-  
       DataCell(Text(movie['filmmakerEmail'] ?? '')),
-    
       DataCell(
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.category,
-              size: 16,
-              color: Colors.grey[600],
-            ),
+            Icon(Icons.category, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 4),
             Text(movie['category'] ?? 'Uncategorized'),
           ],
         ),
       ),
+      DataCell(Text(movie['created']?.toString().substring(0, 10) ?? '')),
       DataCell(
-        Tooltip(
-          message: movie['created'] ?? '',
-          child: Text(
-            (movie['created'] != null && movie['created'].length >= 10)
-              ? movie['created'].substring(0, 10)
-              : (movie['created'] ?? ''),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.visibility),
+              onPressed: () => PreviewThumbnail.previewThumbnail(context, movie),
+            ),
+            IconButton(
+              icon: const Icon(Icons.play_arrow),
+              onPressed: () => Previewmovie.previewMovie(context, movie),
+            ),
+            IconButton(
+              icon: const Icon(Icons.check, color: Colors.green),
+              onPressed: () => _handleApprove(movie),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.red),
+              onPressed: () => _handleReject(movie),
+            ),
+          ],
         ),
       ),
-      // Actions Cell
-      DataCell(Row(
-        children: [
-           IconButton(
-            icon: const Icon(Icons.visibility),
-            onPressed: () => PreviewThumbnail.previewThumbnail(context,movie),
-          ),
-          IconButton(
-            icon: const Icon(Icons.play_arrow),
-            onPressed: () => Previewmovie.previewMovie(context,movie),
-          ),
-          IconButton(
-            icon: const Icon(Icons.check, color: Colors.green),
-            onPressed: () => _handleApprove(movie),
-          ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.red),
-            onPressed: () => _handleReject(movie),
-          ),
-        ],
-      )),
     ]);
   }).toList(),
 ),

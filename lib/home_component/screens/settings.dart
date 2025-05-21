@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+ import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/models/user.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -73,81 +74,204 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  @override
+  
+   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundColor,
+        body: Center(child: AppTheme.loadingIndicator),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.grey[850],
+        elevation: 0,
+        title: Text('Settings', style: AppTheme.headerStyle),
+        backgroundColor: AppTheme.backgroundColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
+      body: SingleChildScrollView(
+        padding: AppTheme.defaultPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (_userInfo != null) ...[
-              _buildInfoItem('FullName', _userInfo!.fullName),
-              _buildInfoItem('Email', _userInfo!.email),
-              _buildInfoItem('Birthdate', _userInfo!.birthDate),
-            ],
-            const Spacer( ), 
-           SizedBox(
-                  width: double.infinity,
-                  height: 50,  
-                  child: ElevatedButton(
-                    onPressed: () => _handleLogout(context),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical:1),  
-                      backgroundColor: Colors.red,  
-                    ),
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(
-                        fontSize: 21, 
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                     
+            Container(
+              padding: AppTheme.defaultPadding,
+              decoration: AppTheme.containerDecoration,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Profile Information', style: AppTheme.subheaderStyle),
+                  const SizedBox(height: AppTheme.defaultSpacing),
+                  if (_userInfo != null) ...[
+                    _buildInfoItem('FULL NAME', _userInfo!.fullName, Icons.person),
+                    _buildDivider(),
+                    _buildInfoItem('EMAIL', _userInfo!.email, Icons.email),
+                    _buildDivider(),
+                    _buildInfoItem('BIRTHDATE', _userInfo!.birthDate, Icons.cake),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTheme.defaultSpacing),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildActionButton(
+                    'My List',
+                    Icons.bookmark,
+                    Colors.blue[700]!,
+                    () {
+                      // Navigate to My List
+                    },
                   ),
-
-                ),
+                  const SizedBox(height: 12),
+                  _buildActionButton(
+                    'Help & Support',
+                    Icons.help_outline,
+                    Colors.green[700]!,
+                    () {
+                      // Navigate to Help
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  _buildActionButton(
+                    'Privacy Policy',
+                    Icons.privacy_tip_outlined,
+                    Colors.orange[700]!,
+                    () {
+                      // Navigate to Privacy Policy
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  _buildLogoutButton(context),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoItem(String label, String value) {
+  Widget _buildInfoItem(String label, String value, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+          Icon(
+            icon,
+            color: Colors.grey[400],
+            size: 24,
           ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 21,
-              fontWeight: FontWeight.w500,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 12,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Divider(
+      color: Colors.grey[800],
+      height: 1,
+      thickness: 1,
+    );
+  }
+
+  Widget _buildActionButton(
+    String label,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: color, size: 24),
+              const SizedBox(width: 16),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey[600],
+                size: 16,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      margin: const EdgeInsets.only(bottom: 24),
+      child: ElevatedButton.icon(
+        onPressed: () => _handleLogout(context),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
+        ),
+        icon: const Icon(Icons.logout, color: Colors.white),
+        label: const Text(
+          'Logout',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 1,
+          ),
+        ),
       ),
     );
   }

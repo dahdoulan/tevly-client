@@ -26,15 +26,17 @@ class MovieProvider with ChangeNotifier {
   // Cache thumbnail URL
   void cacheThumbnailUrl(int movieId, String url) {
     _thumbnailCache[movieId] = url;
-    notifyListeners();
+    // Remove immediate notification to prevent build-time updates
+    Future.microtask(() => notifyListeners());
   }
 
   // Fetch movies if not already loaded
-  Future<void> fetchMovies() async {
-    if (_allMovies.isNotEmpty) return; // Avoid re-fetching
+    Future<void> fetchMovies() async {
+    if (_allMovies.isNotEmpty) return;
 
     _isLoading = true;
-    notifyListeners();
+    // Use microtask for state updates
+    Future.microtask(() => notifyListeners());
 
     try {
       _allMovies = await _movieService.fetchMovies();
@@ -42,7 +44,8 @@ class MovieProvider with ChangeNotifier {
       Logger.debug('Error fetching movies: $e');
     } finally {
       _isLoading = false;
-      notifyListeners();
+      // Use microtask for state updates
+      Future.microtask(() => notifyListeners());
     }
   }
 
@@ -50,14 +53,13 @@ class MovieProvider with ChangeNotifier {
   void addToMyList(Movie movie) {
     if (!_myList.any((item) => item.id == movie.id)) {
       _myList.add(movie);
-      notifyListeners();
+      Future.microtask(() => notifyListeners());
     }
   }
-
   // Remove from My List
   void removeFromMyList(int movieId) {
     _myList.removeWhere((movie) => movie.id == movieId);
-    notifyListeners();
+    Future.microtask(() => notifyListeners());
   }
   List<Movie> getMoviesByCategory(String category) {
     return _allMovies.where((movie) => movie.category == category).toList();

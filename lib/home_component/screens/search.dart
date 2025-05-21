@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/home_component/models/movie.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/screens/movie_details_screen.dart';
+import 'package:tevly_client/home_component/services/cache_service.dart';
 import 'package:tevly_client/home_component/widgets/movie_card.dart';
 
 class MovieSearchPage extends StatefulWidget {
@@ -17,6 +19,8 @@ class MovieSearchPage extends StatefulWidget {
 }
 
 class _MovieSearchPageState extends State<MovieSearchPage> {
+    final _cacheService = MovieCacheService();
+
   List<Movie> _allMovies = [];
   List<Movie> _filteredMovies = [];
   bool _isLoading = false;
@@ -39,33 +43,43 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
   }
 
   Future<void> _fetchAllMovies() async {
-  setState(() => _isLoading = true);
-  try {
-    final token = await AuthenticationService().getToken();
-    final response = await http.post(
-      Uri.parse(ApiConstants.metadata),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
+    setState(() => _isLoading = true);
+    try {
+      // Check cache first
+      if (_cacheService.isCacheValid) {
+        Logger.debug("Using cached movies");
+        _allMovies = _cacheService.getCachedMovies();
+        _filterMovies(_searchController.text);
+        setState(() => _isLoading = false);
+        return;
+      }
 
-    Logger.debug("Status Code: ${response.statusCode}");
-    Logger.debug("Response Body: ${response.body}");
+      final token = await AuthenticationService().getToken();
+      final response = await http.post(
+        Uri.parse(ApiConstants.metadata),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final List data = json.decode(response.body);
-      _allMovies = data.map((json) => Movie.fromJson(json)).toList();
-      _filterMovies(_searchController.text);
-    } else {
-      throw Exception("Failed to fetch movies: ${response.statusCode}");
+      Logger.debug("Status Code: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final List data = json.decode(response.body);
+        _allMovies = data.map((json) => Movie.fromJson(json)).toList();
+        // Update cache with new data
+        _cacheService.updateCache(_allMovies);
+        _filterMovies(_searchController.text);
+      } else {
+        throw Exception("Failed to fetch movies: ${response.statusCode}");
+      }
+    } catch (e) {
+      Logger.debug("Error fetching movies: $e");
+    } finally {
+      setState(() => _isLoading = false);
     }
-  } catch (e) {
-    Logger.debug("Error fetching movies: $e");
-  } finally {
-    setState(() => _isLoading = false);
   }
-}
 
 
   void _filterMovies(String query) {
@@ -86,43 +100,49 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
     );
   }
 
-  @override
+    @override
   void dispose() {
     _searchController.dispose();
     _debounce?.cancel();
     super.dispose();
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(title: const Text("Search Movies")),
+      backgroundColor: AppTheme.backgroundColor,
+      appBar: AppBar(
+        title: Text("Search Movies", style: AppTheme.headerStyle),
+        backgroundColor: AppTheme.backgroundColor,
+        elevation: 0,
+      ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: AppTheme.defaultPadding,
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: Colors.white),
+              style: AppTheme.bodyStyle,
               decoration: InputDecoration(
                 hintText: 'Search for a movie...',
-                hintStyle: const TextStyle(color: Colors.grey),
+                hintStyle: AppTheme.captionStyle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 filled: true,
-                fillColor: Colors.grey[900],
+                fillColor: AppTheme.surfaceColor,
               ),
             ),
           ),
           if (_isLoading)
-            const Center(child: CircularProgressIndicator())
+            Center(child: AppTheme.loadingIndicator)
           else
             Expanded(
-  child: _filteredMovies.isEmpty
-      ? Center(child: Text('No movies found.'))
-      :GridView.builder(
+              child: _filteredMovies.isEmpty
+                  ? Center(
+                      child: Text('No movies found.', style: AppTheme.bodyStyle))
+                  : GridView.builder(
   shrinkWrap: true,
   physics: const AlwaysScrollableScrollPhysics(), // Disable scrolling
   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

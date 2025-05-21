@@ -1,4 +1,4 @@
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/auth_components/api/api_constants.dart';
 
 class Comment {
   final String comment;

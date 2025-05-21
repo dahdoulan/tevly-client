@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tevly_client/admin_component/pages/adminDashboard.dart';
-import 'package:tevly_client/auth_components/pages/filmmakerSignUp.dart';
-import 'package:tevly_client/auth_components/pages/forgotPassword.dart';
+import 'package:tevly_client/admin_component/pages/admin_dashboard.dart';
+import 'package:tevly_client/auth_components/pages/filmmaker_signup.dart';
+import 'package:tevly_client/auth_components/pages/forgot_password.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
-import 'package:tevly_client/auth_components/pages/verificationPage.dart';
-import 'package:tevly_client/home_component/providers/Comment_provider.dart';
+import 'package:tevly_client/auth_components/pages/verification_page.dart';
+import 'package:tevly_client/home_component/providers/comment_provider.dart';
 import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';

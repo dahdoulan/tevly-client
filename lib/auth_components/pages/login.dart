@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   String get token => "";
 
   set tokenGetter(String tokenGetter) {}
@@ -221,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
     data: Theme.of(context).copyWith(
       textSelectionTheme: const TextSelectionThemeData(
         selectionColor: Colors.grey, // Highlight color
- 
+  
       ),
     ),
     child: TextFormField(
@@ -229,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: isPassword && !_isPasswordVisible,
       style: const TextStyle(color: Colors.black),
         validator: (value) => getErrorText(value),
+         
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.black),
