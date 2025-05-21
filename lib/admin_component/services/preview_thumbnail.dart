@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tevly_client/auth_components/api/ApiConstants.dart';
+import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
-import 'package:universal_html/js.dart';
-
+ 
 class PreviewThumbnail {
 
 static void  previewThumbnail(BuildContext context, Map<String, dynamic> movie) {

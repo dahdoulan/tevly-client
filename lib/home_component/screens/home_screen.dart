@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/widgets/check_authentication.dart';
 import '../providers/movie_provider.dart';
 import '../models/movie.dart';
@@ -17,37 +18,36 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
+  final ScrollController _scrollController = ScrollController();
 
-  @override
+   @override
   void initState() {
     super.initState();
-    
-    checkAuth; /////////////////////////////////////////////////TODO: Implement this in a better way, it does not work as expected
-    
-    // Only fetch if data is not already loaded
-    
-      final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    _initializeData();
+  }
+ Future<void> _initializeData() async {
+    final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     if (movieProvider.allMovies.isEmpty) {
-      Future.microtask(() {
-        movieProvider.fetchMovies();
-      });
+      await movieProvider.fetchMovies();
     }
   }
-
   void _onNavTap(int index) {
-    if (index == 2) { // Settings tab index
-      Navigator.pushNamed(context, '/settings');
-    }
-     if (index == 1) { // search tab index
-      Navigator.pushNamed(context, '/search');
-     }
-     else {
-      setState(() {
-        _currentNavIndex = index;
-      });
+    switch (index) {
+      case 1:
+        Navigator.pushNamed(context, '/search');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/settings');
+        break;
+      default:
+        setState(() => _currentNavIndex = index);
     }
   }
- 
+ @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
   void _onMovieTap(Movie movie) {
     Navigator.push(
       context,
@@ -57,98 +57,105 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Consumer<MovieProvider>(
-        builder: (context, movieProvider, child) {
-          if (movieProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      backgroundColor: AppTheme.backgroundColor,
+      body: SafeArea(
+        child: Consumer<MovieProvider>(
+          builder: (context, movieProvider, child) {
+            if (movieProvider.isLoading) {
+              return Center(child: AppTheme.loadingIndicator);
+            }
 
-          final featuredMovie = movieProvider.allMovies.isNotEmpty
-              ? movieProvider.allMovies[0]
-              : null;
+            return RefreshIndicator(
+              color: AppTheme.primaryColor,
+              onRefresh: () => movieProvider.fetchMovies(),
+              child: CustomScrollView(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  SliverAppBar(
+                    backgroundColor: Colors.transparent,
+                    pinned: true,
+                    expandedHeight: 50.0,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Text('Tvely', style: AppTheme.headerStyle),
+                      centerTitle: false,
+                    ),
+                  ),
 
-          return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-
-            slivers: [
-              // App Bar
-              const SliverAppBar(
-                backgroundColor: Colors.transparent,
-                pinned: true,
-                expandedHeight: 50.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Row(
-                    children: [
-                        SizedBox(width: 16),
-                        Text(
-                        'Tvely',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                  // Content
+                    SliverList(
+                    delegate: SliverChildListDelegate([
+                      // Static featured image instead of first movie
+                      Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                        'lib/assets/fr.jpg', // Replace with your image path
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width:  MediaQuery.of(context).size.width ,
                         ),
                       ),
-                    ],
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Cached sections using RepaintBoundary
+                      if (movieProvider.myList.isNotEmpty)
+                        RepaintBoundary(
+                          child: MovieRow(
+                            title: 'My List',
+                            movies: movieProvider.myList,
+                            onMovieTap: _onMovieTap,
+                          ),
+                        ),
+
+                      RepaintBoundary(
+                        child: MovieRow(
+                          title: 'All Movies',
+                          movies: movieProvider.allMovies,
+                          onMovieTap: _onMovieTap,
+                        ),
+                      ),
+
+                      // Optimized category rendering
+                      ...movieProvider.categories.map((category) {
+                        final categoryMovies =
+                            movieProvider.getMoviesByCategory(category);
+                        if (categoryMovies.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return RepaintBoundary(
+                          child: MovieRow(
+                            title: category,
+                            movies: categoryMovies,
+                            onMovieTap: _onMovieTap,
+                          ),
+                        );
+                      }).toList(),
+
+                      // Bottom padding for better scrolling experience
+                      const SizedBox(height: 20),
+                    ]),
                   ),
-                  centerTitle: false,
-                ),
+                ],
               ),
-
-              // Content
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  // Featured Content
-                  if (featuredMovie != null)
-                    FeaturedContent(
-                      movie: featuredMovie,
-                      onPlay: _onMovieTap,
-                      onMyList: movieProvider.toggleMyList,
-                      isInMyList: movieProvider.isInMyList(featuredMovie.id),
-                    ),
-
-                  const SizedBox(height: 20),
-
-                  // My List Section
-                  if (movieProvider.myList.isNotEmpty)
-                    MovieRow(
-                      title: 'My List',
-                      movies: movieProvider.myList,
-                      onMovieTap: _onMovieTap,
-                    ),
-                  if (movieProvider.allMovies.isNotEmpty)
-                    MovieRow(
-                      title: 'All Movies',
-                      movies: movieProvider.allMovies,
-                      onMovieTap: _onMovieTap,
-                    ),
-
-                  // Dynamic Categories
-                  ...movieProvider.categories.map((category) {
-                    final categoryMovies =
-                        movieProvider.getMoviesByCategory(category);
-                    if (categoryMovies.isEmpty) return const SizedBox.shrink();
-
-                    return MovieRow(
-                      title: category,
-                      movies: categoryMovies,
-                      onMovieTap: _onMovieTap,
-                    );
-                    
-                  }).toList(),
-                ]),
-              ),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
-      bottomNavigationBar: TevelyBottomNavigation(
+        bottomNavigationBar: TevelyBottomNavigation(
         currentIndex: _currentNavIndex,
         onTap: _onNavTap,
       ),
     );
   }
+
+  
 }
+ 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
-import 'package:universal_html/js.dart';
-
 class Previewmovie {
    static void previewMovie(BuildContext context, Map<String, dynamic> movie) {
   final Map<String, String> resolutionUrls = {

@@ -5,8 +5,8 @@ import 'package:tevly_client/upload_component/providers/video_provider.dart';
 
 class ThumbnailDropZoneWidget extends StatelessWidget {
   const ThumbnailDropZoneWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
