@@ -1,17 +1,18 @@
- 
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:8080/api';
+  static const String baseUrl = 'https://9e9b-37-202-99-221.ngrok-free.app/api';
   static const String login = '$baseUrl/auth/authenticate';
   static const String signup = '$baseUrl/auth/register/user';
   static const String verifyEmail = '$baseUrl/auth/activate-account?token=';
   static const String forgotPassword = '$baseUrl/auth/forgot-password';
   static const String fetchmovies = '$baseUrl/homepage/movies';
   static const String metadata = '$baseUrl/homepage/metadata';
-  static  String fetchThumbnail(int id) =>  '$baseUrl/videos/$id/thumbnail';
-  static const String submitComments = '$baseUrl/video/comment'; // Updated to match backend endpoint
+  static String fetchThumbnail(int id) => '$baseUrl/videos/$id/thumbnail';
+  static const String submitComments =
+      '$baseUrl/video/comment'; // Updated to match backend endpoint
   static const String adminPendingMovies = '$baseUrl/reviewing-content';
   static const String approveMovie = '$adminPendingMovies/approve';
   static const String rejectMovie = '$adminPendingMovies/reject';
   static String signupFilmmaker = '$baseUrl/auth/register/filmmaker';
   static String viewPorfile = '$baseUrl/user/profile';
+  static String userRating = '$baseUrl/video/Rating ';
 }
