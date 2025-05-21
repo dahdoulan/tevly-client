@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/widgets/image_loader.dart';
+import 'package:tevly_client/home_component/widgets/rating_widget.dart';
 import '../models/movie.dart';
 import '../providers/movie_provider.dart';
 import '../widgets/comments_section.dart';
@@ -107,7 +108,7 @@ bool isArabicText(String text) {
                   },
                   blendMode: BlendMode.darken,
                   child: _isLoading
-                  
+
                       ? Container(
                           height: size.height * 0.4,
                           width: double.infinity,
@@ -245,15 +246,15 @@ bool isArabicText(String text) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton.icon(
+                 ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pushNamed(
-                        context,
+                        context, 
                         '/video-player',
                         arguments: {
                           'resolutionUrls': {
                             'Full HD': widget.movie.videoUrl,
-                            'HD': widget.movie.videoUrl,
+                            'HD': widget.movie.videoUrl, // todo: add HD url to backend
                           },
                         },
                       );
@@ -297,7 +298,25 @@ bool isArabicText(String text) {
                 ],
               ),
             ),
-
+ Center(
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Rate this movie',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        RatingWidget(
+                          videoId: widget.movie.id,
+                          currentRating: widget.movie.userRating.toDouble(),
+                        ),
+                      ],
+                    ),
+                  ),
             // Description with styled container
            Container(
   width: double.infinity,
@@ -317,7 +336,7 @@ bool isArabicText(String text) {
         : CrossAxisAlignment.start,
     children: [
       const Text(
-        'About this movie', 
+        'About this movie',
         style: AppTheme.subheaderStyle
       ),
       const SizedBox(height: 16.0),

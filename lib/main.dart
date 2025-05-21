@@ -7,6 +7,8 @@ import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verification_page.dart';
 import 'package:tevly_client/home_component/providers/comment_provider.dart';
+import 'package:tevly_client/home_component/providers/Rating_provider.dart';
+
 import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
@@ -22,6 +24,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => MovieProvider()),
         ChangeNotifierProvider(create: (_) => VideoUploadProvider()),
         ChangeNotifierProvider(create: (_) => CommentProvider()),
+        ChangeNotifierProvider(create: (_) => RatingProvider()),
       ],
       builder: (context, child) => const MyApp(),
     ),
