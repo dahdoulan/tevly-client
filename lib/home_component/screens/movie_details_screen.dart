@@ -28,14 +28,16 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     _loadImage();
  
   }
-bool isArabicText(String text) {
-  // Unicode range for Arabic characters
-  final arabicRegex = RegExp(r'[\u0600-\u06FF]');
-  return arabicRegex.hasMatch(text);
-}
+
+  bool isArabicText(String text) {
+    // Unicode range for Arabic characters
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(text);
+  }
+
   Future<void> _loadImage() async {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
-    
+
     // Check cache first
     final cachedUrl = movieProvider.getThumbnailUrl(widget.movie.id);
     if (cachedUrl != null) {
@@ -74,7 +76,7 @@ bool isArabicText(String text) {
     final isInMyList = movieProvider.isInMyList(widget.movie.id);
     final size = MediaQuery.of(context).size;
 
-     return Scaffold(
+    return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -111,7 +113,6 @@ bool isArabicText(String text) {
                   },
                   blendMode: BlendMode.darken,
                   child: _isLoading
-
                       ? Container(
                           height: size.height * 0.4,
                           width: double.infinity,
@@ -249,15 +250,21 @@ bool isArabicText(String text) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                 ElevatedButton.icon(
+                  ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pushNamed(
-                        context, 
+                        context,
                         '/video-player',
                         arguments: {
                           'resolutionUrls': {
+<<<<<<< HEAD
                             'Full HD': widget.movie.videoUrl, // APi.constants.fetchvideoURL=100
                             'HD': widget.movie.videoUrl, // todo: add HD url to backend
+=======
+                            'Full HD': widget.movie.videoUrl,
+                            'HD': widget
+                                .movie.videoUrl, // todo: add HD url to backend
+>>>>>>> c58f4713068e557bd21bf6a14ee96749ab7b66e0
                           },
                         },
                       );
@@ -301,6 +308,7 @@ bool isArabicText(String text) {
                 ],
               ),
             ),
+<<<<<<< HEAD
   Center(
 
 
@@ -328,9 +336,21 @@ bool isArabicText(String text) {
 
                       color: Colors.white,
 
+=======
+            Center(
+              child: Column(
+                children: [
+                  const Text(
+                    'Rate this movie',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+>>>>>>> c58f4713068e557bd21bf6a14ee96749ab7b66e0
                     ),
 
                   ),
+<<<<<<< HEAD
 
 
                   const SizedBox(height: 8),
@@ -354,61 +374,70 @@ bool isArabicText(String text) {
               ),
 
 
+=======
+                  const SizedBox(height: 8),
+                  RatingWidget(
+                    videoId: widget.movie.id,
+                    currentRating: widget.movie.userRating.toDouble(),
+                  ),
+                ],
+              ),
+>>>>>>> c58f4713068e557bd21bf6a14ee96749ab7b66e0
             ),
             // Description with styled container
-           Container(
-  width: double.infinity,
-  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-  padding: const EdgeInsets.all(16.0),
-  decoration: BoxDecoration(
-    color: Colors.grey[900],
-    borderRadius: BorderRadius.circular(12.0),
-    border: Border.all(
-      color: Colors.grey[800]!,
-      width: 1.0,
-    ),
-  ),
-  child: Column(
-    crossAxisAlignment: isArabicText(widget.movie.description)
-        ? CrossAxisAlignment.end
-        : CrossAxisAlignment.start,
-    children: [
-      const Text(
-        'About this movie',
-        style: AppTheme.subheaderStyle
-      ),
-      const SizedBox(height: 16.0),
-      Text(
-        widget.movie.description,
-        style: AppTheme.bodyStyle,
-        textAlign: isArabicText(widget.movie.description)
-            ? TextAlign.right
-            : TextAlign.left,
-        textDirection: isArabicText(widget.movie.description)
-            ? TextDirection.rtl
-            : TextDirection.ltr,
-      ),
-    ],
-  ),
-),
-const SizedBox(height: 24.0), // Spacing between sections
+            Container(
+              width: double.infinity,
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(12.0),
+                border: Border.all(
+                  color: Colors.grey[800]!,
+                  width: 1.0,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: isArabicText(widget.movie.description)
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  const Text('About this movie',
+                      style: AppTheme.subheaderStyle),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    widget.movie.description,
+                    style: AppTheme.bodyStyle,
+                    textAlign: isArabicText(widget.movie.description)
+                        ? TextAlign.right
+                        : TextAlign.left,
+                    textDirection: isArabicText(widget.movie.description)
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24.0), // Spacing between sections
 
             // Comments section with styled container
-           Container(
-  width: double.infinity,
-  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-  padding: const EdgeInsets.all(16.0),
-  decoration: BoxDecoration(
-    color: Colors.grey[900],
-    borderRadius: BorderRadius.circular(12.0),
-    border: Border.all(
-      color: Colors.grey[800]!,
-      width: 1.0,
-    ),
-  ),
-  child: CommentsSection(movie: widget.movie),
-),
-const SizedBox(height: 24.0), // Bottom padding
+            Container(
+              width: double.infinity,
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(12.0),
+                border: Border.all(
+                  color: Colors.grey[800]!,
+                  width: 1.0,
+                ),
+              ),
+              child: CommentsSection(movie: widget.movie),
+            ),
+            const SizedBox(height: 24.0), // Bottom padding
           ],
         ),
       ),

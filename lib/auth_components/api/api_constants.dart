@@ -1,6 +1,6 @@
  
 class ApiConstants {
-  static const String baseUrl = 'http://192.168.1.10:8080/api';
+  static const String baseUrl = 'https://9e9b-37-202-99-221.ngrok-free.app/api';
   static const String login = '$baseUrl/auth/authenticate';
   static const String signup = '$baseUrl/auth/register/user';
   static const String verifyEmail = '$baseUrl/auth/activate-account?token=';
