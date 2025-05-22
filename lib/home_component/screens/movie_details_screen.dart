@@ -1,6 +1,4 @@
-// lib/screens/movie_details_screen.dart
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
@@ -28,6 +26,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   void initState() {
     super.initState();
     _loadImage();
+ 
   }
 bool isArabicText(String text) {
   // Unicode range for Arabic characters
@@ -47,6 +46,10 @@ bool isArabicText(String text) {
       return;
     }
 
+
+  
+  
+ 
     try {
       final imageUrl = await ImageLoaderService.loadImage(widget.movie.id);
       if (imageUrl != null) {
@@ -253,7 +256,7 @@ bool isArabicText(String text) {
                         '/video-player',
                         arguments: {
                           'resolutionUrls': {
-                            'Full HD': widget.movie.videoUrl,
+                            'Full HD': widget.movie.videoUrl, // APi.constants.fetchvideoURL=100
                             'HD': widget.movie.videoUrl, // todo: add HD url to backend
                           },
                         },
@@ -298,25 +301,60 @@ bool isArabicText(String text) {
                 ],
               ),
             ),
- Center(
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Rate this movie',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        RatingWidget(
-                          videoId: widget.movie.id,
-                          currentRating: widget.movie.userRating.toDouble(),
-                        ),
-                      ],
+  Center(
+
+
+
+              child: Column(
+
+
+                children: [
+
+
+                  const Text(
+
+
+                    'Rate this movie',
+
+
+                    style: TextStyle(
+
+
+                      fontSize: 16,
+
+
+                      fontWeight: FontWeight.bold,
+
+
+                      color: Colors.white,
+
                     ),
+
                   ),
+
+
+                  const SizedBox(height: 8),
+
+
+                  RatingWidget(
+
+
+                    videoId: widget.movie.id,
+
+
+                    currentRating: widget.movie.userRating.toDouble(),
+
+
+                  ),
+
+
+                ],
+
+
+              ),
+
+
+            ),
             // Description with styled container
            Container(
   width: double.infinity,

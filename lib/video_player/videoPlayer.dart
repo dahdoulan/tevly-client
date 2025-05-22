@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:tevly_client/auth_components/api/api_constants.dart';
+import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:tevly_client/home_component/models/encoded_movie.dart';
+import 'package:tevly_client/home_component/screens/movie_details_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
  
@@ -7,6 +14,8 @@ class UniversalVideoPlayer extends StatefulWidget {
   final Map<String, String> resolutionUrls;
 
   const UniversalVideoPlayer({super.key, required this.resolutionUrls});
+  
+  get movie => null;
 
   @override
   State<UniversalVideoPlayer> createState() => _UniversalVideoPlayerState();
@@ -16,13 +25,15 @@ class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
   late VideoPlayerController _videoController;
   ChewieController? _chewieController;
   String _currentResolution = 'Full HD';
-  
+  List <EncodedMovie> _movies = [];
 
   @override
 void initState() {
   super.initState();
   _videoController = VideoPlayerController.networkUrl(Uri.parse('')); // Initialize with a dummy value
   _initializePlayer(widget.resolutionUrls[_currentResolution]!);
+ //loadEncoded();
+
 }
 
 
@@ -146,3 +157,35 @@ void dispose() {
   super.dispose();
 }
 }
+
+
+
+
+
+
+
+
+// Future<List <EncodedMovie>> loadEncoded() async {
+
+//       final token = AuthenticationService().getToken();
+
+//       if (token == null) {
+//         throw Exception('User is not authenticated. Token is missing.');
+//       }
+//       Logger.debug('Token: $token');
+//       final response = await http.post(
+//         Uri.parse(ApiConstants.fetchvideoURL).replace(queryParameters: {
+//           'id': widget.movie.id.toString(),
+//         }),
+//         headers: {'Authorization': 'Bearer $token'},
+//     );
+//       Logger.debug('Response: ${response.body}');
+//       Logger.debug('Status Code: ${response.statusCode}');
+
+//       if (response.statusCode == 200) {
+//         final List<dynamic> moviesJson = json.decode(response.body);
+//         return moviesJson.map((json) => EncodedMovie.fromJson(json)).toList();
+//       } else {
+//         throw Exception('Failed to load movies');
+//       }
+//     }

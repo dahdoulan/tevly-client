@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/rating_service.dart';
-
+import 'package:tevly_client/home_component/services/Rating_service.dart';
 class RatingProvider with ChangeNotifier {
   final RatingService _ratingService = RatingService();
   bool isLoading = false;

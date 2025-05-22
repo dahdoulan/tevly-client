@@ -167,11 +167,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.category, size: 16, color: Colors.grey[600]),
+            Icon(Icons.category_rounded, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 4),
-            Text(movie['category'] ?? 'Uncategorized'),
+            Text(movie['category'] ?? 'Uncategorized',),
           ],
         ),
+
       ),
       DataCell(Text(movie['created']?.toString().substring(0, 10) ?? '')),
       DataCell(
