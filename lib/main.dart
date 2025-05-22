@@ -30,19 +30,20 @@ void main() {
     ),
   );
 }
- Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case '/video-player':
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-          builder: (context) => UniversalVideoPlayer(
-            resolutionUrls: args['resolutionUrls'] as Map<String, String>,
-          ),
-        );
-      default:
-        return null;
-    }
+Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+  switch (settings.name) {
+    case '/video-player':
+      final args = settings.arguments as Map<String, dynamic>;
+      final id = args['id'] as int;  // Ensure we're getting an int
+      return MaterialPageRoute(
+        builder: (context) => UniversalVideoPlayer(
+          movieId: id,
+        ),
+      );
+    default:
+      return null;
   }
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

@@ -252,13 +252,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       Navigator.pushNamed(
                         context,
                         '/video-player',
-                        arguments: {
-                          'resolutionUrls': {
-                            'Full HD': widget.movie.videoUrl,
-                            'HD': widget
-                                .movie.videoUrl, // todo: add HD url to backend
-                          },
-                        },
+                       arguments: {'id': widget.movie.id}
                       );
                     },
                     style: ElevatedButton.styleFrom(

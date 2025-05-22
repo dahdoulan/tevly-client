@@ -8,7 +8,6 @@ class ApiConstants {
   static const String fetchmovies = '$baseUrl/homepage/movies';
   static const String metadata = '$baseUrl/homepage/metadata';
   static const String fetchvideoURL= '$baseUrl/video/getVideos?id=';
-
   static  String fetchThumbnail(int id) =>  '$baseUrl/videos/$id/thumbnail';
   static const String submitComments = '$baseUrl/video/comment';
   static const String adminPendingMovies = '$baseUrl/reviewing-content';

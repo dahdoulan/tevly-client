@@ -20,6 +20,38 @@ class Comment {
   }
 }
 
+class EncodedMovie {
+  final int id;
+  final String url;
+  final String title;
+  final Movie video;
+
+  EncodedMovie({
+    required this.id,
+    required this.url,
+    required this.title,
+    required this.video,
+  });
+
+  factory EncodedMovie.fromJson(Map<String, dynamic> json) {
+    return EncodedMovie(
+      id: json['id'],
+      url: json['url'],
+      title: json['title'],
+      video: Movie.fromJson(json['video']),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
 class Movie {
   final int id;
   final String title;

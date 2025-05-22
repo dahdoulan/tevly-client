@@ -1,42 +1,72 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:tevly_client/auth_components/api/api_constants.dart';
-import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
-import 'package:tevly_client/home_component/models/encoded_movie.dart';
-import 'package:tevly_client/home_component/screens/movie_details_screen.dart';
+import 'package:tevly_client/home_component/services/movie_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
  
 class UniversalVideoPlayer extends StatefulWidget {
-  final Map<String, String> resolutionUrls;
+  final int movieId;
 
-  const UniversalVideoPlayer({super.key, required this.resolutionUrls});
-  
-  get movie => null;
-
+  const UniversalVideoPlayer({
+    super.key, 
+    required this.movieId,
+  });
+ 
   @override
   State<UniversalVideoPlayer> createState() => _UniversalVideoPlayerState();
 }
 
 class _UniversalVideoPlayerState extends State<UniversalVideoPlayer> {
-  late VideoPlayerController _videoController;
+ late VideoPlayerController _videoController;
   ChewieController? _chewieController;
-  String _currentResolution = 'Full HD';
-  List <EncodedMovie> _movies = [];
+  String _currentResolution = '1080p';
+  Map<String, String> _resolutionUrls = {};
+  final MovieService _movieService = MovieService();
 
-  @override
-void initState() {
-  super.initState();
-  _videoController = VideoPlayerController.networkUrl(Uri.parse('')); // Initialize with a dummy value
-  _initializePlayer(widget.resolutionUrls[_currentResolution]!);
- //loadEncoded();
+   @override
+  void initState() {
+    super.initState();
+    _videoController = VideoPlayerController.networkUrl(Uri.parse('')); 
+    _loadVideoUrls();
+  }
 
+ Future<void> _loadVideoUrls() async {
+  try {
+    final encodedMovie = await _movieService.loadEncoded(widget.movieId);
+    setState(() {
+      // Handle either single encoded movie or list
+      if (encodedMovie is List) {
+        for (var movie in encodedMovie) {
+          if (movie.title.startsWith('720p')) {
+            _resolutionUrls['720p'] = movie.url;
+          } else if (movie.title.startsWith('1080p')) {
+            _resolutionUrls['1080p'] = movie.url;
+          }
+        }
+      } else {
+        // Handle single encoded movie
+        if (encodedMovie.title.startsWith('720p')) {
+          _resolutionUrls['720p'] = encodedMovie.url;
+        } else if (encodedMovie.title.startsWith('1080p')) {
+          _resolutionUrls['1080p'] = encodedMovie.url;
+        }
+      }
+    });
+
+    // Initialize player with highest available resolution
+    if (_resolutionUrls.containsKey('1080p')) {
+      _currentResolution = '1080p';
+      await _initializePlayer(_resolutionUrls['1080p']!);
+    } else if (_resolutionUrls.containsKey('720p')) {
+      _currentResolution = '720p';
+      await _initializePlayer(_resolutionUrls['720p']!);
+    }
+  } catch (e) {
+    Logger.debug('Error loading video URLs: $e');
+  }
 }
-
-
  Future<void> _initializePlayer(String url) async {
   Logger.debug('Initializing video player with URL: $url');
   try {
@@ -76,15 +106,14 @@ void initState() {
 }
 
   List<OptionItem> _buildResolutionOptions() {
-    return widget.resolutionUrls.keys.map((res) {
-      return OptionItem(
-        onTap: (context) => _changeResolution(context, res),
-        iconData: Icons.hd_rounded,
-        title: res,
-      );
-    }).toList();
-  }
-
+  return _resolutionUrls.keys.map((res) {
+    return OptionItem(
+      onTap: (context) => _changeResolution(context, res),
+      iconData: Icons.hd_rounded,
+      title: res,
+    );
+  }).toList();
+}
   void _changeResolution(BuildContext context, String newRes) async {
   if (newRes != _currentResolution) {
     final currentPosition = _videoController.value.position; // Save current position
@@ -95,7 +124,7 @@ void initState() {
     Logger.debug('Was playing: $wasPlaying');
 
     _currentResolution = newRes;
-    await _initializePlayer(widget.resolutionUrls[newRes]!);
+    await _initializePlayer(_resolutionUrls[newRes]!);
 
     // Use ChewieController to seek to the saved position
     if (_chewieController != null) {
@@ -161,31 +190,3 @@ void dispose() {
 
 
 
-
-
-
-
-// Future<List <EncodedMovie>> loadEncoded() async {
-
-//       final token = AuthenticationService().getToken();
-
-//       if (token == null) {
-//         throw Exception('User is not authenticated. Token is missing.');
-//       }
-//       Logger.debug('Token: $token');
-//       final response = await http.post(
-//         Uri.parse(ApiConstants.fetchvideoURL).replace(queryParameters: {
-//           'id': widget.movie.id.toString(),
-//         }),
-//         headers: {'Authorization': 'Bearer $token'},
-//     );
-//       Logger.debug('Response: ${response.body}');
-//       Logger.debug('Status Code: ${response.statusCode}');
-
-//       if (response.statusCode == 200) {
-//         final List<dynamic> moviesJson = json.decode(response.body);
-//         return moviesJson.map((json) => EncodedMovie.fromJson(json)).toList();
-//       } else {
-//         throw Exception('Failed to load movies');
-//       }
-//     }
