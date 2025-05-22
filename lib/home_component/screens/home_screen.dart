@@ -94,10 +94,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.asset(
-                        'lib/assets/fr.jpg', // Replace with your image path
+                        'lib/assets/banner.jpg', // Replace with your image path
                         fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width:  MediaQuery.of(context).size.width ,
+                        height: MediaQuery.of(context).size.height *0.5333333333333333,
+                        width:  MediaQuery.of(context).size.width * 0.23,
                         ),
                       ),
                       ),

@@ -47,6 +47,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         setState(() {
           _pendingMovies = List<Map<String, dynamic>>.from(data);
           _isLoading = false;
+          Logger.debug(response.body);
         });
       } else {
         throw Exception('Failed to load pending movies');
@@ -174,7 +175,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         ),
 
       ),
-      DataCell(Text(movie['created']?.toString().substring(0, 10) ?? '')),
+      DataCell(Text(movie['date']?.toString().substring(0, 10) ?? '')),
       DataCell(
         Row(
           mainAxisSize: MainAxisSize.min,

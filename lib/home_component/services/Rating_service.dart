@@ -1,5 +1,4 @@
 import 'package:http/http.dart' as http;
-import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'dart:convert';
 import '../../auth_components/api/api_constants.dart';
 import '../../auth_components/service/authenticationService.dart';

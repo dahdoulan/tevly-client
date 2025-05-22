@@ -1,58 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/Rating_provider.dart';
+import '../providers/movie_provider.dart';
 
-class RatingWidget extends StatefulWidget {  
-  
+class RatingWidget extends StatefulWidget {
   final int videoId;
   final double currentRating;
   final Function(double)? onRatingChanged;
+
   const RatingWidget({
     Key? key,
     required this.videoId,
     this.currentRating = 0,
-        this.onRatingChanged,
+    this.onRatingChanged,
   }) : super(key: key);
+
   @override
-
-
   State<RatingWidget> createState() => _RatingWidgetState();
-
-
-} 
+}
 
 class _RatingWidgetState extends State<RatingWidget> {
-
-
   late double _currentRating;
- 
+
   @override
-
-
   void initState() {
-
-
     super.initState();
-
-
     _currentRating = widget.currentRating;
-
-
-  } 
-  @override
-
-
-  void didUpdateWidget(RatingWidget oldWidget) {
- 
-    super.didUpdateWidget(oldWidget);
- 
-    if (oldWidget.currentRating != widget.currentRating) {
- 
-      _currentRating = widget.currentRating;
- 
-    }
- 
   }
+
+  @override
+  void didUpdateWidget(RatingWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentRating != widget.currentRating) {
+      _currentRating = widget.currentRating;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<RatingProvider>(
@@ -70,11 +53,18 @@ class _RatingWidgetState extends State<RatingWidget> {
                   ),
                   onPressed: ratingProvider.isLoading
                       ? null
-                      : () {
-                          ratingProvider.submitRating(
+                      : () async {
+                          await ratingProvider.submitRating(
                             widget.videoId,
                             index + 1,
                           );
+
+                          if (ratingProvider.error == null) {
+                            setState(() {
+                              _currentRating = index + 1.0;
+                            });
+                            widget.onRatingChanged?.call(_currentRating);
+                          }
                         },
                 );
               }),
