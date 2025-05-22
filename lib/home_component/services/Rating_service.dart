@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../auth_components/api/ApiConstants.dart';
+import '../../auth_components/api/api_constants.dart';
 import '../../auth_components/service/authenticationService.dart';
 import '../../commons/logger/logger.dart';
 
