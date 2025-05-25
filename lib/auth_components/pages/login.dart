@@ -53,11 +53,11 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
+            begin: Alignment.center,
             end: Alignment.bottomCenter,
             colors: [
               AppTheme.primaryColor,
-              AppTheme.surfaceColor!,
+              AppTheme.backgroundColor,
             ],
           ),
         ),
@@ -74,6 +74,10 @@ class _LoginPageState extends State<LoginPage> {
                   onSubmit: _handleLogin,
                   isLoading: _isLoading,
                 ),
+                                const SizedBox(height: 10),
+
+                                _buildForgotPasswordLink(),
+
                 const SizedBox(height: 20),
                 // Sign Up Link
                 _buildSignUpLink(),
@@ -121,6 +125,24 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () => Navigator.pushNamed(context, '/signup'),
           child: Text(
             "Sign Up",
+            style: AppTheme.linkStyle,
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildForgotPasswordLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Forgot your password? ",
+          style: AppTheme.bodyStyle,
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
+          child: Text(
+            "Forgot Password",
             style: AppTheme.linkStyle,
           ),
         ),

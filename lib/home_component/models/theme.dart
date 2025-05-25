@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Colors
-  static const primaryColor = Colors.red;
+  static final primaryColor = Color(0xFAFFD740);
   static final backgroundColor = Colors.black;
   static final surfaceColor = Colors.grey[900];
   static final accentBlue = Colors.blue[700];

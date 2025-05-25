@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.yellow, brightness: Brightness.dark),
       ),
 
- home : LoginPage(),
+ home :const LoginPage(),
       routes: {
         '/signup': (context) => SignupPage(),
         '/login': (context) => const LoginPage(),

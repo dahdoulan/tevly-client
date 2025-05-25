@@ -188,13 +188,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                   ),
                 const SizedBox(height: 20),
-                 TextButton(
+                 Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      "Back to Login?",
+      style: AppTheme.bodyStyle,
+    ),
+    TextButton(
       onPressed: () => Navigator.pushNamed(context, '/login'),
       child: Text(
-        "Back to Login",
+        "Login",
         style: AppTheme.linkStyle,
       ),
     ),
+  ],
+),
               ],
             ),
           ),
@@ -209,7 +218,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     IconData icon,
     bool isPassword,
   ) {
-    return Container(
+   return Container(
     width: kIsWeb
         ? MediaQuery.of(context).size.width * 0.4
         : MediaQuery.of(context).size.width * 0.8,
@@ -239,17 +248,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
     ),
   );
-  }
+}
 
   Widget _buildActionButton(VoidCallback onPressed, String text) {
-    return SizedBox(
+   return SizedBox(
     width: kIsWeb
         ? MediaQuery.of(context).size.width * 0.4
         : MediaQuery.of(context).size.width * 0.8,
     child: Padding(
       padding: EdgeInsets.symmetric(horizontal: AppTheme.defaultPadding),
       child: ElevatedButton(
-        onPressed: _isLoading ? null : onPressed,  
+        onPressed: _isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
           backgroundColor: AppTheme.primaryColor,
@@ -257,9 +266,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-        ), child: _isLoading
+        ),
+        child: _isLoading
             ? AppTheme.loadingIndicator
             : Text('Submit', style: AppTheme.headerStyle),
-      ),),);
+      ),
+    ),
+  );
   }
 }
