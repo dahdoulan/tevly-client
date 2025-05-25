@@ -12,7 +12,7 @@ import 'package:tevly_client/home_component/providers/Rating_provider.dart';
 import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
-import 'package:tevly_client/video_player/videoPlayer.dart';
+import 'package:tevly_client/video_player/pages/videoPlayer.dart';
 import 'upload_component/providers/video_provider.dart';
 import 'home_component/providers/movie_provider.dart';
 import 'home_component/screens/home_screen.dart';
@@ -36,9 +36,7 @@ Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
       final args = settings.arguments as Map<String, dynamic>;
       final id = args['id'] as int;  // Ensure we're getting an int
       return MaterialPageRoute(
-        builder: (context) => UniversalVideoPlayer(
-          movieId: id,
-        ),
+            builder: (context) => VideoPlayerScreen(movieId: id),
       );
     default:
       return null;
@@ -60,7 +58,7 @@ class MyApp extends StatelessWidget {
  home : LoginPage(),
       routes: {
         '/signup': (context) => SignupPage(),
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
         '/upload': (context) => const UploadPage(),
         '/home': (context) => const HomeScreen(),
         '/verification': (context) => const VerificationPage(),

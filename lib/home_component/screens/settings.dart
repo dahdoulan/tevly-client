@@ -92,12 +92,12 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: AppTheme.backgroundColor,
       ),
       body: SingleChildScrollView(
-        padding: AppTheme.defaultPadding,
+            padding: EdgeInsets.all(AppTheme.defaultPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: AppTheme.defaultPadding,
+            padding: EdgeInsets.all(AppTheme.defaultPadding),
               decoration: AppTheme.containerDecoration,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

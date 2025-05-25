@@ -332,7 +332,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
-                  const Text('About this movie',
+                  Text('About this movie',
                       style: AppTheme.subheaderStyle),
                   const SizedBox(height: 16.0),
                   Text(

@@ -8,53 +8,100 @@ class AppTheme {
   static final accentBlue = Colors.blue[700];
   static final accentGreen = Colors.green[700];
   static final accentOrange = Colors.orange[700];
+    // Spacing and Padding
+  static const double defaultSpacing = 16.0;
+  static const double defaultPadding = 20.0;
+  // Additional Colors that match existing palette
+  static final secondaryColor = Colors.red[700];
+  static const textColor = Colors.white;
+  static final textColorSecondary = Colors.grey[500];
+  static final borderColor = Colors.grey[800];
+  static final errorColor = Colors.red[400];
   
-  // Text Styles
-  static const headerStyle = TextStyle(
+  // Text Styles - keeping existing ones and adding complementary styles
+  // ...existing text styles...
+ // Text Styles
+  static final headerStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
-    letterSpacing: 1.2,
-  );
-
-  static const subheaderStyle = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: textColor,
     letterSpacing: 0.5,
   );
 
-  static const bodyStyle = TextStyle(
+  static final subheaderStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: textColor,
+    letterSpacing: 0.3,
+  );
+  static final bodyStyle = TextStyle(
     fontSize: 16,
-    color: Colors.white,
-    fontWeight: FontWeight.w500,
+    color: textColor,
+    letterSpacing: 0.2,
   );
 
   static final captionStyle = TextStyle(
     fontSize: 12,
-    color: Colors.grey[500],
-    letterSpacing: 1,
+    color: textColorSecondary,
+    letterSpacing: 0.4,
+  );
+
+  // Container Decoration
+  static final containerDecoration = BoxDecoration(
+    color: surfaceColor,
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: borderColor!,
+      width: 1,
+    ),
+  );
+
+  // Loading Indicator
+  static final loadingIndicator = CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+    strokeWidth: 3,
+    backgroundColor: surfaceColor,
+  );
+
+  static final linkStyle = TextStyle(
+    fontSize: 16,
+    color: accentBlue,
     fontWeight: FontWeight.w500,
   );
 
-  // Decorations
-  static final containerDecoration = BoxDecoration(
+  static final errorTextStyle = TextStyle(
+    fontSize: 14,
+    color: errorColor,
+    fontWeight: FontWeight.w500,
+  );
+
+  // Enhanced Decorations - building upon existing containerDecoration
+  static final cardDecoration = BoxDecoration(
     color: surfaceColor,
     borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: borderColor!, width: 1),
   );
 
-  static final buttonDecoration = BoxDecoration(
-    color: surfaceColor,
-    borderRadius: BorderRadius.circular(12),
+  static final inputDecoration = InputDecoration(
+    filled: true,
+    fillColor: surfaceColor,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: borderColor!),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: borderColor!),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: primaryColor, width: 2),
+    ),
   );
 
-  // Padding & Spacing
-  static const defaultPadding = EdgeInsets.all(16.0);
-  static const defaultSpacing = 16.0;
-
-  // Button Styles
-  static final elevatedButtonStyle = ElevatedButton.styleFrom(
-    backgroundColor: primaryColor,
+  // Button Styles - extending existing elevatedButtonStyle
+  static final secondaryButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: surfaceColor,
     foregroundColor: Colors.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
@@ -62,8 +109,15 @@ class AppTheme {
     elevation: 0,
   );
 
-  // Loading Indicator
-  static final loadingIndicator = CircularProgressIndicator(
-    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-  );
+  // Keeping existing spacing and padding constants
+  // ...existing padding & spacing...
+
+  // Animation Durations - useful for consistent animations
+  static const Duration quickAnimation = Duration(milliseconds: 200);
+  static const Duration normalAnimation = Duration(milliseconds: 300);
+
+  // Responsive Breakpoints
+  static const double mobileBreakpoint = 600;
+  static const double tabletBreakpoint = 900;
+  static const double desktopBreakpoint = 1200;
 }

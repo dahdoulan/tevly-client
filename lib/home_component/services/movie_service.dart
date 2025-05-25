@@ -1,6 +1,7 @@
  import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:tevly_client/home_component/models/encoded_movie.dart';
 import '../models/movie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class MovieService {
       .replace(queryParameters: {'id': id.toString()});
   
   Logger.debug('Requesting: $uri');
-  final response = await http.post(
+  final response = await http.get(
     uri,
     headers: {'Authorization': 'Bearer $token'},
   );

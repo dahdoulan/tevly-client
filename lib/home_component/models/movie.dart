@@ -19,39 +19,7 @@ class Comment {
     );
   }
 }
-
-class EncodedMovie {
-  final int id;
-  final String url;
-  final String title;
-  final Movie video;
-
-  EncodedMovie({
-    required this.id,
-    required this.url,
-    required this.title,
-    required this.video,
-  });
-
-  factory EncodedMovie.fromJson(Map<String, dynamic> json) {
-    return EncodedMovie(
-      id: json['id'],
-      url: json['url'],
-      title: json['title'],
-      video: Movie.fromJson(json['video']),
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
+ 
 class Movie {
   final int id;
   final String title;
@@ -88,7 +56,7 @@ class Movie {
       id: json['id'],
       title: json['title'],
       videoUrl: json['videoUrl'],
-      thumbnailUrl: '${ApiConstants.baseUrl}${json['thumbnailUrl']}',
+      thumbnailUrl: '${ApiConstants.baseUrl}${json['thumbnail']}',
       category: json['category'],
       description: json['description'],
       comments: (json['comments'] as List<dynamic>?)
