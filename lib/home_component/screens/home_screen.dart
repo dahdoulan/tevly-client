@@ -14,23 +14,28 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-  CheckAuthentication checkAuth = const CheckAuthentication(child: Text("Welcome Home"),);
+
+CheckAuthentication checkAuth = const CheckAuthentication(
+  child: Text("Welcome Home"),
+);
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
   final ScrollController _scrollController = ScrollController();
 
-   @override
+  @override
   void initState() {
     super.initState();
     _initializeData();
   }
- Future<void> _initializeData() async {
+
+  Future<void> _initializeData() async {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     if (movieProvider.allMovies.isEmpty) {
       await movieProvider.fetchMovies();
     }
   }
+
   void _onNavTap(int index) {
     switch (index) {
       case 1:
@@ -43,11 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _currentNavIndex = index);
     }
   }
- @override
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onMovieTap(Movie movie) {
     Navigator.push(
       context,
@@ -57,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
@@ -79,6 +86,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: Colors.transparent,
                     pinned: true,
                     expandedHeight: 50.0,
+                    actions: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.white,
+                        ),
+                        onPressed: () async {
+                          final movieProvider = Provider.of<MovieProvider>(
+                            context,
+                            listen: false,
+                          );
+                          await movieProvider.fetchMovies();
+                        },
+                      ),
+                    ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text('Tvely', style: AppTheme.headerStyle),
                       centerTitle: false,
@@ -86,20 +108,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   // Content
-                    SliverList(
+                  SliverList(
                     delegate: SliverChildListDelegate([
                       // Static featured image instead of first movie
                       Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                        'lib/assets/banner.jpg', // Replace with your image path
-                        fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.height *0.5333333333333333,
-                        width:  MediaQuery.of(context).size.width * 0.23,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'lib/assets/banner.jpg',
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.height *
+                                0.5333333333333333,
+                            width: MediaQuery.of(context).size.width * 0.23,
+                          ),
                         ),
-                      ),
                       ),
 
                       const SizedBox(height: 20),
@@ -149,13 +172,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-        bottomNavigationBar: TevelyBottomNavigation(
+      bottomNavigationBar: TevelyBottomNavigation(
         currentIndex: _currentNavIndex,
         onTap: _onNavTap,
       ),
     );
   }
-
-  
 }
- 
