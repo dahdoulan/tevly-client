@@ -57,7 +57,7 @@ class _CommentsSectionState extends State<CommentsSection> {
     return Consumer<CommentProvider>(
       builder: (context, commentProvider, child) {
         return Container(
-          padding: AppTheme.defaultPadding,
+            padding: EdgeInsets.all(AppTheme.defaultPadding),
           decoration: AppTheme.containerDecoration,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

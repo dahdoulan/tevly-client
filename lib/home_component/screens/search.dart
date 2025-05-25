@@ -120,7 +120,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
       body: Column(
         children: [
           Padding(
-            padding: AppTheme.defaultPadding,
+            padding: EdgeInsets.all(AppTheme.defaultPadding),
             child: TextField(
               controller: _searchController,
               style: AppTheme.bodyStyle,

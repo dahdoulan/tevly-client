@@ -92,17 +92,18 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: AppTheme.backgroundColor,
       ),
       body: SingleChildScrollView(
-        padding: AppTheme.defaultPadding,
+            padding: EdgeInsets.all(AppTheme.defaultPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: AppTheme.defaultPadding,
+            padding: EdgeInsets.all(AppTheme.defaultPadding),
               decoration: AppTheme.containerDecoration,
+              
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Profile Information', style: AppTheme.subheaderStyle),
+                  Text('Profile Information', style: AppTheme.headerStyle,selectionColor:AppTheme.primaryColor,),
                   const SizedBox(height: AppTheme.defaultSpacing),
                   if (_userInfo != null) ...[
                     _buildInfoItem('FULL NAME', _userInfo!.fullName, Icons.person),
@@ -121,6 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildActionButton(
+                    
                     'My List',
                     Icons.bookmark,
                     Colors.blue[700]!,
@@ -159,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildInfoItem(String label, String value, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: const EdgeInsets.symmetric(vertical:AppTheme.defaultPadding),
       child: Row(
         children: [
           Icon(
@@ -200,9 +202,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildDivider() {
     return Divider(
-      color: Colors.grey[800],
+      color: Colors.grey[500],
       height: 1,
-      thickness: 1,
+      thickness: 3,
     );
   }
 
@@ -218,15 +220,17 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: AppTheme.defaultPadding),
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+      width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.grey[900],
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             children: [
-              Icon(icon, color: color, size: 24),
-              const SizedBox(width: 16),
+              Icon(icon, color: color, size: 30),
+              const SizedBox(width: 17),
               Text(
                 label,
                 style: const TextStyle(
@@ -252,15 +256,17 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       width: double.infinity,
       height: 56,
+      
       margin: const EdgeInsets.only(bottom: 24),
       child: ElevatedButton.icon(
         onPressed: () => _handleLogout(context),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red[800],
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          backgroundColor: Colors.red[700],
+          foregroundColor: AppTheme.textColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          elevation: 0,
         ),
         icon: const Icon(Icons.logout, color: Colors.white),
         label: const Text(

@@ -1,10 +1,10 @@
-import 'package:tevly_client/home_component/models/movie.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 
 class EncodedMovie {
   final int id;
   final String url;
   final String title;
-  final Movie? video;
+  final Map<String, dynamic>? video;
 
   EncodedMovie({
     required this.id,
@@ -14,16 +14,23 @@ class EncodedMovie {
   });
 
   factory EncodedMovie.fromJson(Map<String, dynamic> json) {
-    return EncodedMovie(
-      id: json['id'],
-      url: json['url'],
-      title: json['title'],
-      video: json['video'] != null ? Movie.fromJson(json['video']) : null,
-    );
+    try {
+      return EncodedMovie(
+        id: json['id'] as int,
+        url: (json['url'] ?? '') as String,
+        title: (json['title'] ?? '') as String,
+        video: json['video'] as Map<String, dynamic>?,
+      );
+    } catch (e, stackTrace) {
+      Logger.debug('Error parsing EncodedMovie: $e');
+      Logger.debug('JSON data: $json');
+      Logger.debug('Stack trace: $stackTrace');
+      throw FormatException('Failed to parse EncodedMovie: $e');
+    }
   }
 
-  String get resolution {
-    // Extract resolution from title (e.g., "720p" from "720p-31337ced...")
-    return title.split('-').first;
+  @override
+  String toString() {
+    return 'EncodedMovie(id: $id, title: $title, url: $url)';
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/api_constants.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
 import '../../commons/logger/logger.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -107,17 +108,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.primary,
-              Theme.of(context).colorScheme.secondary,
-            ],
-          ),
+      appBar: AppBar(
+        title: Text(
+          _emailSent ? 'Reset Password' : 'Forgot Password',
+          style: AppTheme.headerStyle.copyWith(color: AppTheme.textColor),
         ),
+        backgroundColor: AppTheme.surfaceColor,
+        elevation: 0,
+      ),
+      body: Container(
+  decoration: BoxDecoration(
+    gradient: LinearGradient(
+     begin: Alignment.center,
+            end: Alignment.bottomCenter,
+      colors: [
+        AppTheme.primaryColor,
+        AppTheme.backgroundColor,
+      ],
+    ),
+  ),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -147,10 +156,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 const SizedBox(height: 30),
                 Text(
                   _emailSent ? 'Reset Password' : 'Forgot Password',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                         style: AppTheme.headerStyle,
                 ),
                 const SizedBox(height: 20),
                 if (!_emailSent) ...[
@@ -190,15 +196,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                   ),
                 const SizedBox(height: 20),
-                TextButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-                  child: Text(
-                    "Back to Login",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                ),
+                 Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      "Back to Login?",
+      style: AppTheme.bodyStyle,
+    ),
+    TextButton(
+      onPressed: () => Navigator.pushNamed(context, '/login'),
+      child: Text(
+        "Login",
+        style: AppTheme.linkStyle,
+      ),
+    ),
+  ],
+),
               ],
             ),
           ),
@@ -213,82 +226,60 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     IconData icon,
     bool isPassword,
   ) {
-    return Container(
-      width: kIsWeb
-          ? MediaQuery.of(context).size.width * 0.4
-          : MediaQuery.of(context).size.width * 0.8,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextFormField(
-        controller: controller,
-        obscureText: isPassword && !_isPasswordVisible,
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-          ),
-          prefixIcon: Icon(
-            icon,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-          suffixIcon: isPassword
-              ? IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                )
-              : null,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onPrimary,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
+   return Container(
+    width: kIsWeb
+        ? MediaQuery.of(context).size.width * 0.4
+        : MediaQuery.of(context).size.width * 0.8,
+    padding: EdgeInsets.symmetric(horizontal: AppTheme.defaultPadding),
+    child: TextFormField(
+      controller: controller,
+      obscureText: isPassword && !_isPasswordVisible,
+      style: AppTheme.bodyStyle,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+       decoration: AppTheme.inputDecoration.copyWith(
+        hintText: hintText,
+        hintStyle: AppTheme.captionStyle,
+        prefixIcon: Icon(icon, color: AppTheme.textColor),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: AppTheme.textColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              )
+            : null,
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildActionButton(VoidCallback onPressed, String text) {
-    return SizedBox(
-      width: kIsWeb
-          ? MediaQuery.of(context).size.width * 0.4
-          : MediaQuery.of(context).size.width * 0.8,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ElevatedButton(
-          onPressed: _isLoading ? null : onPressed,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+   return SizedBox(
+    width: kIsWeb
+        ? MediaQuery.of(context).size.width * 0.4
+        : MediaQuery.of(context).size.width * 0.8,
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppTheme.defaultPadding),
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: AppTheme.textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: _isLoading
-              ? const CircularProgressIndicator()
-              : Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                ),
         ),
+        child: _isLoading
+            ? AppTheme.loadingIndicator
+            : Text('Submit', style: AppTheme.headerStyle),
       ),
-    );
+    ),
+  );
   }
 }
