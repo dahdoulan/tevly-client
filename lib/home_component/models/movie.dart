@@ -19,7 +19,7 @@ class Comment {
     );
   }
 }
-
+ 
 class Movie {
   final int id;
   final String title;
@@ -56,7 +56,7 @@ class Movie {
       id: json['id'],
       title: json['title'],
       videoUrl: json['videoUrl'],
-      thumbnailUrl: '${ApiConstants.baseUrl}${json['thumbnailUrl']}',
+      thumbnailUrl: '${ApiConstants.baseUrl}${json['thumbnail']}',
       category: json['category'],
       description: json['description'],
       comments: (json['comments'] as List<dynamic>?)

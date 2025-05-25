@@ -252,13 +252,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       Navigator.pushNamed(
                         context,
                         '/video-player',
-                        arguments: {
-                          'resolutionUrls': {
-                            'Full HD': widget.movie.videoUrl,
-                            'HD': widget
-                                .movie.videoUrl, // todo: add HD url to backend
-                          },
-                        },
+                       arguments: {'id': widget.movie.id}
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -288,7 +282,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    icon: Icon(isInMyList ? Icons.check : Icons.add),
+                    icon: Icon(isInMyList ? Icons.check : Icons.add, color: AppTheme.accentBlue,),
                     label: Text(
                       isInMyList ? 'Remove' : 'My List',
                       style: const TextStyle(
@@ -338,7 +332,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
-                  const Text('About this movie',
+                  Text('About this movie',
                       style: AppTheme.subheaderStyle),
                   const SizedBox(height: 16.0),
                   Text(
