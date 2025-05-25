@@ -1,6 +1,6 @@
  
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:8080/api';
+  static const String baseUrl = 'https://9e9b-37-202-99-221.ngrok-free.app/api';
   static const String login = '$baseUrl/auth/authenticate';
   static const String signup = '$baseUrl/auth/register/user';
   static const String verifyEmail = '$baseUrl/auth/activate-account?token=';
@@ -8,7 +8,6 @@ class ApiConstants {
   static const String fetchmovies = '$baseUrl/homepage/movies';
   static const String metadata = '$baseUrl/homepage/metadata';
   static const String fetchvideoURL= '$baseUrl/video/getVideos?id=';
-
   static  String fetchThumbnail(int id) =>  '$baseUrl/videos/$id/thumbnail';
   static const String submitComments = '$baseUrl/video/comment';
   static const String adminPendingMovies = '$baseUrl/reviewing-content';
