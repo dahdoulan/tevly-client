@@ -282,7 +282,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    icon: Icon(isInMyList ? Icons.check : Icons.add),
+                    icon: Icon(isInMyList ? Icons.check : Icons.add, color: AppTheme.accentBlue,),
                     label: Text(
                       isInMyList ? 'Remove' : 'My List',
                       style: const TextStyle(

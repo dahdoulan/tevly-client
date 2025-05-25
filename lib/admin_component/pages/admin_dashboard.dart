@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
  
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -65,8 +66,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        backgroundColor: Colors.blue,
+        title: const Text('Admin Dashboard',
+        style: TextStyle(color: AppTheme.textColor,fontWeight: FontWeight.bold)),
+        backgroundColor: AppTheme.primaryColor,
+        
       ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
@@ -76,6 +79,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
+
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.upload),
@@ -104,7 +108,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             children: [
               const Text(
                 'Pending Movies',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textColor),
               ),
               const SizedBox(height: 16),
         DataTable(

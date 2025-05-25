@@ -12,7 +12,8 @@ class VideoProvider extends ChangeNotifier {
   Map<String, String> resolutionUrls = {};
   bool isLoading = true;
   String? error;
-
+  double _volume = 1.0;
+  double get volume => _volume;
   VideoPlayerController get videoController => _videoController!;
 
   Future<void> initialize(int movieId) async {
@@ -56,6 +57,7 @@ class VideoProvider extends ChangeNotifier {
       // Create and initialize new controller
       _videoController = VideoPlayerController.networkUrl(Uri.parse(url));
       await _videoController!.initialize();
+      await _videoController!.setVolume(_volume);
 
       // Create new Chewie controller
       chewieController = ChewieController(
@@ -65,7 +67,7 @@ class VideoProvider extends ChangeNotifier {
         showControls: true,
         showOptions: true,
         allowFullScreen: true,
-        customControls: const MaterialControls(),
+        customControls: const MaterialControls(),  
         additionalOptions: (context) => _buildResolutionOptions(context),
       );
       notifyListeners();

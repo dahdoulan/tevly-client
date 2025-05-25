@@ -108,14 +108,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _emailSent ? 'Reset Password' : 'Forgot Password',
+          style: AppTheme.headerStyle.copyWith(color: AppTheme.textColor),
+        ),
+        backgroundColor: AppTheme.surfaceColor,
+        elevation: 0,
+      ),
       body: Container(
   decoration: BoxDecoration(
     gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+     begin: Alignment.center,
+            end: Alignment.bottomCenter,
       colors: [
         AppTheme.primaryColor,
-        AppTheme.surfaceColor!,
+        AppTheme.backgroundColor,
       ],
     ),
   ),

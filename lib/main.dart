@@ -8,11 +8,11 @@ import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verification_page.dart';
 import 'package:tevly_client/home_component/providers/comment_provider.dart';
 import 'package:tevly_client/home_component/providers/Rating_provider.dart';
-
 import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/pages/videoPlayer.dart';
+import 'package:tevly_client/video_player/providers/videoPlayer_provider.dart';
 import 'upload_component/providers/video_provider.dart';
 import 'home_component/providers/movie_provider.dart';
 import 'home_component/screens/home_screen.dart';
@@ -25,6 +25,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => VideoUploadProvider()),
         ChangeNotifierProvider(create: (_) => CommentProvider()),
         ChangeNotifierProvider(create: (_) => RatingProvider()),
+        ChangeNotifierProvider(create: (_) => VideoProvider()),
+
       ],
       builder: (context, child) => const MyApp(),
     ),
@@ -57,7 +59,7 @@ class MyApp extends StatelessWidget {
 
  home :const LoginPage(),
       routes: {
-        '/signup': (context) => SignupPage(),
+        '/signup': (context) =>  SignupPage(),
         '/login': (context) => const LoginPage(),
         '/upload': (context) => const UploadPage(),
         '/home': (context) => const HomeScreen(),

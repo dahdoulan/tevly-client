@@ -41,15 +41,25 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
 
   @override
   Widget build(BuildContext context) {
+ 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Filmmaker Signup',
+          style: AppTheme.headerStyle.copyWith(color: AppTheme.textColor),
+        ),
+        backgroundColor: AppTheme.surfaceColor,
+        elevation: 0,
+   
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
+            begin: Alignment.center,
             end: Alignment.bottomCenter,
             colors: [
               AppTheme.primaryColor,
-              AppTheme.surfaceColor!,
+              AppTheme.backgroundColor,
             ],
           ),
         ),
@@ -59,7 +69,7 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildLogo(),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 SignupForm(
                   onSubmit: _handleSignup,
                   isLoading: _isLoading,
@@ -103,7 +113,7 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
     return TextButton(
       onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
       child: Text(
-        "Already have an account? Login",
+        "Already registered as filmmaker? Login",
         style: AppTheme.captionStyle.copyWith(color: AppTheme.textColor),
       ),
     );

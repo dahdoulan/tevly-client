@@ -44,14 +44,23 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+        title: Text(
+          'User Signup',
+          style: AppTheme.headerStyle.copyWith(color: AppTheme.textColor),
+        ),
+        backgroundColor: AppTheme.surfaceColor,
+        elevation: 0,
+   
+      ),  
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
+           begin: Alignment.center,
             end: Alignment.bottomCenter,
             colors: [
               AppTheme.primaryColor,
-              AppTheme.surfaceColor!,
+              AppTheme.backgroundColor,
             ],
           ),
         ),
@@ -61,13 +70,12 @@ class _SignupPageState extends State<SignupPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildLogo(),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 SignupForm(
                   onSubmit: _handleSignup,
                   isLoading: _isLoading,
                 ),
-                const SizedBox(height: 20),
-                _buildLoginLink(),
+                 _buildLoginLink(),
                 _buildFilmmakerSignupLink(),
               ],
             ),
