@@ -64,10 +64,11 @@ class AppTheme {
     backgroundColor: surfaceColor,
   );
 
-  static final linkStyle = TextStyle(
+  static const linkStyle =  TextStyle(
     fontSize: 16,
-    color: Colors.amber,
+    color: Colors.white,
     fontWeight: FontWeight.w800,
+    decoration: TextDecoration.underline,
   );
 
   static final errorTextStyle = TextStyle(

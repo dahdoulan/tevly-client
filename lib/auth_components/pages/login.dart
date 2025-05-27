@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
         TextButton(
           onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
           child: Text(
-            "Forgot Password",
+            "Reset Password",
             style: AppTheme.linkStyle,
           ),
         ),
