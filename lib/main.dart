@@ -6,6 +6,7 @@ import 'package:tevly_client/auth_components/pages/forgot_password.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verification_page.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/providers/comment_provider.dart';
 import 'package:tevly_client/home_component/providers/Rating_provider.dart';
 import 'package:tevly_client/home_component/screens/search.dart';
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.yellow, brightness: Brightness.dark),
+            seedColor: AppTheme.primaryColor, brightness: Brightness.dark),
       ),
 
  home :const LoginPage(),

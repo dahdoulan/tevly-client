@@ -8,6 +8,7 @@ class AppTheme {
   static final accentBlue = Colors.blue[700];
   static final accentGreen = Colors.green[700];
   static final accentOrange = Colors.orange[700];
+  static final seconderyTextColor = Colors.white;
     // Spacing and Padding
   static const double defaultSpacing = 16.0;
   static const double defaultPadding = 20.0;
@@ -65,8 +66,8 @@ class AppTheme {
 
   static final linkStyle = TextStyle(
     fontSize: 16,
-    color: accentBlue,
-    fontWeight: FontWeight.w500,
+    color: Colors.amber,
+    fontWeight: FontWeight.w800,
   );
 
   static final errorTextStyle = TextStyle(

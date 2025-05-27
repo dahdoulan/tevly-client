@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/api_constants.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
 import '../../commons/logger/logger.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -69,11 +70,11 @@ Future<void> _verifyCode() async {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
+            begin: Alignment.center,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).colorScheme.primary,
-              Theme.of(context).colorScheme.secondary,
+               AppTheme.primaryColor,
+              AppTheme.backgroundColor,
             ],
           ),
         ),
@@ -128,12 +129,8 @@ Future<void> _verifyCode() async {
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
-                ),TextButton(
-                  onPressed: () {
-           Navigator.pushReplacementNamed(context, '/signup');
-                  },
-                  child:_buildVerifyButton("Go back to signup"),
-                ),
+          ),
+        _buildGoBackToSignupLink(),
               ],
             ),
           ),
@@ -147,19 +144,18 @@ Future<void> _verifyCode() async {
       width: kIsWeb
           ? MediaQuery.of(context).size.width * 0.4
           : MediaQuery.of(context).size.width * 0.8,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    padding: EdgeInsets.symmetric(horizontal: AppTheme.defaultPadding),
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: _verificationController,
-        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-        decoration: InputDecoration(
-          hintText: 'Enter verification code',
-          hintStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
-          ),
-          prefixIcon: Icon(
+          style: AppTheme.bodyStyle,
+            decoration: AppTheme.inputDecoration.copyWith(    
+            hintText: 'Enter verification code',
+            hintStyle: AppTheme.captionStyle,
+
+          prefixIcon: const Icon(
             Icons.lock_outline,
-            color: Theme.of(context).colorScheme.onPrimary,
+                  color: AppTheme.textColor,
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
@@ -185,16 +181,17 @@ Future<void> _verifyCode() async {
           ? MediaQuery.of(context).size.width * 0.4
           : MediaQuery.of(context).size.width * 0.8,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: AppTheme.defaultPadding),
         child: ElevatedButton(
           onPressed: _isLoading ? null : _verifyCode,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+         style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: AppTheme.textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
+        ),
           child: _isLoading
               ? const CircularProgressIndicator()
               : Text(
@@ -206,6 +203,24 @@ Future<void> _verifyCode() async {
                 ),
         ),
       ),
+    );
+  }
+   Widget _buildGoBackToSignupLink() {
+   return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Something wrong? ",
+          style: AppTheme.bodyStyle,
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushNamed(context, '/signup'),
+          child: Text(
+            "Go back to signup",
+            style: AppTheme.linkStyle,
+          ),
+        ),
+      ],
     );
   }
 }
