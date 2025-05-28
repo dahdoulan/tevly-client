@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/Rating_provider.dart';
-import '../providers/movie_provider.dart';
-
 class RatingWidget extends StatefulWidget {
   final int videoId;
   final double currentRating;

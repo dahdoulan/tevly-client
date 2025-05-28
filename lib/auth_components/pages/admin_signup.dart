@@ -3,19 +3,22 @@ import 'package:tevly_client/auth_components/service/signup_service.dart';
 import 'package:tevly_client/auth_components/widgets/signup_form.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
-
+class AdminSignupPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _AdminSignupPageState createState() => _AdminSignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  final _signupService = SignupService();
+class _AdminSignupPageState extends State<AdminSignupPage> {
+  final _signupService = AdminSignupService();
   bool _isLoading = false;
 
-  Future<void> _handleSignup(String firstname, String lastname, String email, 
-    String password,  DateTime? birthdate) async {
+  Future<void> _handleSignup(
+    String firstname,
+    String lastname,
+    String email,
+    String password,
+    DateTime? birthdate,
+  ) async {
     setState(() => _isLoading = true);
 
     final result = await _signupService.signup(
@@ -31,11 +34,11 @@ class _SignupPageState extends State<SignupPage> {
     if (result['success']) {
       Navigator.pushReplacementNamed(context, '/verification');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message']))
+        SnackBar(content: Text(result['message'])),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message']))
+        SnackBar(content: Text(result['message'])),
       );
     }
   }
@@ -43,19 +46,18 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text(
-          'User Signup',
+          'Admin Signup',
           style: AppTheme.headerStyle.copyWith(color: AppTheme.textColor),
         ),
         backgroundColor: AppTheme.surfaceColor,
         elevation: 0,
-   
-      ),  
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-           begin: Alignment.center,
+            begin: Alignment.center,
             end: Alignment.bottomCenter,
             colors: [
               AppTheme.primaryColor,
@@ -74,16 +76,15 @@ class _SignupPageState extends State<SignupPage> {
                   onSubmit: _handleSignup,
                   isLoading: _isLoading,
                 ),
-                 _buildLoginLink(),
-                _buildFilmmakerSignupLink(),
-               ],
+                _buildLoginLink(),
+                const SizedBox(height: 20),
+              ],
             ),
           ),
         ),
       ),
     );
   }
- 
 
   Widget _buildLogo() {
     return Container(
@@ -110,7 +111,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _buildLoginLink() {
-     return Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
@@ -127,24 +128,4 @@ class _SignupPageState extends State<SignupPage> {
       ],
     );
   }
-
-  Widget _buildFilmmakerSignupLink() {
-   return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Sign up as Filmmaker? ",
-          style: AppTheme.bodyStyle,
-        ),
-        TextButton(
-          onPressed: () => Navigator.pushNamed(context, '/signupFilmmaker'),
-          child: Text(
-            "Filmmaker Signup",
-            style: AppTheme.linkStyle,
-          ),
-        ),
-      ],
-    );
-  }
-  
 }

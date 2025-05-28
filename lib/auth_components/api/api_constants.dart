@@ -1,6 +1,6 @@
  
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:8080/api';
+  static const String baseUrl = 'http://192.168.1.10:8080/api';
   static const String login = '$baseUrl/auth/authenticate';
   static const String signup = '$baseUrl/auth/register/user';
   static const String verifyEmail = '$baseUrl/auth/activate-account?token=';
@@ -16,4 +16,5 @@ class ApiConstants {
   static String signupFilmmaker = '$baseUrl/auth/register/filmmaker';
   static String viewPorfile = '$baseUrl/user/profile';
   static String userRating = '$baseUrl/video/Rating';
+  static String adminSignup = '$baseUrl/signup/admin';
 }

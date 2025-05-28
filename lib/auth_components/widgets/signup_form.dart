@@ -4,7 +4,7 @@ import 'package:tevly_client/home_component/models/theme.dart';
  
 class SignupForm extends StatefulWidget {
   final Function(String firstname, String lastname, String email, 
-    String password, String phone, DateTime? birthdate) onSubmit;
+    String password,  DateTime? birthdate) onSubmit;
   final bool isLoading;
 
   const SignupForm({
@@ -23,7 +23,6 @@ class _SignupFormState extends State<SignupForm> {
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   DateTime? _selectedBirthdate;
   bool _isPasswordVisible = false;
 
@@ -100,9 +99,7 @@ Widget _buildTextField(
         const SizedBox(height: 10),
         _buildTextField(_confirmPasswordController, "Confirm Password", Icons.lock_outline, true),
         const SizedBox(height: 10),
-        _buildTextField(_phoneController, "Phone", Icons.phone_outlined, false),
-        const SizedBox(height: 10),
-        _buildDatePicker(),
+         _buildDatePicker(),
         const SizedBox(height: 10),
         _buildLoginButton(),
         const SizedBox(height: 10),
@@ -112,8 +109,7 @@ Widget _buildTextField(
   
   
    void _submitForm() {
-    widget.onSubmit(_firstnameController.text,   _lastnameController.text,_emailController.text, _passwordController.text,
-     _phoneController.text , _selectedBirthdate);
+    widget.onSubmit(_firstnameController.text,   _lastnameController.text,_emailController.text, _passwordController.text, _selectedBirthdate);
   }
   Widget _buildLoginButton() {
     return SizedBox(

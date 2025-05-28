@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
-import 'package:tevly_client/home_component/widgets/check_authentication.dart';
+import 'package:tevly_client/home_component/providers/Rating_provider.dart';
+import 'package:tevly_client/home_component/providers/comment_provider.dart';
 import '../providers/movie_provider.dart';
 import '../models/movie.dart';
 import '../widgets/bottom_navigation.dart';
@@ -13,28 +14,22 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-
-CheckAuthentication checkAuth = const CheckAuthentication(
-  child: Text("Welcome Home"),
-);
-
+ 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
   final ScrollController _scrollController = ScrollController();
 
-  @override
+   @override
   void initState() {
     super.initState();
     _initializeData();
   }
-
-  Future<void> _initializeData() async {
+ Future<void> _initializeData() async {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     if (movieProvider.allMovies.isEmpty) {
       await movieProvider.fetchMovies();
     }
   }
-
   void _onNavTap(int index) {
     switch (index) {
       case 1:
@@ -47,24 +42,28 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _currentNavIndex = index);
     }
   }
-
-  @override
+ @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-
-  void _onMovieTap(Movie movie) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MovieDetailsScreen(movie: movie),
-      ),
-    );
+  void _onMovieTap(Movie movie) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MovieDetailsScreen(movie: movie),
+    ),
+  );
+  // Fetch movies after returning
+  final movieProvider = Provider.of<MovieProvider>(context, listen: false);
+  if(CommentProvider.hasCommented==true||RatingProvider.hasRated==true){
+    CommentProvider.hasCommented = false;
+    RatingProvider.hasRated = false;
+  movieProvider.fetchMovies(forceRefresh: true);
   }
+}
 
   @override
-
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: AppTheme.backgroundColor,
@@ -84,7 +83,7 @@ Widget build(BuildContext context) {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverAppBar(
-                  backgroundColor: AppTheme.surfaceColor,
+                  backgroundColor: AppTheme.primaryColor,
                   pinned: true,
                   expandedHeight: 50.0,
                   flexibleSpace: FlexibleSpaceBar(
@@ -92,7 +91,6 @@ Widget build(BuildContext context) {
                     centerTitle: false,
                   ),
                 ),
-
 
                 SliverList(
                   delegate: SliverChildListDelegate([
@@ -108,7 +106,6 @@ Widget build(BuildContext context) {
                         ),
                       ),
                     ),
-
 
                 const SizedBox(height: AppTheme.defaultSpacing),
 
@@ -180,5 +177,4 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tevly_client/admin_component/pages/admin_dashboard.dart';
+import 'package:tevly_client/auth_components/pages/admin_signup.dart';
 import 'package:tevly_client/auth_components/pages/filmmaker_signup.dart';
 import 'package:tevly_client/auth_components/pages/forgot_password.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
         '/search': (context) => const MovieSearchPage(),
         '/getstarted': (context) => const GetStartedScreen(),
         '/payment': (context) => const PaymentScreen(), 
+        '/adminSignup': (context) => AdminSignupPage(),
          },
           onGenerateRoute: _onGenerateRoute,
    

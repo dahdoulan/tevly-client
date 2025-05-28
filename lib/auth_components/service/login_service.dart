@@ -34,7 +34,7 @@ class LoginService {
       
       return {
         'success': false,
-        'error': 'Login failed',
+        'error': 'Login failed: Password or email is incorrect',
       };
     } catch (e) {
       return {

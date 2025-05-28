@@ -1,3 +1,4 @@
+// lib/providers/movie_provider.dart
 import 'package:flutter/foundation.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 import 'package:tevly_client/upload_component/providers/video_provider.dart';
@@ -25,22 +26,26 @@ class MovieProvider with ChangeNotifier {
   // Cache thumbnail URL
   void cacheThumbnailUrl(int movieId, String url) {
     _thumbnailCache[movieId] = url;
-    notifyListeners();
+    // Remove immediate notification to prevent build-time updates
+    Future.microtask(() => notifyListeners());
   }
 
-  // Fetch movies
-  Future<void> fetchMovies() async {
+  // Fetch movies if not already loaded
+    Future<void> fetchMovies({bool forceRefresh = false}) async {
+    if (!forceRefresh && allMovies.isNotEmpty) return;
+
     _isLoading = true;
-    notifyListeners();
+    // Use microtask for state updates
+    Future.microtask(() => notifyListeners());
 
     try {
-      final movies = await _movieService.fetchMovies();
-      _allMovies = movies;
+      _allMovies = await _movieService.fetchMovies();
     } catch (e) {
       Logger.debug('Error fetching movies: $e');
     } finally {
       _isLoading = false;
-      notifyListeners();
+      // Use microtask for state updates
+      Future.microtask(() => notifyListeners());
     }
   }
 
@@ -48,26 +53,20 @@ class MovieProvider with ChangeNotifier {
   void addToMyList(Movie movie) {
     if (!_myList.any((item) => item.id == movie.id)) {
       _myList.add(movie);
-      notifyListeners();
+      Future.microtask(() => notifyListeners());
     }
   }
-
   // Remove from My List
   void removeFromMyList(int movieId) {
     _myList.removeWhere((movie) => movie.id == movieId);
-    notifyListeners();
+    Future.microtask(() => notifyListeners());
   }
-
-  // Get movies by category
   List<Movie> getMoviesByCategory(String category) {
     return _allMovies.where((movie) => movie.category == category).toList();
   }
-
-  // Get all movies by category
-  List<Movie> getAllMoviesByCategory(String category) {
-    return _allMovies.where((movie) => movie.category == category).toList();
+ List<Movie> getAllMoviesByCategory(String category) {
+    return _allMovies.where((movie) => movie  == movie).toList();
   }
-
   // Toggle My List
   void toggleMyList(Movie movie) {
     if (_myList.any((item) => item.id == movie.id)) {

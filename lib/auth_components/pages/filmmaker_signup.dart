@@ -13,7 +13,7 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
   bool _isLoading = false;
 
   Future<void> _handleSignup(String firstname, String lastname, String email, 
-    String password, String phone, DateTime? birthdate) async {
+    String password,  DateTime? birthdate) async {
     setState(() => _isLoading = true);
 
     final result = await _signupService.signup(
@@ -22,8 +22,7 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
       email: email,
       password: password,
       dateOfBirth: birthdate,
-      phone: phone,
-    );
+     );
 
     setState(() => _isLoading = false);
 
@@ -74,9 +73,10 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
                   onSubmit: _handleSignup,
                   isLoading: _isLoading,
                 ),
-           
                 _buildLoginLink(),
-                const SizedBox(height: 20),],
+                const SizedBox(height: 10),
+                _buildAdminSignupLink(),
+],
             ),
           ),
         ),
@@ -102,7 +102,7 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: Image.asset(
-          'lib/assets/logo.jpg',
+          'lib/assets/actuallogo.png',
           fit: BoxFit.cover,
         ),
       ),
@@ -128,6 +128,23 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
     );
   }
 
-   
+    Widget _buildAdminSignupLink() {
+   return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Sign up as Admin? ",
+          style: AppTheme.bodyStyle,
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushNamed(context, '/adminSignup'),
+          child: Text(
+            "Admin Signup",
+            style: AppTheme.linkStyle,
+          ),
+        ),
+      ],
+    );
+  }
 
 }

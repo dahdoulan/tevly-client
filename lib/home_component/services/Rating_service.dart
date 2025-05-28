@@ -13,18 +13,14 @@ class RatingService {
     }
 
     final response = await http.post(
-41-cdn
       Uri.parse(ApiConstants.userRating),  
-
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
       body: json.encode({
-
-   
-        'videoId': videoId, // Removed toString() since API might expect integers
-
+        'videoId':
+            videoId,  
         'rating': rating,
       }),
     );
@@ -32,10 +28,8 @@ class RatingService {
     Logger.debug('Rating response status: ${response.statusCode}');
     Logger.debug('Rating response body: ${response.body}');
 
-
-    if (response.statusCode != 202) {
-      Logger.debug('Failed to submit rating: ${response.body}');
-
+    if (response.statusCode != 202){
+      throw Exception('Failed to submit rating: ${response.body}');
     }
   }
 }
