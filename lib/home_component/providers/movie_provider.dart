@@ -31,8 +31,8 @@ class MovieProvider with ChangeNotifier {
   }
 
   // Fetch movies if not already loaded
-    Future<void> fetchMovies() async {
-    if (_allMovies.isNotEmpty) return;
+    Future<void> fetchMovies({bool forceRefresh = false}) async {
+    if (!forceRefresh && allMovies.isNotEmpty) return;
 
     _isLoading = true;
     // Use microtask for state updates

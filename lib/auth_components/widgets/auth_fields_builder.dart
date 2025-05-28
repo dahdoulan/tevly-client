@@ -96,6 +96,7 @@ Widget _buildTextField(
     child: TextFormField(
       controller: controller,
       obscureText: isPassword && !_isPasswordVisible,
+      validator: (value) => getErrorText(value),
       style: AppTheme.bodyStyle,
       decoration: AppTheme.inputDecoration.copyWith(
         hintText: hintText,

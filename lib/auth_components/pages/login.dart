@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:isolate';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tevly_client/auth_components/service/login_service.dart';
@@ -104,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                   isLoading: _isLoading,
                 ),
                   const SizedBox(height: 10),
-                  _buildForgotPasswordLink(),
+               //   _buildForgotPasswordLink(), NOT IMPLEMENTED YET
 
           
                 // Sign Up Link
@@ -134,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: Image.asset(
-          'lib/assets/logo.jpg',
+          'lib/assets/actuallogo.png',
           fit: BoxFit.cover,
         ),
       ),

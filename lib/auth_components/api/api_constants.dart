@@ -16,4 +16,5 @@ class ApiConstants {
   static String signupFilmmaker = '$baseUrl/auth/register/filmmaker';
   static String viewPorfile = '$baseUrl/user/profile';
   static String userRating = '$baseUrl/video/Rating';
+  static String adminSignup = '$baseUrl/signup/admin';
 }

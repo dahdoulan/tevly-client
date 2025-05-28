@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
  import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
@@ -7,7 +6,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/models/user.dart';
-import 'package:tevly_client/home_component/providers/comment_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

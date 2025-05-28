@@ -5,6 +5,7 @@ class RatingProvider with ChangeNotifier {
   final RatingService _ratingService = RatingService();
   bool isLoading = false;
   String? error;
+  static bool hasRated = false;
 
   Future<void> submitRating(int videoId, int rating) async {
     isLoading = true;
@@ -12,6 +13,7 @@ class RatingProvider with ChangeNotifier {
     notifyListeners();
 
     try {
+      hasRated = true;
       await _ratingService.submitRating(videoId, rating);
     } catch (e) {
       error = e.toString();

@@ -10,6 +10,7 @@ class CommentProvider with ChangeNotifier {
   List<Comment> comments = [];
   Movie ?movie;
   String? userFullName; // <-- Add this field
+  static  bool hasCommented = false;
 
   void loadComments(List<Comment> initialComments) {
     comments = List<Comment>.from(initialComments);
@@ -28,7 +29,7 @@ class CommentProvider with ChangeNotifier {
     try {
       await _commentService.submitComment(videoId, comment);
       // Add the new comment locally (optimistic update)
-
+      hasCommented = true;
       comments.insert(
         0,
         Comment(
