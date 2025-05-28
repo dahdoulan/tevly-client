@@ -26,7 +26,6 @@ class SignupValidator {
   static const String nameRegex = r'^[a-zA-Z]{1,12}$';
   static const String emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
   static const String passwordRegex = r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$';
-  static const String phoneRegex = r'^\+?[\d-]{10,}$';
 
   static String? validateName(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
@@ -59,13 +58,6 @@ class SignupValidator {
     return null;
   }
 
-  static String? validatePhone(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Phone number is required';
-    }
-    if (!RegExp(phoneRegex).hasMatch(value)) {
-      return 'Enter a valid phone number';
-    }
-    return null;
-  }
+  
+
 }

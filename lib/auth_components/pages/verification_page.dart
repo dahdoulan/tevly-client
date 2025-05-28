@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/api_constants.dart';
+import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
 import '../../commons/logger/logger.dart';
 
@@ -39,8 +40,20 @@ Future<void> _verifyCode() async {
     if (!mounted) return;
     Logger.debug(response.body.toString());
     if (response.statusCode == 200) {
+      SnackBar snackBar =const SnackBar(
+        content: Text('Verification successful!'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      );
       Logger.debug(response.statusCode.toString());
-      Navigator.pushReplacementNamed(context, '/login');
+      if(AuthenticationService().getRole()=="ADMIN"){
+        Navigator.pushReplacementNamed(context, '/admin');
+      }
+      else
+      {      
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+
       
     } else {
       setState(() {

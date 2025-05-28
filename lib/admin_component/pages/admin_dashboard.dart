@@ -69,17 +69,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
         title: const Text('Admin Dashboard',
         style: TextStyle(color: AppTheme.textColor,fontWeight: FontWeight.bold)),
         backgroundColor: AppTheme.primaryColor,
-        
       ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
-
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.upload),
@@ -89,6 +89,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
+           BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: 'Register Admin',
+    ),
         ],
       ),
     );
@@ -240,6 +244,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
     Navigator.pushNamed(
       context,
       '/home',
+      arguments: {'token': token},
+    );
+  } else if (index == 3) {
+    Navigator.pushNamed(
+      context,
+      '/adminSignup',
       arguments: {'token': token},
     );
   }
