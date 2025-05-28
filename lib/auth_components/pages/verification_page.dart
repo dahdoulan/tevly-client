@@ -40,7 +40,7 @@ Future<void> _verifyCode() async {
     if (!mounted) return;
     Logger.debug(response.body.toString());
     if (response.statusCode == 200) {
-      SnackBar snackBar =const SnackBar(
+     const SnackBar(
         content: Text('Verification successful!'),
         backgroundColor: Colors.green,
         duration: Duration(seconds: 2),
@@ -53,8 +53,6 @@ Future<void> _verifyCode() async {
       {      
         Navigator.pushReplacementNamed(context, '/login');
       }
-
-      
     } else {
       setState(() {
         _errorMessage = 'Invalid verification code. Please try again.';
