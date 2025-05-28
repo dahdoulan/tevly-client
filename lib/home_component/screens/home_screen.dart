@@ -13,23 +13,28 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-  CheckAuthentication checkAuth = const CheckAuthentication(child: Text("Welcome Home"),);
+
+CheckAuthentication checkAuth = const CheckAuthentication(
+  child: Text("Welcome Home"),
+);
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
   final ScrollController _scrollController = ScrollController();
 
-   @override
+  @override
   void initState() {
     super.initState();
     _initializeData();
   }
- Future<void> _initializeData() async {
+
+  Future<void> _initializeData() async {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
     if (movieProvider.allMovies.isEmpty) {
       await movieProvider.fetchMovies();
     }
   }
+
   void _onNavTap(int index) {
     switch (index) {
       case 1:
@@ -42,11 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _currentNavIndex = index);
     }
   }
- @override
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _onMovieTap(Movie movie) {
     Navigator.push(
       context,
@@ -57,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: AppTheme.backgroundColor,
@@ -85,6 +93,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
 
+
                 SliverList(
                   delegate: SliverChildListDelegate([
                     Padding(
@@ -99,6 +108,7 @@ Widget build(BuildContext context) {
                         ),
                       ),
                     ),
+
 
                 const SizedBox(height: AppTheme.defaultSpacing),
 
@@ -170,4 +180,5 @@ Widget build(BuildContext context) {
     ),
   );
 }
+
 }
