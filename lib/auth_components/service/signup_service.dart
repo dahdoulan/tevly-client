@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/api_constants.dart';
+import 'package:tevly_client/auth_components/service/authenticationService.dart';
 import 'package:tevly_client/commons/logger/logger.dart';
 
 class SignupService {
@@ -102,9 +103,14 @@ class FilmmakerSignupService {
     try {
       
       final url = Uri.parse(ApiConstants.adminSignup);
+            final token = AuthenticationService().getToken();
+
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'},
+         headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode({
         'firstname': firstname.trim().toLowerCase(),
         'lastname': lastname.trim().toLowerCase(),
