@@ -169,16 +169,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
       DataCell(Text(movie['filmmakerFullName'] ?? 'Unknown')),
       DataCell(Text(movie['filmmakerEmail'] ?? '')),
       DataCell(
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.category_rounded, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 4),
-            Text(movie['category'] ?? 'Uncategorized',),
-          ],
-        ),
-
-      ),
+  Container(
+    constraints: const BoxConstraints(maxWidth: 200),
+    child: Text(
+    
+      movie['category'] ?? 'Uncategorized',
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+    ),
+  ),
+),
       DataCell(Text(movie['date']?.toString().substring(0, 10) ?? '')),
       DataCell(
         Row(

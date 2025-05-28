@@ -111,22 +111,40 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _buildLoginLink() {
-    return TextButton(
-      onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-      child: Text(
-        "Already have an account? Login",
-        style: AppTheme.captionStyle.copyWith(color: AppTheme.textColor),
-      ),
+     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Already have an account? ",
+          style: AppTheme.bodyStyle,
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushNamed(context, '/login'),
+          child: Text(
+            "Login",
+            style: AppTheme.linkStyle,
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildFilmmakerSignupLink() {
-    return TextButton(
-      onPressed: () => Navigator.pushReplacementNamed(context, '/signupFilmmaker'),
-      child: Text(
-        "Are you a filmmaker? Sign up here",
-        style: AppTheme.captionStyle.copyWith(color: AppTheme.textColor),
-      ),
+   return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Sign up as Filmmaker? ",
+          style: AppTheme.bodyStyle,
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushNamed(context, '/signupFilmmaker'),
+          child: Text(
+            "Filmmaker Signup",
+            style: AppTheme.linkStyle,
+          ),
+        ),
+      ],
     );
   }
 }

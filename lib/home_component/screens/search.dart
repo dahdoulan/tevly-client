@@ -1,14 +1,9 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:tevly_client/auth_components/api/api_constants.dart';
-import 'package:tevly_client/auth_components/service/authenticationService.dart';
-import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:tevly_client/home_component/models/movie.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
+import 'package:tevly_client/home_component/providers/search_provider.dart';
 import 'package:tevly_client/home_component/screens/movie_details_screen.dart';
-import 'package:tevly_client/home_component/services/cache_service.dart';
 import 'package:tevly_client/home_component/widgets/movie_card.dart';
 
 class MovieSearchPage extends StatefulWidget {
@@ -19,78 +14,21 @@ class MovieSearchPage extends StatefulWidget {
 }
 
 class _MovieSearchPageState extends State<MovieSearchPage> {
-    final _cacheService = MovieCacheService();
-
-  List<Movie> _allMovies = [];
-  List<Movie> _filteredMovies = [];
-  bool _isLoading = false;
-  Timer? _debounce;
-
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _fetchAllMovies(); 
     _searchController.addListener(_onSearchChanged);
-  }
-
-  void _onSearchChanged() {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      _filterMovies(_searchController.text);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SearchProvider>().fetchMovies();
     });
   }
 
-  Future<void> _fetchAllMovies() async {
-    setState(() => _isLoading = true);
-    try {
-      // Check cache first
-      if (_cacheService.isCacheValid) {
-        Logger.debug("Using cached movies");
-        _allMovies = _cacheService.getCachedMovies();
-        _filterMovies(_searchController.text);
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      final token = await AuthenticationService().getToken();
-      final response = await http.post(
-        Uri.parse(ApiConstants.metadata),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      Logger.debug("Status Code: ${response.statusCode}");
-
-      if (response.statusCode == 200) {
-        final List data = json.decode(response.body);
-        _allMovies = data.map((json) => Movie.fromJson(json)).toList();
-        // Update cache with new data
-        _cacheService.updateCache(_allMovies);
-        _filterMovies(_searchController.text);
-      } else {
-        throw Exception("Failed to fetch movies: ${response.statusCode}");
-      }
-    } catch (e) {
-      Logger.debug("Error fetching movies: $e");
-    } finally {
-      setState(() => _isLoading = false);
-    }
+  void _onSearchChanged() {
+    context.read<SearchProvider>().onSearchChanged(_searchController.text);
   }
 
-
-  void _filterMovies(String query) {
-  setState(() {
-    _filteredMovies = _allMovies.where((movie) {
-      final titleLower = movie.title.toLowerCase();
-      final searchLower = query.toLowerCase();
-      return titleLower.contains(searchLower);
-    }).toList();
-  });
-}
   void _onMovieTap(Movie movie) {
     Navigator.push(
       context,
@@ -100,14 +38,12 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
     );
   }
 
-    @override
+  @override
   void dispose() {
     _searchController.dispose();
-    _debounce?.cancel();
     super.dispose();
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,34 +71,37 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
               ),
             ),
           ),
-          if (_isLoading)
-            Center(child: AppTheme.loadingIndicator)
-          else
-            Expanded(
-              child: _filteredMovies.isEmpty
-                  ? Center(
-                      child: Text('No movies found.', style: AppTheme.bodyStyle))
-                  : GridView.builder(
-  shrinkWrap: true,
-  physics: const AlwaysScrollableScrollPhysics(), // Disable scrolling
-  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-    maxCrossAxisExtent: 200, // Each item max width
-    mainAxisSpacing: 8,
-    crossAxisSpacing: 8,
-    childAspectRatio: 0.7, // Adjust based on your MovieCard dimensions
-  ),
-  itemCount: _filteredMovies.length,
-  itemBuilder: (context, index) {
-    final movie = _filteredMovies[index];
-    return MovieCard(
-      movie: movie,
-      onTap: () => _onMovieTap(movie),
-    );
-  },
-)
-,
-)
-,
+          Consumer<SearchProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                return Center(child: AppTheme.loadingIndicator);
+              }
+              
+              return Expanded(
+                child: provider.filteredMovies.isEmpty
+                    ? Center(
+                        child: Text('No movies found.', style: AppTheme.bodyStyle))
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          childAspectRatio: 0.7,
+                        ),
+                        itemCount: provider.filteredMovies.length,
+                        itemBuilder: (context, index) {
+                          final movie = provider.filteredMovies[index];
+                          return MovieCard(
+                            movie: movie,
+                            onTap: () => _onMovieTap(movie),
+                          );
+                        },
+                      ),
+              );
+            },
+          ),
         ],
       ),
     );

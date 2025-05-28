@@ -74,7 +74,7 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
                   onSubmit: _handleSignup,
                   isLoading: _isLoading,
                 ),
-                const SizedBox(height: 20),
+           
                 _buildLoginLink(),
                 const SizedBox(height: 20),],
             ),
@@ -110,12 +110,21 @@ class _FilmmakerSignupPageState extends State<FilmmakerSignupPage> {
   }
 
   Widget _buildLoginLink() {
-    return TextButton(
-      onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-      child: Text(
-        "Already registered as filmmaker? Login",
-        style: AppTheme.captionStyle.copyWith(color: AppTheme.textColor),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Already have an account? ",
+          style: AppTheme.bodyStyle,
+        ),
+        TextButton(
+          onPressed: () => Navigator.pushNamed(context, '/login'),
+          child: Text(
+            "Login",
+            style: AppTheme.linkStyle,
+          ),
+        ),
+      ],
     );
   }
 

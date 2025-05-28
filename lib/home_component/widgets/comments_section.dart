@@ -4,10 +4,9 @@ import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../models/movie.dart';
 import '../providers/comment_provider.dart';
- 
+
 class CommentsSection extends StatefulWidget {
   final Movie movie;
-
   const CommentsSection({
     super.key,
     required this.movie,
@@ -21,12 +20,22 @@ class _CommentsSectionState extends State<CommentsSection> {
   final TextEditingController _commentController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Load initial comments into provider
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<CommentProvider>(context, listen: false)
+          .loadComments(widget.movie.comments);
+    });
+  }
+
+  @override
   void dispose() {
     _commentController.dispose();
     super.dispose();
   }
 
-  Future<void> _submitComment() async {
+  Future<void> _submitComment(BuildContext context) async {
     if (_commentController.text.isEmpty) return;
 
     final commentProvider = Provider.of<CommentProvider>(context, listen: false);
@@ -57,14 +66,14 @@ class _CommentsSectionState extends State<CommentsSection> {
     return Consumer<CommentProvider>(
       builder: (context, commentProvider, child) {
         return Container(
-            padding: EdgeInsets.all(AppTheme.defaultPadding),
+          padding: EdgeInsets.all(AppTheme.defaultPadding),
           decoration: AppTheme.containerDecoration,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Comments', style: AppTheme.subheaderStyle),
               const SizedBox(height: AppTheme.defaultSpacing),
-              
+
               // Comment input field
               Container(
                 decoration: BoxDecoration(
@@ -96,7 +105,9 @@ class _CommentsSectionState extends State<CommentsSection> {
                       ),
                     ),
                     IconButton(
-                      onPressed: commentProvider.isLoading ? null : _submitComment,
+                      onPressed: commentProvider.isLoading
+                          ? null
+                          : () => _submitComment(context),
                       icon: commentProvider.isLoading
                           ? SizedBox(
                               width: 20,
@@ -133,9 +144,9 @@ class _CommentsSectionState extends State<CommentsSection> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
-                itemCount: widget.movie.comments.length,
+                itemCount: commentProvider.comments.length,
                 itemBuilder: (context, index) {
-                  final comment = widget.movie.comments[index];
+                  final comment = commentProvider.comments[index];
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Container(

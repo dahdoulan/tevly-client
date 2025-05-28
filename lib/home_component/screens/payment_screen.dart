@@ -265,28 +265,33 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Processing Payment...'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                onPressed: () async {
+  if (_formKey.currentState!.validate()) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Processing Payment...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
 
-                      await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 4));
 
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Payment Completed Successfully!'),
-                            backgroundColor: Colors.green,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    }
-                  },
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Payment Completed Successfully!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      // Wait for the success message to show, then navigate to login
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    }
+  }
+},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(225, 255, 214, 64),
                     shape: RoundedRectangleBorder(

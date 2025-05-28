@@ -6,8 +6,13 @@ import 'package:tevly_client/auth_components/pages/forgot_password.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
 import 'package:tevly_client/auth_components/pages/verification_page.dart';
+import 'package:tevly_client/auth_components/widgets/launch_screen.dart';
+import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/providers/comment_provider.dart';
 import 'package:tevly_client/home_component/providers/Rating_provider.dart';
+import 'package:tevly_client/home_component/providers/search_provider.dart';
+import 'package:tevly_client/home_component/screens/get_started_screen.dart';
+import 'package:tevly_client/home_component/screens/payment_screen.dart';
 import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
@@ -26,7 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => CommentProvider()),
         ChangeNotifierProvider(create: (_) => RatingProvider()),
         ChangeNotifierProvider(create: (_) => VideoProvider()),
-
+        ChangeNotifierProvider(create: (_) => SearchProvider()), 
       ],
       builder: (context, child) => const MyApp(),
     ),
@@ -54,10 +59,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.yellow, brightness: Brightness.dark),
+            seedColor: AppTheme.primaryColor, brightness: Brightness.dark),
       ),
 
- home :const LoginPage(),
+ home :const LaunchScreen(),
       routes: {
         '/signup': (context) =>  SignupPage(),
         '/login': (context) => const LoginPage(),
@@ -69,9 +74,11 @@ class MyApp extends StatelessWidget {
         '/admin': (context) => const AdminDashboard(),
         '/settings': (context) => const SettingsPage(),
         '/search': (context) => const MovieSearchPage(),
+        '/getstarted': (context) => const GetStartedScreen(),
+        '/payment': (context) => const PaymentScreen(), 
          },
           onGenerateRoute: _onGenerateRoute,
-      initialRoute: '/login',
+   
     );
   }
 }

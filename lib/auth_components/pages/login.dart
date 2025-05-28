@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:isolate';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tevly_client/auth_components/service/login_service.dart';
  import 'package:tevly_client/auth_components/widgets/auth_fields_builder.dart';
@@ -23,9 +27,8 @@ class _LoginPageState extends State<LoginPage> {
 
     if (result['success']) {
       _handleNavigation(result['role']);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login Successful"))
-      );
+     
+      
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result['error']))
@@ -33,19 +36,44 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _handleNavigation(String role) {
-    switch (role) {
-      case "USER":
-        Navigator.pushReplacementNamed(context, '/home');
-        break;
-      case "FILMMAKER":
-        Navigator.pushReplacementNamed(context, '/upload');
-        break;
-      case "ADMIN":
-        Navigator.pushReplacementNamed(context, '/admin');
-        break;
-    }
+ void _handleNavigation(String role) {
+  bool isMobilePlatform = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+  
+  switch (role) {
+    case "USER":
+      Navigator.pushReplacementNamed(context, '/home');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Welcome back to Tvely!"),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      break;
+      
+    case "FILMMAKER":
+    case "ADMIN":
+      if (isMobilePlatform) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${role.toLowerCase()} login is not available on mobile. Please use a non-mobile version."),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      } else {
+        Navigator.pushReplacementNamed(
+          context, 
+          role == "FILMMAKER" ? '/upload' : '/admin'
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Welcome back to Tvely, ${role.toLowerCase()}!"),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +103,10 @@ class _LoginPageState extends State<LoginPage> {
                   onSubmit: _handleLogin,
                   isLoading: _isLoading,
                 ),
-                                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  _buildForgotPasswordLink(),
 
-                                _buildForgotPasswordLink(),
-
-                const SizedBox(height: 20),
+          
                 // Sign Up Link
                 _buildSignUpLink(),
               ],
@@ -143,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
         TextButton(
           onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
           child: Text(
-            "Forgot Password",
+            "Reset Password",
             style: AppTheme.linkStyle,
           ),
         ),
