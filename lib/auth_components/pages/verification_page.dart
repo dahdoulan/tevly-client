@@ -41,6 +41,13 @@ Future<void> _verifyCode() async {
     if (response.statusCode == 200) {
       Logger.debug(response.statusCode.toString());
       Navigator.pushReplacementNamed(context, '/login');
+      SnackBar snackBar = SnackBar(
+        content: Text(
+          'Email verified successfully! You can now log in.',
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      );
     } else {
       setState(() {
         _errorMessage = 'Invalid verification code. Please try again.';

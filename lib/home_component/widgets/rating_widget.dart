@@ -6,14 +6,12 @@ import '../providers/movie_provider.dart';
 class RatingWidget extends StatefulWidget {
   final int videoId;
   final double currentRating;
-  final Function(double)? onRatingChanged;
-
+ 
   const RatingWidget({
     Key? key,
     required this.videoId,
     this.currentRating = 0,
-    this.onRatingChanged,
-  }) : super(key: key);
+   }) : super(key: key);
 
   @override
   State<RatingWidget> createState() => _RatingWidgetState();
@@ -63,8 +61,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                             setState(() {
                               _currentRating = index + 1.0;
                             });
-                            widget.onRatingChanged?.call(_currentRating);
-                          }
+                           }
                         },
                 );
               }),

@@ -46,6 +46,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         _imageUrl = cachedUrl;
         _isLoading = false;
       });
+      
       return;
     }
 

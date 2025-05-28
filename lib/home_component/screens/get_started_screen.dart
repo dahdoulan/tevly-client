@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({Key? key}) : super(key: key);
@@ -54,10 +55,11 @@ class GetStartedScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {
-                    // Add navigation to registration screen
-                    Navigator.pushNamed(context, '/signup');//TODO FELLING QUICQY MIGHT CHANGE LATER TOPIC PAGE ON TEVLEY
-                  },
+                  onPressed: () async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenGetStarted', true);
+    Navigator.pushNamed(context, '/payment');
+  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(230, 255, 214, 64),
                     minimumSize: const Size(double.infinity, 56),

@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 import '../services/comment_service.dart';
+import '../models/movie.dart';
 
 class CommentProvider with ChangeNotifier {
   final CommentService _commentService = CommentService();
   bool isLoading = false;
   String? error;
+  List<Comment> comments = [];
+  Movie ?movie;
+  String? userFullName; // <-- Add this field
+
+  void loadComments(List<Comment> initialComments) {
+    comments = List<Comment>.from(initialComments);
+    notifyListeners();
+  }  
+  void setUserFullName(String fullName) {
+    userFullName = fullName;
+    notifyListeners();
+  }
 
   Future<void> addComment(int videoId, String comment) async {
     isLoading = true;
@@ -13,7 +27,22 @@ class CommentProvider with ChangeNotifier {
 
     try {
       await _commentService.submitComment(videoId, comment);
-    } catch (e) {
+      // Add the new comment locally (optimistic update)
+
+      comments.insert(
+        0,
+        Comment(
+         
+          comment: comment,
+          fullName: movie?.comments.isNotEmpty == true
+              ? movie!.comments.first.fullName
+              : (userFullName ?? 'You'),  
+          date: DateTime.now(),
+        ),
+      );      Logger.debug('Current userFullName: $userFullName');
+      Logger.debug('Comment added: $comment by $userFullName');
+    }
+     catch (e) {
       error = e.toString();
     } finally {
       isLoading = false;

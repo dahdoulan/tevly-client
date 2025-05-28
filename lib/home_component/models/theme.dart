@@ -69,6 +69,7 @@ class AppTheme {
     color: Colors.white,
     fontWeight: FontWeight.w800,
     decoration: TextDecoration.underline,
+    
   );
 
   static final errorTextStyle = TextStyle(

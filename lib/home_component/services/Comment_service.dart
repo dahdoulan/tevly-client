@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:tevly_client/auth_components/api/api_constants.dart';
+import 'package:tevly_client/commons/logger/logger.dart';
 import 'dart:convert';
  import '../../auth_components/service/authenticationService.dart';
 
@@ -22,7 +23,8 @@ class CommentService {
         'comment': comment,
       }),
     );
-
+        Logger.debug('Comment response status: ${response.statusCode}');
+        Logger.debug('Comment response body: ${response.body}');
     if (response.statusCode != 202) {
       throw Exception('Failed to post comment: ${response.body}');
     }

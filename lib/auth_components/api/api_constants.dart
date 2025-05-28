@@ -15,5 +15,5 @@ class ApiConstants {
   static const String rejectMovie = '$adminPendingMovies/reject';
   static String signupFilmmaker = '$baseUrl/auth/register/filmmaker';
   static String viewPorfile = '$baseUrl/user/profile';
-  static String userRating = '$baseUrl/video/Rating ';
+  static String userRating = '$baseUrl/video/Rating';
 }
