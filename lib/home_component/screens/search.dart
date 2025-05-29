@@ -61,7 +61,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
               controller: _searchController,
               style: AppTheme.bodyStyle,
               decoration: InputDecoration(
-                hintText: 'Search for a movie...',
+                hintText: 'Search for a movie by Title, Category or Director...',
                 hintStyle: AppTheme.captionStyle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -80,7 +80,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
               return Expanded(
                 child: provider.filteredMovies.isEmpty
                     ? Center(
-                        child: Text('No movies found.', style: AppTheme.bodyStyle))
+                        child: Text('No Movies, Categories or Filmmakers found.', style: AppTheme.bodyStyle))
                     : GridView.builder(
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
