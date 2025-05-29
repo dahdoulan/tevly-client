@@ -40,7 +40,7 @@ Future<void> _verifyCode() async {
     if (!mounted) return;
     Logger.debug(response.body.toString());
     if (response.statusCode == 200) {
-      SnackBar snackBar =const SnackBar(
+     const SnackBar(
         content: Text('Verification successful!'),
         backgroundColor: Colors.green,
         duration: Duration(seconds: 2),
@@ -49,11 +49,11 @@ Future<void> _verifyCode() async {
       if(AuthenticationService().getRole()=="ADMIN"){
         Navigator.pushReplacementNamed(context, '/admin');
       }
-      else
+      else 
       {      
-        Navigator.pushReplacementNamed(context, '/login');
-      }
+        Navigator.pushReplacementNamed(context, '/payment');
 
+      }
       
     } else {
       setState(() {

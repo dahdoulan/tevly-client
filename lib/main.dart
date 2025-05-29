@@ -22,7 +22,7 @@ import 'package:tevly_client/video_player/providers/videoPlayer_provider.dart';
 import 'upload_component/providers/video_provider.dart';
 import 'home_component/providers/movie_provider.dart';
 import 'home_component/screens/home_screen.dart';
-  
+
 void main() {
   runApp(
     MultiProvider(
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
             seedColor: AppTheme.primaryColor, brightness: Brightness.dark),
       ),
 
- home :const LaunchScreen(),
+ home :const LoginPage(),
       routes: {
         '/signup': (context) =>  SignupPage(),
         '/login': (context) => const LoginPage(),

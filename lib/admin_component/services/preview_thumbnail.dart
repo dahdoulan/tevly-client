@@ -6,7 +6,7 @@ import 'package:tevly_client/commons/logger/logger.dart';
 class PreviewThumbnail {
 
 static void  previewThumbnail(BuildContext context, Map<String, dynamic> movie) {
-  final String thumbnailUrl = '${ApiConstants.baseUrl}/videos/${movie['id']}/thumbnail';
+  final String thumbnailUrl = '${ApiConstants.fetchThumbnail}';
   Logger.debug('Preview thumbnail with URL: $thumbnailUrl');
 
   showDialog(
@@ -56,7 +56,7 @@ static void  previewThumbnail(BuildContext context, Map<String, dynamic> movie) 
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  movie['title'] ?? '',
+                    'Thumbnail Preview for the movie ${movie['title'] ?? ''}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

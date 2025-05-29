@@ -1,81 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:tevly_client/admin_component/services/preview_movie.dart';
-import 'package:tevly_client/admin_component/services/preview_thumbnail.dart';
-import 'dart:convert';
-import 'package:tevly_client/auth_components/api/api_constants.dart';
-import 'package:tevly_client/auth_components/service/authenticationService.dart';
-import 'package:tevly_client/commons/logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:tevly_client/admin_component/providers/admin_provider.dart';
+import 'package:tevly_client/admin_component/widgets/pending_movie_table.dart';
+import 'package:tevly_client/admin_component/widgets/rejected_movie_table.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
- 
-class AdminDashboard extends StatefulWidget {
+
+class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
 
   @override
-  State<AdminDashboard> createState() => _AdminDashboardState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => AdminDashboardProvider()..fetchPendingMovies(),
+      child: const _AdminDashboardBody(),
+    );
+  }
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
-  
-  int _selectedIndex = 0;
-  bool _isLoading = true;
-  List<Map<String, dynamic>> _pendingMovies = [];
- 
-  @override
-  void initState() {
-    super.initState();
-    _fetchPendingMovies();
-  }
-
-  Future<void> _fetchPendingMovies() async {
-    setState(() => _isLoading = true);
-    try {
-      final token = AuthenticationService().getToken();
-      if (token == null) {
-        throw Exception('No authentication token found');
-      }
-
-      final response = await http.post(
-        Uri.parse( ApiConstants.adminPendingMovies ),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          _pendingMovies = List<Map<String, dynamic>>.from(data);
-          _isLoading = false;
-          Logger.debug(response.body);
-        });
-      } else {
-        throw Exception('Failed to load pending movies');
-      }
-    } catch (e) {
-      Logger.debug('Error fetching pending movies: $e');
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to load pending movies')),
-      );
-    }
-  }
+class _AdminDashboardBody extends StatelessWidget {
+  const _AdminDashboardBody();
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AdminDashboardProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard',
-        style: TextStyle(color: AppTheme.textColor,fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Admin Dashboard',
+          style: TextStyle(
+            color: AppTheme.textColor,
+            fontWeight: FontWeight.bold
+          ),
+        ),
         backgroundColor: AppTheme.primaryColor,
       ),
-      body: _buildBody(),
+      body: provider.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _buildBody(context, provider),
       bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: provider.selectedIndex,
+        onTap: (index) => provider.onItemTapped(context, index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
@@ -89,248 +55,59 @@ class _AdminDashboardState extends State<AdminDashboard> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-           BottomNavigationBarItem(
-      icon: Icon(Icons.person),
-      label: 'Register Admin',
-    ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Register Admin',
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBody() {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (_selectedIndex == 0) {
+Widget _buildBody(BuildContext context, AdminDashboardProvider provider) {
+    if (provider.selectedIndex == 0) {
       return RefreshIndicator(
-        onRefresh: _fetchPendingMovies,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+        onRefresh: provider.fetchPendingMovies,
+        child:const SingleChildScrollView(
+          padding:  EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
                 'Pending Movies',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.textColor),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textColor
+                ),
               ),
               const SizedBox(height: 16),
-        DataTable(
-  showCheckboxColumn: false,
-  horizontalMargin: 16,
-  columnSpacing: 24,
-  border: TableBorder.all(
-    color: Colors.grey.shade300,
-    width: 1,
-    borderRadius: BorderRadius.circular(8),
-  ),
-  headingRowColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
-  dataRowHeight: 60,
-  columns: const [
-    DataColumn(
-      label: Text('Title', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-    DataColumn(
-      label: Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-    DataColumn(
-      label: Text('Filmmaker', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-    DataColumn(
-      label: Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-    DataColumn(
-      label: Text('Category', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-    DataColumn(
-      label: Text('Date', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-    DataColumn(
-      label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
-    ),
-  ],
-  rows: _pendingMovies.map((movie) {
-    return DataRow(cells: [
-      DataCell(
-        Container(
-          constraints: const BoxConstraints(maxWidth: 500),
-          child: Text(
-            movie['title'] ?? '',
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
-      DataCell(
-        Container(
-          constraints: const BoxConstraints(maxWidth: 2000),
-          child: Text(
-            movie['description'] ?? '',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
-      DataCell(Text(movie['filmmakerFullName'] ?? 'Unknown')),
-      DataCell(Text(movie['filmmakerEmail'] ?? '')),
-      DataCell(
-  Container(
-    constraints: const BoxConstraints(maxWidth: 200),
-    child: Text(
-    
-      movie['category'] ?? 'Uncategorized',
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-    ),
-  ),
-),
-      DataCell(Text(movie['date']?.toString().substring(0, 10) ?? '')),
-      DataCell(
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.visibility),
-              onPressed: () => PreviewThumbnail.previewThumbnail(context, movie),
-            ),
-            IconButton(
-              icon: const Icon(Icons.play_arrow),
-              onPressed: () => Previewmovie.previewMovie(context, movie),
-            ),
-            IconButton(
-              icon: const Icon(Icons.check, color: Colors.green),
-              onPressed: () => _handleApprove(movie),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.red),
-              onPressed: () => _handleReject(movie),
-            ),
-          ],
-        ),
-      ),
-    ]);
-  }).toList(),
-),
-              
+              SizedBox(
+                height: 300, // Fixed height for PendingMoviesTable
+                child: const PendingMoviesTable(),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Rejected Movies',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textColor
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 300, // Fixed height for RejectedMoviesTable
+                child: const RejectedMoviesTable(),
+              ),
             ],
           ),
         ),
       );
-     } else if (_selectedIndex == 1) {
-    return const Center(child: Text('Select Upload to navigate'));
-  } else {
-    return const Center(child: Text('Select Home to navigate'));
-  }
-  }
-
-  void _onItemTapped(int index) {
-  final token = AuthenticationService().getToken();
-  if (token == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Authentication error. Please login again.')),
-    );
-    Navigator.pushReplacementNamed(context, '/login');
-    return;
-  }
-
-  setState(() => _selectedIndex = index);
-
-  if (index == 1) {
-    Navigator.pushNamed(
-      context,
-      '/upload',
-      arguments: {'token': token},
-    );
-  } else if (index == 2) {
-    Navigator.pushNamed(
-      context,
-      '/home',
-      arguments: {'token': token},
-    );
-  } else if (index == 3) {
-    Navigator.pushNamed(
-      context,
-      '/adminSignup',
-      arguments: {'token': token},
-    );
-  }
-}
-
-  Future<void> _handleApprove(Map<String, dynamic> movie) async {
-  try {
-    final token = AuthenticationService().getToken();
-    if (token == null) throw Exception('No authentication token found');
-
-    final videoId = int.parse(movie['id'].toString());
-    Logger.debug('Approving movie with ID: $videoId');
-
-    final url = Uri.parse('${ApiConstants.approveMovie}?videoId=$videoId');
-    
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    Logger.debug('Approve response status: ${response.statusCode}');
-    Logger.debug('Approve response body: ${response.body}');
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Approved: ${movie['title']}')),
-      );
-      await _fetchPendingMovies();
+    } else if (provider.selectedIndex == 1) {
+      return const Center(child: Text('Select Upload to navigate'));
     } else {
-      throw Exception('Failed to approve movie: ${response.statusCode}');
+      return const Center(child: Text('Select Home to navigate'));
     }
-  } catch (e) {
-    Logger.debug('Error approving movie: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Failed to approve movie')),
-    );
   }
-}
-
-Future<void> _handleReject(Map<String, dynamic> movie) async {
-  try {
-    final token = AuthenticationService().getToken();
-    if (token == null) throw Exception('No authentication token found');
-
-    final videoId = int.parse(movie['id'].toString());
-    Logger.debug('Rejecting movie with ID: $videoId');
-
-
-    final url = Uri.parse('${ApiConstants.rejectMovie}?videoId=$videoId');
-    
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    Logger.debug('Reject response status: ${response.statusCode}');
-    Logger.debug('Reject response body: ${response.body}');
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Rejected: ${movie['title']}')),
-      );
-      await _fetchPendingMovies();
-    } else {
-      throw Exception('Failed to reject movie: ${response.statusCode}');
-    }
-  } catch (e) {
-    Logger.debug('Error rejecting movie: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Failed to reject movie')),
-    );
-  }
-}
-
- 
-
- 
 }
