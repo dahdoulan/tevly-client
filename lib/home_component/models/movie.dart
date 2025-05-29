@@ -34,6 +34,7 @@ class Movie {
   final DateTime? createdAt;
   final int averageRating;
   final int userRating;
+  final String movieMaker;
 
   Movie({
     required this.id,
@@ -49,6 +50,7 @@ class Movie {
     this.createdAt,
     this.averageRating = 0,
     this.userRating = 0,
+    this.movieMaker = '',
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class Movie {
           : null,
       averageRating: json['averageRating']?.toInt() ?? 0,
       userRating: json['userRating']?.toInt() ?? 0,
+      movieMaker: json['moviemaker'] ?? '',
     );
   }
 }

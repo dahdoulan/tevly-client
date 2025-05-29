@@ -38,7 +38,10 @@ class SearchProvider extends ChangeNotifier {
     _filteredMovies = _allMovies.where((movie) {
       final titleLower = movie.title.toLowerCase();
       final searchLower = query.toLowerCase();
-      return titleLower.contains(searchLower);
+      final categoryLower = movie.category.toLowerCase();
+      final moviemakerLower = movie.movieMaker.toLowerCase();
+      return titleLower.contains(searchLower) || categoryLower.contains(searchLower) 
+          || moviemakerLower.contains(searchLower);
     }).toList();
     notifyListeners();
   }
