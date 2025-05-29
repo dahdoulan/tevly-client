@@ -9,13 +9,33 @@ class AdminDashboardProvider extends ChangeNotifier {
   int selectedIndex = 0;
   List<Map<String, dynamic>> pendingMovies = [];
   List<Map<String, dynamic>> rejectedMovies = [];
+
+
+//to fetch both Pending and Rejected at the same time
+Future<void> fetchInitialData() async {
+  isLoading = true;
+  notifyListeners();
+  
+  await Future.wait([
+    fetchPendingMovies(),
+    fetchRejectedMovies()
+  ]);
+  
+  isLoading = false;
+  notifyListeners();
+}
+
+
+
+
+
   Future<void> fetchPendingMovies() async {
     isLoading = true;
     notifyListeners();
     
     try {
       pendingMovies = await _service.fetchPendingMovies();
-      Logger.debug('Fetched $pendingMovies pending movies');
+      Logger.debug('Fetched ${pendingMovies.length} pending movies');
     } catch (e) {
       Logger.debug('Error fetching pending movies: $e');
       pendingMovies = [];
@@ -23,14 +43,16 @@ class AdminDashboardProvider extends ChangeNotifier {
     
     isLoading = false;
     notifyListeners();
-  }
+  } 
+
+
    Future<void> fetchRejectedMovies() async {
     isLoading = true;
     notifyListeners();
     
     try {
       rejectedMovies = await _service.fetchRejectedMovies();
-            Logger.debug('Fetched $rejectedMovies pending movies');
+            Logger.debug('Fetched ${rejectedMovies.length} rejected movies');
 
     } catch (e) {
       Logger.debug('Error fetching rejected movies: $e');
@@ -42,38 +64,70 @@ class AdminDashboardProvider extends ChangeNotifier {
   }
 
   Future<void> handleApprove(BuildContext context, Map<String, dynamic> movie) async {
-    try {
-      final videoId = int.parse(movie['id'].toString());
-      await _service.approveMovie(videoId);
-      
+  if (!context.mounted) return;
+  
+  isLoading = true;
+  notifyListeners();
+
+  try {
+    final videoId = int.parse(movie['id'].toString());
+    await _service.approveMovie(videoId);
+    
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Approved: ${movie['title']}')),
       );
-      await fetchPendingMovies();
-    } catch (e) {
-      Logger.debug('Error approving movie: $e');
+    }
+
+    await Future.wait([
+      fetchPendingMovies(),
+      fetchRejectedMovies(),
+    ]);
+  } catch (e) {
+    Logger.debug('Error approving movie: $e');
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to approve movie')),
       );
     }
+  } finally {
+    isLoading = false;
+    notifyListeners();
   }
+}
 
-  Future<void> handleReject(BuildContext context, Map<String, dynamic> movie) async {
-    try {
-      final videoId = int.parse(movie['id'].toString());
-      await _service.rejectMovie(videoId);
-      
+Future<void> handleReject(BuildContext context, Map<String, dynamic> movie) async {
+  if (!context.mounted) return;
+
+  isLoading = true;
+  notifyListeners();
+
+  try {
+    final videoId = int.parse(movie['id'].toString());
+    await _service.rejectMovie(videoId);
+    
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Rejected: ${movie['title']}')),
       );
-      await fetchPendingMovies();
-    } catch (e) {
-      Logger.debug('Error rejecting movie: $e');
+    }
+
+    await Future.wait([
+      fetchPendingMovies(),
+      fetchRejectedMovies(),
+    ]);
+  } catch (e) {
+    Logger.debug('Error rejecting movie: $e');
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to reject movie')),
       );
     }
+  } finally {
+    isLoading = false;
+    notifyListeners();
   }
+}
 
   void onItemTapped(BuildContext context, int index) {
     if (_service.token == null) {

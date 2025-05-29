@@ -25,7 +25,7 @@ class AdminDashboardService {
       throw Exception('Failed to load pending movies');
     }
   }
-  
+
   Future<List<Map<String, dynamic>>> fetchRejectedMovies() async {
     if (token == null) throw Exception('No authentication token found');
 
@@ -38,8 +38,8 @@ class AdminDashboardService {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return List<Map<String, dynamic>>.from(data);
+      final List<dynamic> rejectedData = json.decode(response.body);
+      return List<Map<String, dynamic>>.from(rejectedData);
     } else {
       throw Exception('Failed to load pending movies');
     }

@@ -11,7 +11,7 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AdminDashboardProvider()..fetchPendingMovies(),
+      create: (_) => AdminDashboardProvider()..fetchInitialData(),
       child: const _AdminDashboardBody(),
     );
   }
@@ -67,7 +67,10 @@ class _AdminDashboardBody extends StatelessWidget {
 Widget _buildBody(BuildContext context, AdminDashboardProvider provider) {
     if (provider.selectedIndex == 0) {
       return RefreshIndicator(
-        onRefresh: provider.fetchPendingMovies,
+       onRefresh: () async {
+          await provider.fetchPendingMovies();
+          await provider.fetchRejectedMovies();
+        },
         child:const SingleChildScrollView(
           padding:  EdgeInsets.all(16.0),
           child: Column(

@@ -11,8 +11,7 @@ class RejectedMoviesTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<AdminDashboardProvider>(context);
     
-    return DataTable(
-      
+   return DataTable(
       showCheckboxColumn: false,
       horizontalMargin: 16,
       columnSpacing: 24,

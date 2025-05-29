@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tevly_client/admin_component/pages/admin_dashboard.dart';
+import 'package:tevly_client/admin_component/providers/admin_provider.dart';
 import 'package:tevly_client/auth_components/pages/admin_signup.dart';
 import 'package:tevly_client/auth_components/pages/filmmaker_signup.dart';
 import 'package:tevly_client/auth_components/pages/forgot_password.dart';
@@ -33,6 +34,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => RatingProvider()),
         ChangeNotifierProvider(create: (_) => VideoProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()), 
+        ChangeNotifierProvider(create: (_) => AdminDashboardProvider()),
       ],
       builder: (context, child) => const MyApp(),
     ),
