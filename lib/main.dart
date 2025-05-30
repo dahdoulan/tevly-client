@@ -7,8 +7,8 @@ import 'package:tevly_client/auth_components/pages/filmmaker_signup.dart';
 import 'package:tevly_client/auth_components/pages/forgot_password.dart';
 import 'package:tevly_client/auth_components/pages/login.dart';
 import 'package:tevly_client/auth_components/pages/signup.dart';
+import 'package:tevly_client/auth_components/pages/subscription.dart';
 import 'package:tevly_client/auth_components/pages/verification_page.dart';
-import 'package:tevly_client/auth_components/widgets/launch_screen.dart';
 import 'package:tevly_client/home_component/models/theme.dart';
 import 'package:tevly_client/home_component/providers/comment_provider.dart';
 import 'package:tevly_client/home_component/providers/Rating_provider.dart';
@@ -80,6 +80,8 @@ class MyApp extends StatelessWidget {
         '/getstarted': (context) => const GetStartedScreen(),
         '/payment': (context) => const PaymentScreen(), 
         '/adminSignup': (context) => AdminSignupPage(),
+        '/subscription': (context) => const SubscriptionScreen(),
+
          },
           onGenerateRoute: _onGenerateRoute,
    

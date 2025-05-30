@@ -67,44 +67,47 @@ class _AdminDashboardBody extends StatelessWidget {
 Widget _buildBody(BuildContext context, AdminDashboardProvider provider) {
     if (provider.selectedIndex == 0) {
       return RefreshIndicator(
-       onRefresh: () async {
-          await provider.fetchPendingMovies();
-          await provider.fetchRejectedMovies();
+        onRefresh: () async {
+          await Future.wait([
+            provider.fetchPendingMovies(),
+            provider.fetchRejectedMovies(),
+          ]);
         },
-        child:const SingleChildScrollView(
-          padding:  EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Pending Movies',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textColor
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          itemCount: 1,
+          itemBuilder: (context, index) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Pending Movies',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColor
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 300, // Fixed height for PendingMoviesTable
-                child: const PendingMoviesTable(),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Rejected Movies',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textColor
+                const SizedBox(height: 16),
+                provider.tablesLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : const SizedBox(child: PendingMoviesTable()),
+                const SizedBox(height: 24),
+                const Text(
+                  'Rejected Movies',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textColor
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 300, // Fixed height for RejectedMoviesTable
-                child: const RejectedMoviesTable(),
-              ),
-            ],
-          ),
+                const SizedBox(height: 16),
+                provider.tablesLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : const SizedBox(child: RejectedMoviesTable()),
+              ],
+            );
+          },
         ),
       );
     } else if (provider.selectedIndex == 1) {

@@ -51,7 +51,7 @@ Future<void> _verifyCode() async {
       }
       else 
       {      
-        Navigator.pushReplacementNamed(context, '/payment');
+        Navigator.pushReplacementNamed(context, '/subscription');
 
       }
       

@@ -9,21 +9,28 @@ class AdminDashboardProvider extends ChangeNotifier {
   int selectedIndex = 0;
   List<Map<String, dynamic>> pendingMovies = [];
   List<Map<String, dynamic>> rejectedMovies = [];
+ bool _tablesLoading = true;
+  bool get tablesLoading => _tablesLoading;
 
 
 //to fetch both Pending and Rejected at the same time
 Future<void> fetchInitialData() async {
-  isLoading = true;
-  notifyListeners();
-  
-  await Future.wait([
-    fetchPendingMovies(),
-    fetchRejectedMovies()
-  ]);
-  
-  isLoading = false;
-  notifyListeners();
-}
+    _tablesLoading = true;
+    notifyListeners();
+    
+    try {
+      final results = await Future.wait([
+        fetchPendingMovies(),
+        fetchRejectedMovies(),
+      ]);
+      _tablesLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _tablesLoading = false;
+      notifyListeners();
+      debugPrint('Error fetching data: $e');
+    }
+  }
 
 
 

@@ -32,29 +32,6 @@ Widget _buildTextField(
     IconData icon,
     bool isPassword,
   ) {
-  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$');
-  String? getErrorText(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    }
-
-    switch (hintText) {
-      case "Email":
-        if (!emailRegex.hasMatch(value)) {
-          return 'Enter a valid email address';
-        }
-        break;
-      case "Password":
-        if (!passwordRegex.hasMatch(value)) {
-          return 'Min 8 chars, 1 uppercase, 1 symbol';
-        }
-        break;
-      
-      
-    }
-    return null;
-  }
      return Container(
     width: kIsWeb
         ? MediaQuery.of(context).size.width * 0.4

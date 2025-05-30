@@ -157,22 +157,4 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
-  Widget _buildForgotPasswordLink() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Forgot your password? ",
-          style: AppTheme.bodyStyle,
-        ),
-        TextButton(
-          onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
-          child: Text(
-            "Reset Password",
-            style: AppTheme.linkStyle,
-          ),
-        ),
-      ],
-    );
-  }
 }
