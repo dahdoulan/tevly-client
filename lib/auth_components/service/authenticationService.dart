@@ -7,7 +7,7 @@ class AuthenticationService {
 
   factory AuthenticationService() {
     return _instance;
-  }
+  } 
 
   void setToken(String token) {
     _token = token;

@@ -81,18 +81,31 @@ Future<void> _verifyCode() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.center,
-            end: Alignment.bottomCenter,
-            colors: [
-               AppTheme.primaryColor,
-              AppTheme.backgroundColor,
-            ],
+     body: Stack(
+      children: [
+        // Background image
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/assets/collage.jpg'),  
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        child: Center(
+        // Gradient overlay
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.center,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppTheme.primaryColor.withOpacity(0.7), // Adding opacity to blend with image
+                AppTheme.backgroundColor.withOpacity(0.9),
+              ],
+            ),
+          ),
+        ),
+       Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -149,7 +162,8 @@ Future<void> _verifyCode() async {
             ),
           ),
         ),
-      ),
+      ],
+     ),
     );
   }
 

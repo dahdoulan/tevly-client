@@ -19,7 +19,7 @@ Future<void> fetchInitialData() async {
     notifyListeners();
     
     try {
-      final results = await Future.wait([
+      await Future.wait([
         fetchPendingMovies(),
         fetchRejectedMovies(),
       ]);
@@ -28,7 +28,7 @@ Future<void> fetchInitialData() async {
     } catch (e) {
       _tablesLoading = false;
       notifyListeners();
-      debugPrint('Error fetching data: $e');
+      Logger.debug('Error fetching data: $e');
     }
   }
 
