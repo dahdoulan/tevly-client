@@ -176,8 +176,12 @@ Future<void> handleReject(BuildContext context, Map<String, dynamic> movie) asyn
     notifyListeners();
     switch (index) {
       case 1:
+        Navigator.pushNamed(context, '/myuploads', arguments: {'token': _service.token});
+        break;
+      case 2:
         Navigator.pushNamed(context, '/settings', arguments: {'token': _service.token});
         break;
+
       
     }
   }

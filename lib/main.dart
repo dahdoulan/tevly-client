@@ -17,6 +17,7 @@ import 'package:tevly_client/home_component/screens/get_started_screen.dart';
 import 'package:tevly_client/home_component/screens/payment_screen.dart';
 import 'package:tevly_client/home_component/screens/search.dart';
 import 'package:tevly_client/home_component/screens/settings.dart';
+import 'package:tevly_client/upload_component/pages/my_uploaded_movies.dart';
 import 'package:tevly_client/upload_component/pages/upload_page.dart';
 import 'package:tevly_client/video_player/pages/videoPlayer.dart';
 import 'package:tevly_client/video_player/providers/videoPlayer_provider.dart';
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
         '/payment': (context) => const PaymentScreen(), 
         '/adminSignup': (context) => AdminSignupPage(),
         '/subscription': (context) => const SubscriptionScreen(),
+        '/myuploads': (context) => const FilmmakerPendingMoviesPage(),
          },
           onGenerateRoute: _onGenerateRoute,
    

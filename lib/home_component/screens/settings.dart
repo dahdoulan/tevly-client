@@ -122,15 +122,6 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildActionButton(
-                    
-                    'My List',
-                    Icons.bookmark,
-                    Colors.blue[700]!,
-                    () {
-                      // Navigate to My List
-                    },
-                  ),
                   const SizedBox(height: 12),
                   _buildActionButton(
                     'Help & Support',

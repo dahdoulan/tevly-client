@@ -58,10 +58,15 @@ class _UploadPageState extends State<UploadPage> {
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
+            BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'My Uploads',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ), 
+        
         ],
       ),
       body: Stack(
