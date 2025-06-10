@@ -49,7 +49,7 @@ class ThumbnailDropZoneWidget extends StatelessWidget {
                     Text(
                       provider.isDragging
                           ? 'Drop to upload'
-                          : 'Drop thumbnail here',
+                          : 'Drag and drop thumbnail here',
                       style: TextStyle(
                         color: provider.isDragging ? Colors.blue : Colors.grey,
                       ),

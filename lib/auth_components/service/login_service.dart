@@ -4,8 +4,11 @@ import 'package:tevly_client/auth_components/api/api_constants.dart';
 import 'package:tevly_client/auth_components/service/authenticationService.dart';
 
 class LoginService {
+  static var role;
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     final url = Uri.parse(ApiConstants.login);
+    
     
     try {
       final response = await http.post(
@@ -20,7 +23,7 @@ class LoginService {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         final token = responseData['token'].toString().trim();
-        final role = responseData['role'].toString().trim();
+          role = responseData['role'].toString().trim();
 
           AuthenticationService().setToken(token);
           AuthenticationService().setRole(role);

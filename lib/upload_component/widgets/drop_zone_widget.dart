@@ -60,8 +60,8 @@ class DropZoneWidget extends StatelessWidget {
                       if (!isCompact)
                         Text(
                           isDragging
-                              ? 'Drop your videos here'
-                              : 'Drag and drop videos here',
+                              ? 'Drop your movie here'
+                              : 'Drag and drop movie here',
                           style: TextStyle(
                             fontSize: constraints.maxHeight < 300 ? 16 : 20,
                             color: isDragging ? kSecondaryColor : kPrimaryColor,

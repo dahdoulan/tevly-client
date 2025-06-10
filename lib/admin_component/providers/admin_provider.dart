@@ -158,6 +158,27 @@ Future<void> handleReject(BuildContext context, Map<String, dynamic> movie) asyn
       case 3:
         Navigator.pushNamed(context, '/adminSignup', arguments: {'token': _service.token});
         break;
+      case 4:
+        Navigator.pushNamed(context, '/settings', arguments: {'token': _service.token});
+        break;
+    }
+  }
+  void onItemTappedFilmmaker(BuildContext context, int index) {
+    if (_service.token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Authentication error. Please login again.')),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
+    selectedIndex = index;
+    notifyListeners();
+    switch (index) {
+      case 1:
+        Navigator.pushNamed(context, '/settings', arguments: {'token': _service.token});
+        break;
+      
     }
   }
 }

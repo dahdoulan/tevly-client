@@ -81,8 +81,6 @@ class MyApp extends StatelessWidget {
         '/payment': (context) => const PaymentScreen(), 
         '/adminSignup': (context) => AdminSignupPage(),
         '/subscription': (context) => const SubscriptionScreen(),
-        
-
          },
           onGenerateRoute: _onGenerateRoute,
    

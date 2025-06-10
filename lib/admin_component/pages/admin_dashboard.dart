@@ -59,6 +59,10 @@ class _AdminDashboardBody extends StatelessWidget {
             icon: Icon(Icons.person),
             label: 'Register Admin',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
       ),
     );
